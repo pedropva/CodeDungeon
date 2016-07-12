@@ -1,20 +1,28 @@
-<h1>
-
-<head>
-	<title>
-		Code Dungeon
-	</title>
-	<script>
-		Nsala();
-	</script>
-</head>
-<p>
-	<h1 class="room" id="room"></h1></h1>
-	<br><br>
-	<p id="descriptionRoom"></p>
-	What should i do?
-	<input id="CommandInput"/>
-	<button onclick="act()" id="btnAct">Act!</button>
-	<script src="room.js"></script>
-</body>
+<html>
+	<head>
+		<link rel="stylesheet" href="style.css">
+		<title>
+			Code Dungeon
+		</title>
+	</head>
+	<body>
+			<div class="divPrincipal">
+				<h1 class="title" id="gameTitle" align="center">
+					Code Dungeon!
+				</h1>
+				<div class="divSecond">
+					<p class="roomNumber" id="roomNumber">
+					</p>
+					<br><br>
+					<p id="descriptionRoom"></p>
+					<br><br>
+					O que fazer?
+					<br>
+					<input id="CommandInput"/>
+					<button onclick="act();Nsala();" id="btnAct">Act!</button>
+					<br><br>
+				</div>
+				<script src="room.js"></script>
+			</div>
+	</body>
 </html>

@@ -1,3 +1,28 @@
-.sala{
-    allign:"center"
+.roomStyle{
+    color:#000000;
+}
+.roomNumber{
+    color:#000000;
+    font-size: small;
+}
+.title{
+    color:#000000;
+}
+.divPrincipal{
+    color:#000000;
+    border:double;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.divSecond{
+    color:#000000;
+    border:double;
+    padding-left: 2%;
+    padding-right: 2%;
 }
