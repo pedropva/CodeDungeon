@@ -16,7 +16,7 @@ function carregaSala(xhttp){
 	nSala(xhttp);
 	descriptionRoom(xhttp);	
 }
-xhttp.open("GET", "https://dl.dropboxusercontent.com/u/85412057/room1.xml", false);
+xhttp.open("GET", "https://dl.dropboxusercontent.com/u/85412057/rooms.xml", false);
 xhttp.send();
 
 
@@ -29,52 +29,70 @@ function descriptionRoom(xml){
  	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("descriptionRoom")[salaAtual].childNodes[0].nodeValue;	
 }
 
-function act(){
-    var texto;
-    texto = document.getElementById("CommandInput").value;
-    var res = texto.split(" ");
-    if(res[0] == "go"){
-		go(res[1],xhttp);    
+
+document.getElementById('CommandInput').onkeypress = function(e) {
+    var event = e || window.event;
+    var charCode = event.which || event.keyCode;
+
+    if ( charCode == '13' ) {
+      	// Enter pressed
+      	var texto;
+	    texto = document.getElementById("CommandInput").value;
+	    var res = texto.split(" ");
+	    if(res[0] == "go"){
+			go(res[1],xhttp);    
+	    }
+	 	if(res[0] == "look"){    	
+			look(res[1],xhttp);
+	    }   
+      	return false;
     }
- 	if(res[0] == "look"){    	
-		look(res[1],xhttp);
-    }   
 }
+function pick(){
 
+}
+function take(){
 
+}
+function inventory(){
+
+}
+function use(){//serve tanto pra iten quanto pra terminal
+
+}
 function go(where,xml){
 	var xmlDoc = xml.responseXML;
 	var numberNext;
 	var room = xmlDoc.getElementsByTagName("room")[salaAtual];
 	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	switch(where){
-		case "foward":
-			if(nextRoom.getElementsByTagName("foward")[0].childNodes[0].nodeValue != "none"){
-				numberNext = nextRoom.getElementsByTagName("foward")[0].childNodes[0].nodeValue;
+		case "north":
+			if(nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
-				document.getElementById("resposta").innerHTML = numberNext[1];				
+				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];				
 				salaAtual = parseInt(numberNext[1])-1;
 				carregaSala(xhttp);
 			}else{
 				document.getElementById("resposta").innerHTML = "tem nada pra frente";
 			}
 			break;
-		case "back":
-			if(nextRoom.getElementsByTagName("back")[0].childNodes[0].nodeValue != "none"){
-				numberNext = nextRoom.getElementsByTagName("back")[0].childNodes[0].nodeValue;
+		case "south":
+			if(nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
-				document.getElementById("resposta").innerHTML = numberNext[1];
+				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
 				salaAtual = parseInt(numberNext[1])-1;
 				carregaSala(xhttp);
 			}else{
 				document.getElementById("resposta").innerHTML = "tem nada pra tras";
 			}
 			break;
-		case "left":
-			if(nextRoom.getElementsByTagName("left")[0].childNodes[0].nodeValue != "none"){
-				numberNext = nextRoom.getElementsByTagName("left")[0].childNodes[0].nodeValue;
+		case "west":
+			if(nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
-				document.getElementById("resposta").innerHTML = numberNext[1];
+				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
 				salaAtual = parseInt(numberNext[1])-1;
 				carregaSala(xhttp);
 			}else{
@@ -82,11 +100,11 @@ function go(where,xml){
 			}
 			break;
 
-		case "right":
-			if(nextRoom.getElementsByTagName("right")[0].childNodes[0].nodeValue != "none"){
-				numberNext = nextRoom.getElementsByTagName("right")[0].childNodes[0].nodeValue;
+		case "east":
+			if(nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
-				document.getElementById("resposta").innerHTML = numberNext[1];
+				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
 				salaAtual = parseInt(numberNext[1])-1;
 				carregaSala(xhttp);
 			}else{
@@ -98,20 +116,46 @@ function go(where,xml){
 	}
 }
 
-function look(where,xml){
+function look(where,xml){//tem que descrever a proxima sala e funcionar pra ver a descricao do item
 	var xmlDoc = xml.responseXML;
+	var room = xmlDoc.getElementsByTagName("room")[salaAtual];
+	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	switch(where){
-		case "foward": 
-			document.getElementById("resposta").innerHTML = "tem nada em frente";
+		case "north": 
+			if(nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue != "none"){//tem que aceitar tag vazia tbm 
+				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
+				numberNext = numberNext.split(" ");
+				document.getElementById("resposta").innerHTML ='Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela, talvez devesse checar?';
+			}else{
+				document.getElementById("resposta").innerHTML = "nao tem nada a frente";
+			}
 			break;
-		case "back":
-			document.getElementById("resposta").innerHTML = "tem nada pra atras";
+		case "south":
+			if(nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
+				numberNext = numberNext.split(" ");
+				document.getElementById("resposta").innerHTML ='Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela, talvez devesse checar?';
+			}else{
+				document.getElementById("resposta").innerHTML = "nao tem nada pra tras";
+			}
 			break;
-		case "left":
-			document.getElementById("resposta").innerHTML = "tem nada pra esquerda";
+		case "west":
+			if(nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
+				numberNext = numberNext.split(" ");
+				document.getElementById("resposta").innerHTML ='Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela, talvez devesse checar?';
+			}else{
+				document.getElementById("resposta").innerHTML = "nao tem nada pra esquerda";
+			}
 			break;
-		case "right":
-			document.getElementById("resposta").innerHTML = "tem nada pra direita";
+		case "east":
+			if(nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue != "none"){
+				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
+				numberNext = numberNext.split(" ");
+				document.getElementById("resposta").innerHTML ='Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela, talvez devesse checar?';
+			}else{
+				document.getElementById("resposta").innerHTML = "nao tem nada pra direita";
+			}
 			break;
 		default:
 			document.getElementById("resposta").innerHTML = "nao tem nada que valha a pena olhar ai";
