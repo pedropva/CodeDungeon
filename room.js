@@ -48,16 +48,16 @@ document.getElementById('CommandInput').onkeypress = function(e) {
       	return false;
     }
 }
-function pick(){
+function pick(where,xml){//pick
+	
+}
+function take(where,xml){//==take
 
 }
-function take(){
+function inventory(where,xml){
 
 }
-function inventory(){
-
-}
-function use(){//serve tanto pra iten quanto pra terminal
+function use(where,xml){//serve tanto pra iten quanto pra terminal
 
 }
 function go(where,xml){
@@ -78,7 +78,7 @@ function go(where,xml){
 			}
 			break;
 		case "south":
-			if(nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue != "none"){
+			if(nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue != ""){
 				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
 				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
@@ -89,7 +89,7 @@ function go(where,xml){
 			}
 			break;
 		case "west":
-			if(nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue != "none"){
+			if(nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue != ""){
 				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
 				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
@@ -101,7 +101,7 @@ function go(where,xml){
 			break;
 
 		case "east":
-			if(nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue != "none"){
+			if(nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue != ""){
 				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
 				numberNext = numberNext.split(" ");
 				document.getElementById("resposta").innerHTML = "Entrando na sala "+numberNext[1];
