@@ -6,23 +6,22 @@
 		</title>
 	</head>
 	<body>
-			<div class="divPrincipal">
-				<h1 class="title" id="gameTitle" align="center">
-					Code Dungeon!
-				</h1>
-				<div class="divSecond">
-					<p class="roomNumber" id="roomNumber">
-					</p>
-					<br><br>
-					<p id="descriptionRoom"></p>
-					<br><br>
-					O que fazer?
-					<br>
-					<input id="CommandInput"/>
-					<br><br>
-					<p id="resposta"> </p>
+			<h1 class="title" id="gameTitle" align="center">
+				Code Dungeon!
+			</h1>
+			<div class="divSecond">
+				<p class="roomNumber" id="roomNumber">
+				</p>
+				<br><br>
+				<p id="descriptionRoom"></p>
+				<br><br>
+				O que fazer?
+				<div class="divScrollMaior">
+					<div class="divScroll" id="scrollDiv"></div>
+					<input id="CommandInput" autocomplete="on" autofocus="on" size="126%"/>
 				</div>
-				<script src="room.js"></script>
+				<br>
 			</div>
+			<script src="room.js"></script>
 	</body>
 </html>
