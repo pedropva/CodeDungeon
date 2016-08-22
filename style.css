@@ -8,6 +8,10 @@
 .title{
     color:#000000;
 }
+.inputText{
+    color:#000000;
+    size: 100%;
+}
 .divPrincipal{
     color:#000000;
     border:double;

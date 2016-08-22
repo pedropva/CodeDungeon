@@ -3,42 +3,67 @@
 	<inventory>
 		<item id="chave">
 			<description>
-				Uma chave velha.
+				Uma chave velha de metal, mas polida pelo uso.
 			</description>
-			<descriptonDroped>
+			<descriptionDroped>
 				Uma chave esta jogada no chao entre os tijolos do chao.
 			</descriptionDroped>
+			<active>
+				true
+			</active>
 			<use>
+				<condition>
+					<has>chave</has>
+					<at>room 2</at>
+				</condition>
+				<action>
+					<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bauzinho!</print>
+					<do>
+						<item>bau</item>
+						<property>description</property>
+						<value>Um bauzinho aberto</value>
+					</do>
+					<do>
+						<item>diamond</item>
+						<property>active</property>
+						<value>true</value>
+					</do>
+				</action>
 			</use>
 		</item>
 		<item id="bau">
 			<description>
 				Um bau pequeno e misterioso. 
 			</description>
-			<descriptonDroped>
+			<descriptionDroped>
 				Um bau pequeno jaz num canto da sala.
 			</descriptionDroped>
-			<use>
-			</use>
+			<active>
+				alwaysTrue
+			</active>
+			<use></use>
 		</item>
 		<item id="diamante">
 			<description>
 				Uau! um diamante de verdade!
 			</description>
-			<descriptonDroped>
-				Voçe achou um diamante solitario no fundo do bauzinho!
+			<descriptionDroped>
+				Um diamante no chao!Que desperdicio!
 			</descriptionDroped>
-			<use>
-			</use>
+			<active>
+				false
+			</active>
+			<use></use>
 		</item>
 	</inventory>
 	<room id="1">
+		<shortDescription>
+		Uma sala escura a frente.
+		</shortDescription>
 		<description>
-		"Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor."
+		Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor.
 		</description>
 		<item>chave</item>
-		<item>bau</item>
-		<item>diamante</item>
 		<monster></monster>
 		<NextRoom>
 			<north>room 2</north>
@@ -48,10 +73,12 @@
 		</NextRoom>
 	</room>
 	<room id="2">
+		<shortDescription>
+		Uma sala bem iluminada a frente.
+		</shortDescription>
 		<description>
-		"algumacoisa."
+		algumacoisa.
 		</description>
-		<item>chave</item>
 		<item>bau</item>
 		<item>diamante</item>
 		<monster></monster>
@@ -59,7 +86,7 @@
 			<north></north>
 			<west></west>
 			<east></east>
-			<south></south>
+			<south>room 1</south>
 		</NextRoom>
 	</room>
 </xml>
