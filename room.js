@@ -25,7 +25,7 @@ function carregaSala(xhttp){
 	//nSala(xhttp);
 	descriptionRoom(xhttp);	
 }
-xhttp.open("GET", "https://dl.dropboxusercontent.com/u/85412057/rooms.xml", false);//aqui determina o carregamento assincrono
+xhttp.open("GET", "http://pedropva.esy.es/rooms.xml", false);//aqui determina o carregamento assincrono
 xhttp.send();
 
 /* acho que iss nao é necessaerio
@@ -33,6 +33,10 @@ function nSala(){
    document.getElementById("roomNumber").innerHTML ="Sala: "+ parseInt(salaAtual+1);
 }
 */
+function tutorial(){
+	feedBackHistory("Olá! Bem vindo! Para começar a jogar primeiro voçe tem que aprender os comandos:");
+	feedBackHistory("Inventory/i: É o inventario do jogo");
+}
 function descriptionRoom(xml){//tem que mostrar as descriptions dos items tbm
 	var xmlDoc = xml.responseXML;
  	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("room")[salaAtual].getElementsByTagName("description")[0].childNodes[0].nodeValue;	
@@ -116,7 +120,7 @@ document.getElementById('CommandInput').onkeypress = function(e) {
       	return false;
     }
 }//lembra de por historico de comandos e talz
-function pick(what,xml){//pick
+function pick(what,xml){//pick TA DANDO ERRO ELE TA PEGANDO O ITEN ERRADO
 	var active = isActive(what,xml);
 	if(active != "alwaysTrue" ||  active != "false"){
 		var xmlDoc = xml.responseXML;
@@ -128,6 +132,8 @@ function pick(what,xml){//pick
 				feedBackHistory("Pegou "+ what + "!");
 			}
 		}
+	}else{
+		feedBackHistory("Não dá consigo pegar isso!");
 	}
 }
 function isActive(what,xml){//BUSCA O ITEN NO INVENTARIO MUA MIGO cuidado com a linha 118 ja fiz o response

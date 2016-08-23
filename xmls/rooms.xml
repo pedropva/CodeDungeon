@@ -1,16 +1,15 @@
 <xml>
-	<CurRoom>0</CurRoom>
+	<state>
+		
+	</state>
 	<inventory>
-		<item id="chave">
+		<item id="chave" active="true">
 			<description>
 				Uma chave velha de metal, mas polida pelo uso.
 			</description>
 			<descriptionDroped>
 				Uma chave esta jogada no chao entre os tijolos do chao.
 			</descriptionDroped>
-			<active>
-				true
-			</active>
 			<use>
 				<condition>
 					<has>chave</has>
@@ -31,28 +30,22 @@
 				</action>
 			</use>
 		</item>
-		<item id="bau">
+		<item id="bau" active="awaysTrue">
 			<description>
 				Um bau pequeno e misterioso. 
 			</description>
 			<descriptionDroped>
 				Um bau pequeno jaz num canto da sala.
 			</descriptionDroped>
-			<active>
-				alwaysTrue
-			</active>
 			<use></use>
 		</item>
-		<item id="diamante">
+		<item id="diamante" active="false">
 			<description>
 				Uau! um diamante de verdade!
 			</description>
 			<descriptionDroped>
 				Um diamante no chao!Que desperdicio!
 			</descriptionDroped>
-			<active>
-				false
-			</active>
 			<use></use>
 		</item>
 	</inventory>
