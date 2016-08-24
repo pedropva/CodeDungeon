@@ -1,9 +1,14 @@
 <xml>
 	<state>
-		
+		<curRoom>
+			0
+		</curRoom>
+		<item where="1" active="true">chave</item>
+		<item where="2" active="false">diamond</item>
+		<item where="inventory" active="awaysTrue">bau</item>
 	</state>
 	<inventory>
-		<item id="chave" active="true">
+		<item id="chave">
 			<description>
 				Uma chave velha de metal, mas polida pelo uso.
 			</description>
@@ -13,7 +18,7 @@
 			<use>
 				<condition>
 					<has>chave</has>
-					<at>room 2</at>
+					<at>2</at>
 				</condition>
 				<action>
 					<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bauzinho!</print>
@@ -30,7 +35,7 @@
 				</action>
 			</use>
 		</item>
-		<item id="bau" active="awaysTrue">
+		<item id="bau">
 			<description>
 				Um bau pequeno e misterioso. 
 			</description>
@@ -39,7 +44,7 @@
 			</descriptionDroped>
 			<use></use>
 		</item>
-		<item id="diamante" active="false">
+		<item id="diamante">
 			<description>
 				Uau! um diamante de verdade!
 			</description>
@@ -56,10 +61,9 @@
 		<description>
 		Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor.
 		</description>
-		<item>chave</item>
 		<monster></monster>
 		<NextRoom>
-			<north>room 2</north>
+			<north>2</north>
 			<west></west>
 			<east></east>
 			<south></south>
@@ -70,16 +74,17 @@
 		Uma sala bem iluminada a frente.
 		</shortDescription>
 		<description>
-		algumacoisa.
+		Ao entrar na sala, vejo o lindo chão de parquê encerado com vinte e uma classes e suas respectivas cadeiras, além de minha mesa e cadeira, que fica ao lado do quadro. Sob este fica o apagador e os gizes coloridos.
+		Observo também o teto de PVC, com as seis lâmpadas florescentes e o ventilador de ferro. Ao lado das janelas vasculantes com vista para o gramado da escola e para um terreno vizinho com plantações de bananeiras, fica um armário marrom de madeira com duas portas, onde são guardados os livros dos alunos.
+		A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
 		</description>
-		<item>bau</item>
 		<item>diamante</item>
 		<monster></monster>
 		<NextRoom>
 			<north></north>
 			<west></west>
 			<east></east>
-			<south>room 1</south>
+			<south>1</south>
 		</NextRoom>
 	</room>
 </xml>

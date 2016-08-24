@@ -22,20 +22,26 @@ function loadInventory(inventory){
 }
 
 function carregaSala(xhttp){
-	//nSala(xhttp);
+	nSala(xhttp);
 	descriptionRoom(xhttp);	
 }
 xhttp.open("GET", "http://pedropva.esy.es/rooms.xml", false);//aqui determina o carregamento assincrono
 xhttp.send();
 
-/* acho que iss nao é necessaerio
-function nSala(){
+
+function nSala(){//bota no numero da sala no canto da div :)SERIA UMA BOA ESCREVER NO STATE ONDE ELE TA
    document.getElementById("roomNumber").innerHTML ="Sala: "+ parseInt(salaAtual+1);
 }
-*/
 function tutorial(){
 	feedBackHistory("Olá! Bem vindo! Para começar a jogar primeiro voçe tem que aprender os comandos:");
-	feedBackHistory("Inventory/i: É o inventario do jogo");
+	feedBackHistory("inventory ou i: Mostra o inventario atual do jogador(vc).");
+	feedBackHistory("go <where>: Serve pra se movimentar entre as salas.");
+	feedBackHistory("<where>: É pra onde ir,north/n,south/s,west/w e east/e.");
+	feedBackHistory("look <where> ou <what>: Serve pra tentar prever o que vai ter na sala,cuidado ao entrar em salas que vc nao olhou primeiro!");
+	feedBackHistory("<where>: É observar melhor, pode ser iten ou um desafio.");
+	feedBackHistory("pick/take <what>: Com esse comando vc pega um iten selecionado!");
+	feedBackHistory("drop <what>: Solta o iten do inventario no chao.");
+	feedBackHistory("use <what> on <what>: Usa um iten em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele iten.");
 }
 function descriptionRoom(xml){//tem que mostrar as descriptions dos items tbm
 	var xmlDoc = xml.responseXML;
@@ -109,7 +115,12 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 			case "i":    	
 				seeInventory(xhttp);
 				break;
+			case "drop":    	
+				feedBackHistory("Isso nao ta implementado ainda nerdao!");
+				drop(xhttp);
+				break;
 			case "use":    	
+				feedBackHistory("Isso nao ta implementado ainda nerdao!");
 				use(res[1],res[2],xhttp);
 				break;
 		    default:
@@ -119,16 +130,15 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 	    
       	return false;
     }
-}//lembra de por historico de comandos e talz
-function pick(what,xml){//pick TA DANDO ERRO ELE TA PEGANDO O ITEN ERRADO
+}
+function pick(what,xmlStatus){//pick TA DANDO ERRO ELE TA PEGANDO O ITEN ERRADO,OLHA ELE TEM QUE RECEBER O XML STATUS
 	var active = isActive(what,xml);
 	if(active != "alwaysTrue" ||  active != "false"){
-		var xmlDoc = xml.responseXML;
-		var CurRoom=xmlDoc.getElementsByTagName("room")[salaAtual];
-		var items=CurRoom.getElementsByTagName("item");
+		var xmlDoc = xmlStaus.responseXML;
+		var items=xmlDoc.getElementsByTagName("item");
 		for (var i = items.length - 1; i >= 0; i--){
-			if(items[i].childNodes[0].nodeValue == what){
-				inventory[inventory.length]= items[0].childNodes[0].nodeValue;
+			if(items[i].childNodes[0].nodeValue == what && items[i].getAttribute('where') == salaAtual){
+				inventory[inventory.length]= items[i].childNodes[0].nodeValue;
 				feedBackHistory("Pegou "+ what + "!");
 			}
 		}
@@ -136,13 +146,15 @@ function pick(what,xml){//pick TA DANDO ERRO ELE TA PEGANDO O ITEN ERRADO
 		feedBackHistory("Não dá consigo pegar isso!");
 	}
 }
-function isActive(what,xml){//BUSCA O ITEN NO INVENTARIO MUA MIGO cuidado com a linha 118 ja fiz o response
-	var xmlDoc = xml.responseXML;
-	var inventory = xmlDoc.getElementsByTagName("inventory")[0];
-	var items = inventory.getElementsByTagName("item");
+function drop(xmlStatus){
+	
+}
+function isActive(what,xmlStatus){//ELE RECEBE O XML STATUS
+	var xmlDoc = xmlStatus.responseXML;
+	var items = xmlDoc.getElementsByTagName("item");
 	for (var i = items.length - 1; i >= 0; i--){
 		if(items[i].getAttribute('id') == what){
-			return items[i].getElementsByTagName("active");
+			return items[i].getAttribute('active');
 		}
 	}
 }
@@ -168,9 +180,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 		case "north":
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				feedBackHistory("Entrando na sala "+numberNext[1]);				
-				salaAtual = parseInt(numberNext[1])-1;
+				feedBackHistory("Entrando na sala "+numberNext);				
+				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
 				feedBackHistory("tem nada pra frente");
@@ -179,9 +190,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 		case "south":
 			if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				feedBackHistory("Entrando na sala "+numberNext[1]);
-				salaAtual = parseInt(numberNext[1])-1;
+				feedBackHistory("Entrando na sala "+numberNext);
+				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
 				feedBackHistory("tem nada pra tras");
@@ -190,9 +200,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 		case "west":
 			if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				feedBackHistory("Entrando na sala "+numberNext[1]);
-				salaAtual = parseInt(numberNext[1])-1;
+				feedBackHistory("Entrando na sala "+numberNext);
+				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
 				feedBackHistory("tem nada pra esquerda");
@@ -202,9 +211,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 		case "east":
 			if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				feedBackHistory("Entrando na sala "+numberNext[1]);
-				salaAtual = parseInt(numberNext[1])-1;
+				feedBackHistory("Entrando na sala "+numberNext);
+				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
 				feedBackHistory("tem nada pra direita");
@@ -223,10 +231,9 @@ function look(where,xml){//tem que descrever a proxima sala e funcionar pra ver 
 		case "north": 
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){//tem que aceitar tag vazia tbm 
 				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext[1])-1];
+				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
 				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext[1] + '" escrito sobre ela.' + shortDescription);
+				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription);
 			}else{
 				feedBackHistory("nao tem nada a frente");
 			}
@@ -234,10 +241,9 @@ function look(where,xml){//tem que descrever a proxima sala e funcionar pra ver 
 		case "south":
 			if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext[1])-1];
+				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
 				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela'+ shortDescription);
+				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
 			}else{
 				feedBackHistory("nao tem nada pra tras");
 			}
@@ -245,10 +251,9 @@ function look(where,xml){//tem que descrever a proxima sala e funcionar pra ver 
 		case "west":
 			if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext[1])-1];
+				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
 				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela'+ shortDescription);
+				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
 			}else{
 				feedBackHistory("nao tem nada pra esquerda");
 			}
@@ -256,10 +261,9 @@ function look(where,xml){//tem que descrever a proxima sala e funcionar pra ver 
 		case "east":
 			if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
-				numberNext = numberNext.split(" ");
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext[1])-1];
+				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
 				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext[1] + '"escrito sobre ela'+ shortDescription);
+				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
 			}else{
 				feedBackHistory("nao tem nada pra direita");
 			}
