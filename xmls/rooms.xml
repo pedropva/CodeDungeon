@@ -5,7 +5,7 @@
 		</curRoom>
 		<item where="1" active="true">chave</item>
 		<item where="2" active="false">diamond</item>
-		<item where="inventory" active="awaysTrue">bau</item>
+		<item where="2" active="awaysTrue">bau</item>
 	</state>
 	<inventory>
 		<item id="chave">
@@ -18,6 +18,7 @@
 			<use>
 				<condition>
 					<has>chave</has>
+					<in>bau</in>
 					<at>2</at>
 				</condition>
 				<action>
