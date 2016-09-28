@@ -1,0 +1,8 @@
+	<state>
+		<curRoom>
+			1
+		</curRoom>
+		<item id="chave" where="1" active="true"></item>
+		<item id="diamante" where="2" active="false"></item>
+		<item id="bau" where="2" active="alwaysTrue"></item>
+	</state>
