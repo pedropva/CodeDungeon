@@ -1,8 +1,8 @@
 	<state>
 		<curRoom>
-			1
+			0
 		</curRoom>
-		<item id="chave" where="1" active="true"></item>
-		<item id="diamond" where="2" active="false"></item>
-		<item id="bau" where="inventory" active="awaysTrue"></item>
+		<item where="1" active="true">chave</item>
+		<item where="2" active="false">diamond</item>
+		<item where="inventory" active="awaysTrue">bau</item>
 	</state>
