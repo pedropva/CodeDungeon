@@ -4,11 +4,28 @@
 		<title>
 			Code Dungeon
 		</title>
+
+		<script type="text/javascript" src="js/angular.min.js"> </script>
+		<script type="text/javascript" src="js/app.js"> </script>
 	</head>
-	<body>
+	<body ng-app="room">
 			<h1 class="title" id="gameTitle" align="center">
 				Code Dungeon!
 			</h1>
+			<div ng-controller="GreetingController">
+				<ul>
+					<li ng-repeat="item in state.item">
+						{{ item.id + item.where + item.active }}</br>
+						<a ng-click="shout(item.id)">aqui</a>
+					</li>
+				</ul>
+
+				<input type="text" ng-model="state.item[0].id"/>
+				</br>
+				<a ng-click="getData()">data</a>
+				</br>
+				<a ng-click="sendData()">send</a>
+			</div>
 			<div class="divSecond">
 				<p class="roomNumber" id="roomNumber">
 				</p>
@@ -22,6 +39,6 @@
 				</div>
 				<br>
 			</div>
-			<script src="room.js"></script>
+			<!-- <script src="room.js"></script> -->
 	</body>
 </html>

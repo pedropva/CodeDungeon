@@ -1,0 +1,85 @@
+<xml>
+	<state>
+		<curRoom>
+			0
+		</curRoom>
+		<item where="1" active="true">chave</item>
+		<item where="2" active="false">diamante</item>
+		<item where="2" active="alwaysTrue">bau</item>
+	</state>
+	<inventory>
+		<item id="chave">
+			<description>
+				Uma chave velha de metal, mas polida pelo uso.
+			</description>
+			<descriptionDroped>
+				Uma chave esta jogada no chao entre os tijolos do chao.
+			</descriptionDroped>
+			<use>
+				<in what="bau">
+					<conditions>
+						<has>chave</has>	
+						<at>2</at>
+					</conditions>
+					<action>
+						<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bau velho!</print>
+						<give>diamante</give> 
+						<extract>chave</extract>
+						<do>
+							<victim>bau</victim>
+							<property>where</property>
+							<value>3</value>
+						</do>
+					</action>
+				</in>
+			</use>
+		</item>
+		<item id="bau">
+			<description>Um bau velho e grande,mas parece estar vazio pela falta de peso a mais.</description>
+			<descriptionDroped>
+				Um bau jaz num canto da sala.
+			</descriptionDroped>
+			<use></use>
+		</item>
+		<item id="diamante">
+			<description>
+				Uau! um diamante de verdade!
+			</description>
+			<descriptionDroped>
+				Tem um diamante no chao tambem!
+			</descriptionDroped>
+			<use></use>
+		</item>
+	</inventory>
+	<room id="1">
+		<shortDescription>
+		Uma sala escura.
+		</shortDescription>
+		<description>
+		Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor.
+		</description>
+		<monster></monster>
+		<NextRoom>
+			<north>2</north>
+			<west></west>
+			<east></east>
+			<south></south>
+		</NextRoom>
+	</room>
+	<room id="2">
+		<shortDescription>
+		Uma sala bem iluminada.
+		</shortDescription>
+		<description>
+		Ao entrar na sala, vejo o lindo chão de parquê encerado com vinte e uma classes e suas respectivas cadeiras, além de minha mesa e cadeira, que fica ao lado do quadro. Sob este fica o apagador e os gizes coloridos.
+		A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+		</description>
+		<monster></monster>
+		<NextRoom>
+			<north></north>
+			<west></west>
+			<east></east>
+			<south>1</south>
+		</NextRoom>
+	</room>
+</xml>
