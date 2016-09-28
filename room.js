@@ -2,8 +2,13 @@
  * Created by LAWS on 08/07/2016.
  */
 //um programa pra formatar o xml
+<<<<<<< HEAD
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
+=======
+var items = [];
+var inventory = [];
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
@@ -11,6 +16,7 @@ var xhttp2 = new XMLHttpRequest();
 tutorial();
 carregaTudo();
 
+<<<<<<< HEAD
 function atualizaState(id,where,active){
 	//http://stackoverflow.com/questions/14340894/create-xml-in-javascript
 	//http://www.w3schools.com/xml/dom_nodes_create.asp
@@ -27,6 +33,16 @@ function atualizaState(id,where,active){
 }
 
 function item(id,where,active){//isso eh meio que uma classe...
+=======
+function atualizaState(){
+	xmlDoc = xhttp2.responseXML;
+	newAtt = xmlDoc.createAttribute("where");
+	newAtt.nodeValue = items[0].getWhere();
+	xmlDoc.getElementsByTagName("item")[0].setAttributeNode(newAtt);
+}
+
+function item(id,where,active){
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	this.id = id;
 	this.where = where;
 	this.active = active;
@@ -46,6 +62,7 @@ function item(id,where,active){//isso eh meio que uma classe...
 		return this.active;
 	}
 
+<<<<<<< HEAD
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -102,15 +119,75 @@ function loadGame(xml){
 		var active= xmlDoc.getElementsByTagName("item")[i].getAttribute('active');
 		items[i] = new item(id,where,active);
 	}
+=======
+	this.setId= function(){
+		this.id=id;
+	}
+
+	this.setWhere= function(){
+		this.where=where;
+	}
+
+	this.setActive= function(){
+		this.active=active;
+	}
+}
+
+function carregaTudo(){
+	xhttp2.onreadystatechange = function() {
+		if (xhttp2.readyState == 4 && xhttp2.status == 200) {
+			loadGame(xhttp2);
+		}else{
+			//feedBackHistory("Erro ao conectar ao servidor!"); 
+		}
+	};
+	xhttp.onreadystatechange = function() {
+		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			carregaSala(xhttp);
+		}else{
+			//cria o arquivo de save
+			function test(){    
+				var v = new  XMLWriter();
+				v.writeStartDocument(true);
+				v.writeElementString('test','Hello World');
+				v.writeAttributeString('foo','bar');
+				v.writeEndDocument();
+				console.log( v.flush() );
+			} 
+		}
+	};
+	//testa se ja tem algum inventaro salvo
+	//TODO esse teste ^
+	xhttp2.open("GET", "http://pedropva.esy.es/state.xml", false);//aqui determina o carregamento assincrono
+	xhttp2.send();
+	xhttp.open("GET", "http://pedropva.esy.es/rooms.xml", false);//aqui determina o carregamento assincrono
+	xhttp.send();
+}
+function loadGame(xml){
+	var xmlDoc = xml.responseXML;
+	salaAtual = parseInt(xmlDoc.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
+	for(var i=0;i<xmlDoc.getElementsByTagName("item").length;i++){
+		var id=	xmlDoc.getElementsByTagName("item")[i].getAttribute('id');
+		var where= xmlDoc.getElementsByTagName("item")[i].getAttribute('where');
+		var active= xmlDoc.getElementsByTagName("item")[i].getAttribute('active');
+		items[i] = new item(id,where,active);
+	}
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 }
 
 function carregaSala(xhttp){
 	nSala(xhttp);
 	descriptionRoom(xhttp);	
 }
+<<<<<<< HEAD
 
 function nSala(){//bota no numero da sala no canto da div :)
 	
+=======
+
+
+function nSala(){//bota no numero da sala no canto da div :)
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	document.getElementById("roomNumber").innerHTML ="Sala: "+ parseInt(salaAtual+1);
 }
 
@@ -123,13 +200,18 @@ function tutorial(){
 	feedBackHistory("-<where>: Eh observar melhor, pode ser iten ou um desafio.");
 	feedBackHistory("-pick/take <what>: Com esse comando vc pega um item selecionado!");
 	feedBackHistory("-drop <what>: Solta o item do inventario no chao.");
+<<<<<<< HEAD
 	feedBackHistory("-use <what> on <what>: Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele item.");
+=======
+	feedBackHistory("-use <what> on <what>: Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele iten.");
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	feedBackHistory("Eh isso!Boa sorte!");
 }
 
 function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o item continua aparecendo :(
 	var xmlDoc = xml.responseXML;
 	var descriptionDroped="";
+<<<<<<< HEAD
 	var inventoryXML;
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 
@@ -140,6 +222,16 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 			for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
 					descriptionDroped = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
+=======
+	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("room")[salaAtual].getElementsByTagName("description")[0].childNodes[0].nodeValue;	
+	for(var i=0;i<items.length-1;i++){
+		if(items[i].getActive() == "true" && items[i].getWhere() == (salaAtual+1)){
+			feedBackHistory("tentei1");
+			for(var j=0;j<xmlDoc.getElementsByTagName("item").lenght;j++){
+				if(xmlDoc.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
+					descriptionDroped = xmlDoc.getElementsByTagName("item")[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
+					feedBackHistory(desriptionDroped);
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 				}
 			}
 			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
@@ -152,8 +244,13 @@ function CommandHistory(text) {
 	var br = document.createElement("br");
 	var t = document.createTextNode(text);
 	b.appendChild(t);
+<<<<<<< HEAD
 	document.getElementById("scrollDiv").appendChild(b);
 	document.getElementById("scrollDiv").appendChild(br);
+=======
+	document.getElementById("scrollDiv").appendChild(br);
+	document.getElementById("scrollDiv").appendChild(b);
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	updateScroll();
 }
 
@@ -162,8 +259,13 @@ function feedBackHistory(text) {
 	var br = document.createElement("br");
 	var t = document.createTextNode(text);
 	b.appendChild(t);
+<<<<<<< HEAD
 	document.getElementById("scrollDiv").appendChild(b);
 	document.getElementById("scrollDiv").appendChild(br);
+=======
+	document.getElementById("scrollDiv").appendChild(br);
+	document.getElementById("scrollDiv").appendChild(b);
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	updateScroll();
 }
 
@@ -180,13 +282,17 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 		// Enter pressed
 		var texto;
 		texto = document.getElementById("CommandInput").value;
+<<<<<<< HEAD
 		texto=texto.toLowerCase();
 		document.getElementById("CommandInput").value = "";
+=======
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 		CommandHistory(texto);
 		var res = texto.split(" ");
 		switch(res[0]){
 		case "go":    
 			switch(res[1]){
+<<<<<<< HEAD
 				case "n":
 					res[1]="north";
 					break;
@@ -217,6 +323,24 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 					res[1]="east";
 					break;
 			}	    	
+=======
+			case "n":
+				res[1]="north";
+				break;
+			case "s":
+				res[1]="south";
+				break;
+			case "w":
+				res[1]="west";
+				break;
+			case "e":
+				res[1]="east";
+				break;
+			}	
+			go(res[1],xhttp);    
+			break;
+		case "look":    	
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 			look(res[1],xhttp);
 			break;
 		case "pick":    	
@@ -231,17 +355,28 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 		case "i":    	
 			seeInventory();
 			break;
+<<<<<<< HEAD
 		case "ni":    	
 			seeNotInventory();
 			break;
 		case "connect":    	
 			connect(res[1]);
 			break;
+=======
+		case "Ni":    	
+			seeNotInventory();
+			break;
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 		case "drop":    	
 			drop(res[1]);
 			break;
 		case "use":    	
+<<<<<<< HEAD
 			use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
+=======
+			feedBackHistory("Isso nao ta implementado ainda nerdao!");
+			use(res[1],res[2],xhttp);
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 			break;
 		default:
 			feedBackHistory("Isso nao faz sentido!");
@@ -251,6 +386,7 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 		return false;
 	}
 }
+<<<<<<< HEAD
 
 function pick(what){
 	for(var i = items.length - 1; i >= 0; i--){
@@ -265,12 +401,32 @@ function pick(what){
 			}else{
 				feedBackHistory("Nao consigo pegar isso!");//tem no jogo mas n tem no inventario
 				return;
+=======
+function pick(what){//ele n ta checando se existe
+	var active = isActive(what);
+	if(active != "naoTem" &&  active != "false"){
+		if(active != "alwaysTrue"){
+			for(var i = items.length - 1; i >= 0; i--){
+				if(items[i].getId() == what && items[i].getWhere() == (salaAtual+1)){
+					inventory[inventory.length]= items[i];
+					items.splice(i, 1);
+					feedBackHistory("Pegou "+ what + "!");
+				}
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 			}
+		}else{
+			feedBackHistory("Nao consigo pegar isso!");
 		}
+<<<<<<< HEAD
+=======
+	}else{
+		feedBackHistory("Nao vejo nenhum item assim!");
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	}
 	feedBackHistory("Nao vejo nenhum item assim!");//n tem no jogo
 }
 //tem que pensar no awaysfalse
+<<<<<<< HEAD
 //inventory[i].getId() == what
 //&& inventory[i].getWhere() == (salaAtual+1)
 function drop(what){
@@ -298,6 +454,38 @@ function drop(what){
 	}
 */
 
+=======
+function drop(what){
+	var active = isInInventory(what);
+	if(active != "naoTem" &&  active == "false"){
+		if(active == "alwaysTrue"){
+			for(var i = inventory.length - 1; i >= 0; i--){
+				if(inventory[i].getId() == what && inventory[i].getWhere() == (salaAtual+1)){
+					items[items.length]= inventory[i];
+					inventory.splice(i, 1);
+					feedBackHistory("Soltou "+ what + "!");
+				}
+			}
+		}else{
+			feedBackHistory("Nao consigo deixar isso!");
+		}
+	}else{
+		feedBackHistory("Nao tenho nenhum item assim");
+	}	
+}
+
+function isInInventory(what){
+	for(var i = inventory.length - 1; i >= 0; i--){
+		feedBackHistory(what);
+		feedBackHistory(inventory[i].getId());
+		if(inventory[i].getId().equals(what)){
+			return inventory[i].getActive();
+		}
+	}
+	return "naoTem";
+}
+
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 function isActive(what){
 	for (var i = items.length - 1; i >= 0; i--){
 		if(items[i].getId() == what){
@@ -560,49 +748,49 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 	var room = xmlDoc.getElementsByTagName("room")[salaAtual];
 	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	switch(where){
-		case "north":
-			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){
-				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
-				feedBackHistory("Entrando na sala "+numberNext);				
-				salaAtual = parseInt(numberNext)-1;
-				carregaSala(xhttp);
-			}else{
-				feedBackHistory("tem nada pra frente");
-			}
-			break;
-		case "south":
-			if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
-				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
-				feedBackHistory("Entrando na sala "+numberNext);
-				salaAtual = parseInt(numberNext)-1;
-				carregaSala(xhttp);
-			}else{
-				feedBackHistory("tem nada pra tras");
-			}
-			break;
-		case "west":
-			if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
-				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
-				feedBackHistory("Entrando na sala "+numberNext);
-				salaAtual = parseInt(numberNext)-1;
-				carregaSala(xhttp);
-			}else{
-				feedBackHistory("tem nada pra esquerda");
-			}
-			break;
+	case "north":
+		if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
+			feedBackHistory("Entrando na sala "+numberNext);				
+			salaAtual = parseInt(numberNext)-1;
+			carregaSala(xhttp);
+		}else{
+			feedBackHistory("tem nada pra frente");
+		}
+		break;
+	case "south":
+		if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
+			feedBackHistory("Entrando na sala "+numberNext);
+			salaAtual = parseInt(numberNext)-1;
+			carregaSala(xhttp);
+		}else{
+			feedBackHistory("tem nada pra tras");
+		}
+		break;
+	case "west":
+		if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
+			feedBackHistory("Entrando na sala "+numberNext);
+			salaAtual = parseInt(numberNext)-1;
+			carregaSala(xhttp);
+		}else{
+			feedBackHistory("tem nada pra esquerda");
+		}
+		break;
 
-		case "east":
-			if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
-				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
-				feedBackHistory("Entrando na sala "+numberNext);
-				salaAtual = parseInt(numberNext)-1;
-				carregaSala(xhttp);
-			}else{
-				feedBackHistory("tem nada pra direita");
-			}
-			break;
-		default:
-			feedBackHistory("nao tem nada que valha a pena andar");
+	case "east":
+		if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
+			feedBackHistory("Entrando na sala "+numberNext);
+			salaAtual = parseInt(numberNext)-1;
+			carregaSala(xhttp);
+		}else{
+			feedBackHistory("tem nada pra direita");
+		}
+		break;
+	default:
+		feedBackHistory("nao tem nada que valha a pena andar");
 	}
 }
 
@@ -614,6 +802,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 	var inventoryXML;
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 	switch(where){
+<<<<<<< HEAD
 		case "north": 
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){//se a tag n ta vazia
 				//http://stackoverflow.com/questions/10637467/prevent-javascript-from-breaking-when-xml-has-an-empty-node-value
@@ -680,5 +869,49 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 			}
 			feedBackHistory("nao consigo observar nada assim.");
 			break;
+=======
+	case "north": 
+		if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){//tem que aceitar tag vazia tbm 
+			numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
+			var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
+			var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
+			feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription);
+		}else{
+			feedBackHistory("nao tem nada a frente");
+		}
+		break;
+	case "south":
+		if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
+			var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
+			var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
+			feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
+		}else{
+			feedBackHistory("nao tem nada pra tras");
+		}
+		break;
+	case "west":
+		if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
+			var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
+			var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
+			feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
+		}else{
+			feedBackHistory("nao tem nada pra esquerda");
+		}
+		break;
+	case "east":
+		if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
+			numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
+			var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
+			var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
+			feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela'+ shortDescription);
+		}else{
+			feedBackHistory("nao tem nada pra direita");
+		}
+		break;
+	default:
+		feedBackHistory("nao tem nada que valha a pena olhar ai");
+>>>>>>> a98123039534e9a4b81a2ed9765ae3fc362411b8
 	}
 }
