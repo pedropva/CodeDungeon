@@ -68,7 +68,7 @@ function carregaTudo(){
 			//feedBackHistory("Carregando...");  
 		}
 	};
-	xhttp.open("GET", "http://pedropva.esy.es/rooms.xml", false);//aqui determina o carregamento assincrono
+	xhttp.open("GET", "rooms.xml", false);//aqui determina o carregamento assincrono
 	xhttp.send();
 }
 
@@ -89,7 +89,7 @@ function carregaState(){
 			
 		}
 	};
-	xhttp2.open("GET", "http://pedropva.esy.es/state.xml", false);//aqui determina o carregamento assincrono
+	xhttp2.open("GET", "state.xml", false);//aqui determina o carregamento assincrono
 	xhttp2.send();
 }
 
