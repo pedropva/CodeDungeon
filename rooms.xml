@@ -78,6 +78,7 @@
 		<NextRoom>
 			<north></north>
 			<west></west>
+<<<<<<< HEAD
 			<east>3</east>
 			<south>1</south>
 		</NextRoom>
@@ -95,6 +96,10 @@
 			<west>2</west>
 			<east></east>
 			<south></south>
+=======
+			<east></east>
+			<south>1</south>
+>>>>>>> master
 		</NextRoom>
 	</room>
 </xml>
