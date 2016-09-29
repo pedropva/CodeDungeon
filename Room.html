@@ -1,10 +1,15 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <html>
 	<head>
+
 		<link rel="stylesheet" href="style.css">
 		<title>
 			Code Dungeon
 		</title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="blockly/blockly_compressed.js"></script>
+		<script src="blockly/blocks_compressed.js"></script>
+		<script src="blockly/msg/js/pt-br.js"></script>
 	</head>
 	<body>
 			<h1 class="title" id="gameTitle" align="center">
@@ -26,6 +31,23 @@
 				</div>
 			</div>
 			<div id="overlay-back"></div>
+			<xml id="toolbox" style="display: none;">
+				<category name="Control" colour="410">
+					<block type="controls_if"></block>
+					<block type="controls_whileUntil"></block>
+					<block type="controls_for">
+				</category>
+				<category name="Logic" colour="210">
+					<block type="logic_compare"></block>
+					<block type="logic_operation"></block>
+					<block type="logic_boolean"></block>
+				</category>
+				<category name="Loops" colour="120">...</category>
+				<category name="Math" colour="230">...</category>
+				<category name="Colour" colour="20">...</category>
+				<category name="Variables" colour="330" custom="VARIABLE"></category>
+				<category name="Functions" colour="290" custom="PROCEDURE"></category>
+			</xml>
 			<script src="room.js"></script>
 	</body>
-</html>
+</html>	

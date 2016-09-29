@@ -10,6 +10,7 @@ var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
 tutorial();
 carregaTudo();
+//connect();
 
 function atualizaState(id,where,active){
 	//http://stackoverflow.com/questions/14340894/create-xml-in-javascript
@@ -373,17 +374,60 @@ function connect(what){
     divPopup.id = "overlay";
     var divCaixaResposta = document.createElement("DIV");
     divCaixaResposta.id = "caixaResposta";
-    para = document.createElement("p");
-    para.appendChild(document.createTextNode("Entrada Inválida! Verifique as Marcações em Vermelho"));
-    divCaixaResposta.appendChild(para);
-    divCaixaResposta.appendChild(document.createElement("BR"));
-   // divCaixaResposta.innerHTML += "<a href=\"#\" class=\"caixaRespostaButton\" onclick = \"loadHTMLOfQuestion("+(index)+"); return false;\">Try Again</a> ";
-    //divCaixaResposta.innerHTML += "<a href=\"#\" class=\"caixaRespostaButton\" onclick = \"loadHTMLOfMenu(); return false;\">Menu</a></div>";
+    divPopup.style.width = "85%";
+	divPopup.style.height = "85%";
+    
     divPopup.appendChild(divCaixaResposta);
     document.getElementById("divPrincipal").appendChild(divPopup);
     $(document).ready(function(){
         $('#overlay, #overlay-back').fadeIn(500);                
     });
+
+    //inserindo o blockly
+    var blocklyDiv = document.createElement("DIV");
+    blocklyDiv.id = "blocklyDiv";
+    blocklyDiv.style.position= "absolute";
+    blocklyDiv.style.width = "85%";
+	blocklyDiv.style.height = "85%";
+    document.getElementById("caixaResposta").appendChild(blocklyDiv);
+  
+   	//document.getElementById("caixaResposta").innerHTML += "<script src='blockly/blockly_compressed.js'></script><script src='blockly/blocks_compressed.js'></script>";
+    //document.getElementById("caixaResposta").innerHTML += "<script src='blockly/msg/js/pt-br.js'></script>";
+    //document.getElementById("caixaResposta").innerHTML += "<xml id='toolbox' style='display: none'><block type='controls_if'></block><block type='controls_repeat_ext'></block><block type='logic_compare'></block><block type='math_number'></block><block type='math_arithmetic'></block><block type='text'></block><block type='text_print'></block></xml>";
+    //document.getElementById("caixaResposta").innerHTML += "<script>var workspace = Blockly.inject(\"blocklyDiv\",{toolbox: document.getElementById(\"toolbox\")});</script>";
+  var workspace = Blockly.inject('blocklyDiv',
+      {toolbox: document.getElementById('toolbox')});
+    /*
+    var s = document.createElement("script");
+	s.type = "javascript";
+	s.text = "<script>var workspace = Blockly.inject('blocklyDiv',{toolbox: document.getElementById('toolbox')});</script>";
+	$("body").append(s);
+    */
+    //resizeBlockly();
+}
+function resizeBlockly(){
+	var blocklyArea = document.getElementById('caixaResposta');//BlocklyArea = caixa resposta
+  var blocklyDiv = document.getElementById('blocklyDiv');
+  var workspace = Blockly.inject(blocklyDiv,{toolbox: document.getElementById('toolbox')});
+  var onresize = function(e) {
+    // Compute the absolute coordinates and dimensions of blocklyArea.
+    var element = blocklyArea;
+    var x = 0;
+    var y = 0;
+    do {
+      x += element.offsetLeft;
+      y += element.offsetTop;
+      element = element.offsetParent;
+    } while (element);
+    // Position blocklyDiv over blocklyArea.
+    blocklyDiv.style.left = x + 'px';
+    blocklyDiv.style.top = y + 'px';
+    blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+  };
+  window.addEventListener('resize', onresize, false);
+  onresize();
+  Blockly.svgResize(workspace);
 }
 
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario
