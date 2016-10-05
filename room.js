@@ -8,6 +8,7 @@ var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id 
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
+var workspace;
 tutorial();
 carregaTudo();
 //connect();
@@ -31,6 +32,7 @@ function item(id,where,active){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
+	
 
 	this.getInfo = function() {
 		return this.color + ' ' + this.type + ' apple';
@@ -368,43 +370,71 @@ function give(what){
 		}
 	}
 }
-
+function disconnect(){
+	 $(document).ready(function(){
+        $('#overlay, #overlay-back').fadeOut(500);                
+    });
+}
 function connect(what){
-    var divPopup = document.createElement("DIV");
-    divPopup.id = "overlay";
-    var divCaixaResposta = document.createElement("DIV");
-    divCaixaResposta.id = "caixaResposta";
-    divPopup.style.width = "85%";
-	divPopup.style.height = "85%";
     
-    divPopup.appendChild(divCaixaResposta);
-    document.getElementById("divPrincipal").appendChild(divPopup);
+    if(document.getElementById("overlay") == null){
+    	var divPopup = document.createElement("DIV");
+	    divPopup.id = "overlay";
+	    var divCaixaResposta = document.createElement("DIV");
+	    divCaixaResposta.id = "caixaResposta";
+	    divPopup.style.width = "85%";
+		divPopup.style.height = "85%";
+	    
+	    divPopup.appendChild(divCaixaResposta);
+	    document.getElementById("divPrincipal").appendChild(divPopup);
+    }
+
     $(document).ready(function(){
         $('#overlay, #overlay-back').fadeIn(500);                
     });
+    
+    if(document.getElementById("blocklyDiv") == null){
+	    //inserindo o blockly
+	    var blocklyDiv = document.createElement("DIV");
+	    blocklyDiv.id = "blocklyDiv";
+	    blocklyDiv.style.position= "absolute";
+	    blocklyDiv.style.width = "45%";
+		blocklyDiv.style.height = "95%";
+	    document.getElementById("caixaResposta").appendChild(blocklyDiv);
 
-    //inserindo o blockly
-    var blocklyDiv = document.createElement("DIV");
-    blocklyDiv.id = "blocklyDiv";
-    blocklyDiv.style.position= "absolute";
-    blocklyDiv.style.width = "85%";
-	blocklyDiv.style.height = "85%";
-    document.getElementById("caixaResposta").appendChild(blocklyDiv);
-  
-   	//document.getElementById("caixaResposta").innerHTML += "<script src='blockly/blockly_compressed.js'></script><script src='blockly/blocks_compressed.js'></script>";
-    //document.getElementById("caixaResposta").innerHTML += "<script src='blockly/msg/js/pt-br.js'></script>";
-    //document.getElementById("caixaResposta").innerHTML += "<xml id='toolbox' style='display: none'><block type='controls_if'></block><block type='controls_repeat_ext'></block><block type='logic_compare'></block><block type='math_number'></block><block type='math_arithmetic'></block><block type='text'></block><block type='text_print'></block></xml>";
-    //document.getElementById("caixaResposta").innerHTML += "<script>var workspace = Blockly.inject(\"blocklyDiv\",{toolbox: document.getElementById(\"toolbox\")});</script>";
-  var workspace = Blockly.inject('blocklyDiv',
-      {toolbox: document.getElementById('toolbox')});
-    /*
-    var s = document.createElement("script");
-	s.type = "javascript";
-	s.text = "<script>var workspace = Blockly.inject('blocklyDiv',{toolbox: document.getElementById('toolbox')});</script>";
-	$("body").append(s);
-    */
-    //resizeBlockly();
+	    //inserindo a div do script
+	    var codeDiv = document.createElement("DIV");
+	    codeDiv.id = "codeDiv";
+		codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
+		codeDiv.innerHTML += "<div id=\"code\"></div>";
+	    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
+	    document.getElementById("caixaResposta").appendChild(codeDiv);
+	  	
+	   	document.getElementById("caixaResposta").innerHTML += "<input type=\"submit\" class=\"btn\" value=\"Enter\" onclick=\"disconnect();\">"
+	    
+	   	workspace = Blockly.inject('blocklyDiv',
+	    {toolbox: document.getElementById('toolbox'),
+	     zoom:
+	         {controls: true,
+	          wheel: true,
+	          startScale: 1.0,
+	          maxScale: 3,
+	          minScale: 0.3,
+	          scaleSpeed: 1.2},
+	     trashcan: true});
+	   	
+	  	workspace.addChangeListener(updateCode);
+	}
+
+	updateCode();
 }
+function updateCode(event) {
+
+  var code = "<br><br>"+Blockly.JavaScript.workspaceToCode(workspace);
+  //alert(code);
+  document.getElementById('code').innerHTML = code;
+}
+
 function resizeBlockly(){
 	var blocklyArea = document.getElementById('caixaResposta');//BlocklyArea = caixa resposta
   var blocklyDiv = document.getElementById('blocklyDiv');
