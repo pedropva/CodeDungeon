@@ -4,6 +4,7 @@
 //um programa pra formatar o xml
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
+var monsters = [];
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
@@ -34,9 +35,6 @@ function item(id,where,active){//isso eh meio que uma classe...
 	this.active = active;
 	
 
-	this.getInfo = function() {
-		return this.color + ' ' + this.type + ' apple';
-	};
 	this.getId= function(){
 		return this.id;
 	}
@@ -59,6 +57,47 @@ function item(id,where,active){//isso eh meio que uma classe...
 
 	this.setActive= function(active){
 		this.active=active;
+	}
+}
+
+function monster(id,where,active,alive){//isso eh meio que uma classe...
+	this.id = id;
+	this.where = where;
+	this.active = active;
+	this.alive = alive;
+	
+
+	
+	this.getId= function(){
+		return this.id;
+	}
+
+	this.getWhere= function(){
+		return this.where;
+	}
+
+	this.getActive= function(){
+		return this.active;
+	}
+
+	this.getAlive= function(){
+		return this.alive;
+	}
+
+	this.setId= function(id){
+		this.id=id;
+	}
+
+	this.setWhere= function(where){
+		this.where=where;
+	}
+
+	this.setActive= function(active){
+		this.active=active;
+	}
+
+	this.setAlive= function(alive){
+		this.alive=alive;
 	}
 }
 
@@ -98,11 +137,31 @@ function carregaState(){
 
 function loadGame(xml){
 	var xmlDoc = xml.responseXML;
-	salaAtual = parseInt(xmlDoc.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
-	for(var i=0;i<xmlDoc.getElementsByTagName("item").length;i++){
-		var id=	xmlDoc.getElementsByTagName("item")[i].getAttribute('id');
-		var where= xmlDoc.getElementsByTagName("item")[i].getAttribute('where');
-		var active= xmlDoc.getElementsByTagName("item")[i].getAttribute('active');
+	var statusXML = xmlDoc.getElementsByTagName("state")[0];
+	
+	var id ="";
+	var where = "";
+	var active ="";
+	var alive ="";
+
+	salaAtual = parseInt(statusXML.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
+	
+	//carrega os monstru
+	var monsterr = statusXML.getElementsByTagName("monster");
+	for(var i=0;i<monsterr.length;i++){
+		id=	monsterr[i].getAttribute('id');
+		where= monsterr[i].getAttribute('where');
+		active= monsterr[i].getAttribute('active');
+		alive = monsterr[i].childNodes[0].nodeValue;
+		monsters[i] = new item(id,where,active,alive);
+	}
+	
+	//carreaga os item
+	var itemm = statusXML.getElementsByTagName("item");
+	for(var i=0;i<itemm.length;i++){
+		id=	itemm[i].getAttribute('id');
+		where= itemm[i].getAttribute('where');
+		active= itemm[i].getAttribute('active');
 		items[i] = new item(id,where,active);
 	}
 }
@@ -135,17 +194,35 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 	var descriptionDroped="";
 	var inventoryXML;
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+	var itemm = inventoryXML.getElementsByTagName("item");
+	var monsterr = bestiaryXML.getElementsByTagName("monster");
 
 	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("room")[salaAtual].getElementsByTagName("description")[0].childNodes[0].nodeValue;	
-
+	//adiciona a descricao de items no chao
 	for (var i = items.length - 1; i >= 0; i--) {
 		if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
-			for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
-				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
-					descriptionDroped = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
+			for(var j=0;j < itemm.length ;j++){
+				if(itemm[j].getAttribute('id') == items[i].getId()){
+					descriptionDroped = itemm[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
 				}
 			}
 			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
+		}
+	}
+	//adiciona a descricao de monstros no chao
+	for (var i = monsters.length - 1; i >= 0; i--) {
+		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1))){			
+			for(var j=0;j < monsterr.length ;j++){
+				if(monsterr[j].getAttribute('id') == monsters[i].getId()){
+					if(monsterr[j].childNodes[0].nodeValue == "alive" ){
+						document.getElementById("descriptionRoom").innerHTML += monsterr[j].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+					}
+					else{
+						document.getElementById("descriptionRoom").innerHTML += monsterr[j].getElementsByTagName("descriptionDead")[0].childNodes[0].nodeValue;
+					}		
+				}
+			}
 		}
 	}
 }
@@ -238,7 +315,7 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 			seeNotInventory();
 			break;
 		case "connect":    	
-			connect(res[1]);
+			connect(xhttp,res[1]);
 			break;
 		case "drop":    	
 			drop(res[1]);
@@ -375,89 +452,83 @@ function disconnect(){
         $('#overlay, #overlay-back').fadeOut(500);                
     });
 }
-function connect(what){
-    
-    if(document.getElementById("overlay") == null){
-    	var divPopup = document.createElement("DIV");
-	    divPopup.id = "overlay";
-	    var divCaixaResposta = document.createElement("DIV");
-	    divCaixaResposta.id = "caixaResposta";
-	    divPopup.style.width = "85%";
-		divPopup.style.height = "85%";
-	    
-	    divPopup.appendChild(divCaixaResposta);
-	    document.getElementById("divPrincipal").appendChild(divPopup);
-    }
+function connect(xml,what){
+	var xmlDoc = xml.responseXML;
+    bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+    var monsterr = bestiaryXML.getElementsByTagName("monster");
+    connected = false;
+    chalenge = "";
+    for (var i = monsters.length - 1; i >= 0; i--) {
+	  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
+	  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+	  				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
+	  					alert(monsterr[j].getAttribute("id"));
+	  					chalenge = monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
+	  					connected = true;
+	  				}
+	  			}
+	  		}else{
+	  			feedBackHistory("Nao consigo ver nada isso!");
+	  		}
+	  	}
+	if(connected == true){
+	    if(document.getElementById("overlay") == null){
+	    	var divPopup = document.createElement("DIV");
+		    divPopup.id = "overlay";
+		    var divCaixaResposta = document.createElement("DIV");
+		    divCaixaResposta.id = "caixaResposta";
+		    divPopup.style.width = "85%";
+			divPopup.style.height = "85%";
+		    
+		    divPopup.appendChild(divCaixaResposta);
+		    document.getElementById("divPrincipal").appendChild(divPopup);
+	    }
 
-    $(document).ready(function(){
-        $('#overlay, #overlay-back').fadeIn(500);                
-    });
-    
-    if(document.getElementById("blocklyDiv") == null){
-	    //inserindo o blockly
-	    var blocklyDiv = document.createElement("DIV");
-	    blocklyDiv.id = "blocklyDiv";
-	    blocklyDiv.style.position= "absolute";
-	    blocklyDiv.style.width = "45%";
-		blocklyDiv.style.height = "95%";
-	    document.getElementById("caixaResposta").appendChild(blocklyDiv);
-
-	    //inserindo a div do script
-	    var codeDiv = document.createElement("DIV");
-	    codeDiv.id = "codeDiv";
-		codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
-		codeDiv.innerHTML += "<div id=\"code\"></div>";
-	    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
-	    document.getElementById("caixaResposta").appendChild(codeDiv);
-	  	
-	   	document.getElementById("caixaResposta").innerHTML += "<input type=\"submit\" class=\"btn\" value=\"Enter\" onclick=\"disconnect();\">"
+	    $(document).ready(function(){
+	        $('#overlay, #overlay-back').fadeIn(500);                
+	    });
 	    
-	   	workspace = Blockly.inject('blocklyDiv',
-	    {toolbox: document.getElementById('toolbox'),
-	     zoom:
-	         {controls: true,
-	          wheel: true,
-	          startScale: 1.0,
-	          maxScale: 3,
-	          minScale: 0.3,
-	          scaleSpeed: 1.2},
-	     trashcan: true});
-	   	
-	  	workspace.addChangeListener(updateCode);
+	    if(document.getElementById("blocklyDiv") == null){
+		    //inserindo o blockly
+		    var blocklyDiv = document.createElement("DIV");
+		    blocklyDiv.id = "blocklyDiv";
+		    blocklyDiv.style.position= "absolute";
+		    blocklyDiv.style.width = "45%";
+			blocklyDiv.style.height = "95%";
+		    document.getElementById("caixaResposta").appendChild(blocklyDiv);
+
+		    //inserindo a div do script
+		    var codeDiv = document.createElement("DIV");
+		    codeDiv.id = "codeDiv";
+			codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
+			codeDiv.innerHTML += "<div id=\"code\"></div>";
+		    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
+		    document.getElementById("caixaResposta").appendChild(codeDiv);
+		  	
+		   	document.getElementById("caixaResposta").innerHTML += "<input type=\"submit\" class=\"btn\" value=\"Enter\" onclick=\"disconnect();\">"
+		    
+		   	workspace = Blockly.inject('blocklyDiv',
+		    {toolbox: document.getElementById('toolbox'),
+		     zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		     trashcan: true});
+		   	
+		  	workspace.addChangeListener(updateCode);
+		}
+		document.getElementById("chalenge").innerHTML += chalenge;
+		updateCode();
 	}
-
-	updateCode();
 }
 function updateCode(event) {
 
-  var code = "<br><br>"+Blockly.JavaScript.workspaceToCode(workspace);
+  var code = "<br><br><pre>"+Blockly.JavaScript.workspaceToCode(workspace)+"</pre>";
   //alert(code);
   document.getElementById('code').innerHTML = code;
-}
-
-function resizeBlockly(){
-	var blocklyArea = document.getElementById('caixaResposta');//BlocklyArea = caixa resposta
-  var blocklyDiv = document.getElementById('blocklyDiv');
-  var workspace = Blockly.inject(blocklyDiv,{toolbox: document.getElementById('toolbox')});
-  var onresize = function(e) {
-    // Compute the absolute coordinates and dimensions of blocklyArea.
-    var element = blocklyArea;
-    var x = 0;
-    var y = 0;
-    do {
-      x += element.offsetLeft;
-      y += element.offsetTop;
-      element = element.offsetParent;
-    } while (element);
-    // Position blocklyDiv over blocklyArea.
-    blocklyDiv.style.left = x + 'px';
-    blocklyDiv.style.top = y + 'px';
-    blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
-    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
-  };
-  window.addEventListener('resize', onresize, false);
-  onresize();
-  Blockly.svgResize(workspace);
 }
 
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario

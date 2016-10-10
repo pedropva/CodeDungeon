@@ -5,6 +5,12 @@
     color:#000000;
     font-size: small;
 }
+pre {
+    display: block;
+    font-family: monospace;
+    white-space: pre;
+    text-align: left;
+}
 .title{
     color:#000000;
 }
