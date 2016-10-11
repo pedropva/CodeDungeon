@@ -4,10 +4,13 @@
 //um programa pra formatar o xml
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
+var monsters = [];
+var roomsStates = [];
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
+var workspace;
 tutorial();
 carregaTudo();
 //connect();
@@ -27,14 +30,12 @@ function atualizaState(id,where,active){
 	carregaTudo();
 }
 
-function item(id,where,active){//isso eh meio que uma classe...
+function item(id,where,active,state){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
+	this.state = state;
 
-	this.getInfo = function() {
-		return this.color + ' ' + this.type + ' apple';
-	};
 	this.getId= function(){
 		return this.id;
 	}
@@ -47,6 +48,10 @@ function item(id,where,active){//isso eh meio que uma classe...
 		return this.active;
 	}
 
+	this.getState= function(){
+		return this.state;
+	}
+
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -57,6 +62,50 @@ function item(id,where,active){//isso eh meio que uma classe...
 
 	this.setActive= function(active){
 		this.active=active;
+	}
+	this.setState= function(state){
+		this.state=state;
+	}
+}
+
+function monster(id,where,active,state){//isso eh meio que uma classe...
+	this.id = id;
+	this.where = where;
+	this.active = active;
+	this.state = state;
+	
+
+	
+	this.getId= function(){
+		return this.id;
+	}
+
+	this.getWhere= function(){
+		return this.where;
+	}
+
+	this.getActive= function(){
+		return this.active;
+	}
+
+	this.getState= function(){
+		return this.state;
+	}
+
+	this.setId= function(id){
+		this.id=id;
+	}
+
+	this.setWhere= function(where){
+		this.where=where;
+	}
+
+	this.setActive= function(active){
+		this.active=active;
+	}
+
+	this.setState= function(state){
+		this.state=state;
 	}
 }
 
@@ -96,12 +145,39 @@ function carregaState(){
 
 function loadGame(xml){
 	var xmlDoc = xml.responseXML;
-	salaAtual = parseInt(xmlDoc.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
-	for(var i=0;i<xmlDoc.getElementsByTagName("item").length;i++){
-		var id=	xmlDoc.getElementsByTagName("item")[i].getAttribute('id');
-		var where= xmlDoc.getElementsByTagName("item")[i].getAttribute('where');
-		var active= xmlDoc.getElementsByTagName("item")[i].getAttribute('active');
-		items[i] = new item(id,where,active);
+	var statusXML = xmlDoc.getElementsByTagName("state")[0];
+	
+	var id ="";
+	var where = "";
+	var active ="";
+	var state ="";
+
+	salaAtual = parseInt(statusXML.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
+	
+	//carrega os monstru
+	var monsterr = statusXML.getElementsByTagName("monster");
+	var itemm = statusXML.getElementsByTagName("item");
+	var roomss = statusXML.getElementsByTagName("room");
+	for(var i=0;i<monsterr.length;i++){
+		id=	monsterr[i].getAttribute('id');
+		where= monsterr[i].getAttribute('where');
+		active= monsterr[i].getAttribute('active');
+		state = monsterr[i].childNodes[0].nodeValue;
+		monsters[i] = new monster(id,where,active,state);
+	}
+	
+	//carreaga os item
+	
+	for(var i=0;i<itemm.length;i++){
+		id=	itemm[i].getAttribute('id');
+		where= itemm[i].getAttribute('where');
+		active= itemm[i].getAttribute('active');
+		state = itemm[i].childNodes[0].nodeValue;
+		items[i] = new item(id,where,active,state);
+	}
+	// carrega as salas
+	for(var i=0;i<roomss.length;i++){
+		roomsStates[parseInt(roomss[i].getAttribute('id')-1)] =  roomss[i].childNodes[0].nodeValue;
 	}
 }
 
@@ -131,16 +207,51 @@ function tutorial(){
 function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o item continua aparecendo :(
 	var xmlDoc = xml.responseXML;
 	var descriptionDroped="";
-	var inventoryXML;
-	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	var roomss = xmlDoc.getElementsByTagName("rooms")[0];
+	var rooms = roomss.getElementsByTagName("room");
+	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	var bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+	var itemm = inventoryXML.getElementsByTagName("item");
+	var monsterr = bestiaryXML.getElementsByTagName("monster");
+	var descriptions;
 
-	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("room")[salaAtual].getElementsByTagName("description")[0].childNodes[0].nodeValue;	
-
+	descriptions = rooms[salaAtual].getElementsByTagName("description");
+	for (var i = descriptions.length - 1; i >= 0; i--){
+		if(parseInt(descriptions[i].getAttribute('id')) == roomsStates[salaAtual + 1]){
+			document.getElementById("descriptionRoom").innerHTML = descriptions[i].childNodes[0].nodeValue;
+			break;
+		}
+	}
+	 
+	//adiciona a descricao de items no chao
 	for (var i = items.length - 1; i >= 0; i--) {
 		if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
-			for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
-				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
-					descriptionDroped = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
+			for(var j=0;j < itemm.length ;j++){
+				if(itemm[j].getAttribute('id') == items[i].getId()){
+					descriptions = itemm[j].getElementsByTagName("descriptionDroped");
+					for (var k = descriptions.length - 1; k >= 0; k--) {
+						if(descriptions[k].getAttribute('id') == items[i].getState()){
+							descriptionDroped = descriptions[k].childNodes[0].nodeValue;
+							break;
+						}
+					}
+					
+				}
+			}
+			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
+		}
+	}
+	//adiciona a descricao de monstros no chao
+	for (var i = monsters.length - 1; i >= 0; i--) {
+		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1))){			
+			for(var j=0;j < monsterr.length ;j++){
+				if(monsterr[j].getAttribute('id') == monsters[i].getId()){
+					descriptions = monsterr[j].getElementsByTagName("description");
+					if(descriptions[i].getAttribute('id') == monsters[i].getState()){
+						descriptionDroped = descriptions[i].childNodes[0].nodeValue;
+						connect(xhttp,monsters[i].getId());
+						break;
+					}
 				}
 			}
 			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
@@ -234,9 +345,6 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 			break;
 		case "ni":    	
 			seeNotInventory();
-			break;
-		case "connect":    	
-			connect(res[1]);
 			break;
 		case "drop":    	
 			drop(res[1]);
@@ -368,68 +476,116 @@ function give(what){
 		}
 	}
 }
-
-function connect(what){
-    var divPopup = document.createElement("DIV");
-    divPopup.id = "overlay";
-    var divCaixaResposta = document.createElement("DIV");
-    divCaixaResposta.id = "caixaResposta";
-    divPopup.style.width = "85%";
-	divPopup.style.height = "85%";
-    
-    divPopup.appendChild(divCaixaResposta);
-    document.getElementById("divPrincipal").appendChild(divPopup);
-    $(document).ready(function(){
-        $('#overlay, #overlay-back').fadeIn(500);                
+function disconnect(){
+	 $(document).ready(function(){
+        $('#overlay, #overlay-back').fadeOut(500);                
     });
+}
+function connect(xml,what){
+	var xmlDoc = xml.responseXML;
+    bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+    var monsterr = bestiaryXML.getElementsByTagName("monster");
+    connected = false;
+    chalenge = "";
+    for (var i = monsters.length - 1; i >= 0; i--) {
+  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
+  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
+  					chalenge = monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
+  					connected = true;
+  				}
+  			}
+  		}else{
+  			feedBackHistory("Nao consigo ver nada isso!");
+  		}
+	}
+	if(connected == true){
+	    if(document.getElementById("overlay") == null){
+	    	var divPopup = document.createElement("DIV");
+		    divPopup.id = "overlay";
+		    var divCaixaResposta = document.createElement("DIV");
+		    divCaixaResposta.id = "caixaResposta";
+		    divPopup.style.width = "85%";
+			divPopup.style.height = "85%";
+		    
+		    divPopup.appendChild(divCaixaResposta);
+		    document.getElementById("divPrincipal").appendChild(divPopup);
+	    }
 
-    //inserindo o blockly
-    var blocklyDiv = document.createElement("DIV");
-    blocklyDiv.id = "blocklyDiv";
-    blocklyDiv.style.position= "absolute";
-    blocklyDiv.style.width = "85%";
-	blocklyDiv.style.height = "85%";
-    document.getElementById("caixaResposta").appendChild(blocklyDiv);
+	    $(document).ready(function(){
+	        $('#overlay, #overlay-back').fadeIn(500);                
+	    });
+	    
+	    if(document.getElementById("blocklyDiv") == null){
+		    //inserindo o blockly
+		    var blocklyDiv = document.createElement("DIV");
+		    blocklyDiv.id = "blocklyDiv";
+		    blocklyDiv.style.position= "absolute";
+		    blocklyDiv.style.width = "45%";
+			blocklyDiv.style.height = "95%";
+		    document.getElementById("caixaResposta").appendChild(blocklyDiv);
+
+		    //inserindo a div do script
+		    var codeDiv = document.createElement("DIV");
+		    codeDiv.id = "codeDiv";
+			codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
+			codeDiv.innerHTML += "<div id=\"code\"></div>";
+		    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
+		    document.getElementById("caixaResposta").appendChild(codeDiv);
+		  	
+		   	document.getElementById("caixaResposta").innerHTML += "<input type=\"submit\" class=\"btn\" value=\"Enter\" onclick=\"disconnect();\">"
+		    
+		   	workspace = Blockly.inject('blocklyDiv',
+		    {toolbox: document.getElementById('toolbox'),
+		     zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		     trashcan: true});
+		   	
+		  	workspace.addChangeListener(updateCode);
+		}
+		document.getElementById("chalenge").innerHTML += chalenge;
+		updateCode();
+	}
+}
+
+function updateCode(event) {
+	var languageDropdown = document.getElementById('languageDropdown');
+    var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
+	var code = "<br><pre>"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
+  	document.getElementById('code').innerHTML = code;
+}
+
+function executeBlockCode() {
+    var code = Blockly.JavaScript.workspaceToCode(workspace);
+    var initFunc = function(interpreter, scope) {
+      var alertWrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(alert(text));
+      };
+      interpreter.setProperty(scope, 'alert',
+          interpreter.createNativeFunction(alertWrapper));
+      var promptWrapper = function(text) {
+        text = text ? text.toString() : '';
+        return interpreter.createPrimitive(prompt(text));
+      };
+      interpreter.setProperty(scope, 'prompt',
+          interpreter.createNativeFunction(promptWrapper));
+    };
+    var myInterpreter = new Interpreter(code, initFunc);
+    var stepsAllowed = 10000;
+    while (myInterpreter.step() && stepsAllowed) {
+      stepsAllowed--;
+    }
+    if (!stepsAllowed) {
+      throw EvalError('Infinite loop.');
+    }
+  }
   
-   	//document.getElementById("caixaResposta").innerHTML += "<script src='blockly/blockly_compressed.js'></script><script src='blockly/blocks_compressed.js'></script>";
-    //document.getElementById("caixaResposta").innerHTML += "<script src='blockly/msg/js/pt-br.js'></script>";
-    //document.getElementById("caixaResposta").innerHTML += "<xml id='toolbox' style='display: none'><block type='controls_if'></block><block type='controls_repeat_ext'></block><block type='logic_compare'></block><block type='math_number'></block><block type='math_arithmetic'></block><block type='text'></block><block type='text_print'></block></xml>";
-    //document.getElementById("caixaResposta").innerHTML += "<script>var workspace = Blockly.inject(\"blocklyDiv\",{toolbox: document.getElementById(\"toolbox\")});</script>";
-  var workspace = Blockly.inject('blocklyDiv',
-      {toolbox: document.getElementById('toolbox')});
-    /*
-    var s = document.createElement("script");
-	s.type = "javascript";
-	s.text = "<script>var workspace = Blockly.inject('blocklyDiv',{toolbox: document.getElementById('toolbox')});</script>";
-	$("body").append(s);
-    */
-    //resizeBlockly();
-}
-function resizeBlockly(){
-	var blocklyArea = document.getElementById('caixaResposta');//BlocklyArea = caixa resposta
-  var blocklyDiv = document.getElementById('blocklyDiv');
-  var workspace = Blockly.inject(blocklyDiv,{toolbox: document.getElementById('toolbox')});
-  var onresize = function(e) {
-    // Compute the absolute coordinates and dimensions of blocklyArea.
-    var element = blocklyArea;
-    var x = 0;
-    var y = 0;
-    do {
-      x += element.offsetLeft;
-      y += element.offsetTop;
-      element = element.offsetParent;
-    } while (element);
-    // Position blocklyDiv over blocklyArea.
-    blocklyDiv.style.left = x + 'px';
-    blocklyDiv.style.top = y + 'px';
-    blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
-    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
-  };
-  window.addEventListener('resize', onresize, false);
-  onresize();
-  Blockly.svgResize(workspace);
-}
-
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario
 	var xmlDoc = xml.responseXML;
 	//1-ve se as entradas do use sao validas:
@@ -601,7 +757,8 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 function go(where,xml){//tem q por as siglas w,e,s,n
 	var xmlDoc = xml.responseXML;
 	var numberNext;
-	var room = xmlDoc.getElementsByTagName("room")[salaAtual];
+	var roomm = xmlDoc.getElementsByTagName("rooms")[0];
+	var room = roomm.getElementsByTagName("room")[salaAtual];
 	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	switch(where){
 		case "north":
@@ -652,7 +809,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 
 function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pro tratamento dos itens recebido
 	var xmlDoc = xml.responseXML;
-	var room = xmlDoc.getElementsByTagName("room")[salaAtual];
+	var roomm = xmlDoc.getElementsByTagName("rooms")[0];
+	var room = roomm.getElementsByTagName("room")[salaAtual];
 	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	var itemDescription;
 	var inventoryXML;

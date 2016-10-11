@@ -1,20 +1,41 @@
 <xml>
 	<state>
 		<curRoom>
-			0
+			1
 		</curRoom>
-		<item where="1" active="true">chave</item>
-		<item where="2" active="false">diamante</item>
-		<item where="2" active="alwaysTrue">bau</item>
+		<item id="chave" where="1" active="true">1</item>
+		<item id="diamante" where="2" active="false">1</item>
+		<item id="bau" where="2" active="alwaysTrue">1</item>
+		<monster id="goblin" where="3" active="true" alive="true">1</monster>
+		<room id="1">1</room>
+		<room id="2">1</room>
+		<room id="3">1</room>
 	</state>
+	<bestiary>
+		<monster id="goblin">
+			<status>
+				<description id="1">
+					Tem um goblin no canto.
+				</description>
+			</status>
+			<problem>
+				1,2,3,4,5,6,7,8,9,10
+			</problem>
+			<test>
+				1,2,3,4,5,6,7,8,9,10
+			</test>
+		</monster>
+	</bestiary>
 	<inventory>
 		<item id="chave">
-			<description>
-				Uma chave velha de metal, mas polida pelo uso.
-			</description>
-			<descriptionDroped>
-				Uma chave esta jogada no chao entre os tijolos do chao.
-			</descriptionDroped>
+			<status>
+				<description id="1">
+					Uma chave velha de metal, mas polida pelo uso.
+				</description>
+				<descriptionDroped id="1">
+					Uma chave esta jogada no chao entre os tijolos do chao.
+				</descriptionDroped>
+			</status>			
 			<use>
 				<in what="bau">
 					<conditions>
@@ -30,71 +51,87 @@
 							<property>where</property>
 							<value>3</value>
 						</do>
+						<do>
+							<victim>bau</victim>
+							<property>description</property>
+							<value>2</value>
+						</do>
 					</action>
 				</in>
 			</use>
 		</item>
 		<item id="bau">
-			<description>Um bau velho e grande,mas parece estar vazio pela falta de peso a mais.</description>
-			<descriptionDroped>
-				Um bau jaz num canto da sala.
-			</descriptionDroped>
+			<status>
+				<description id="1">
+					Um bau velho e grande,mas parece estar vazio pela falta de peso a mais.
+				</description>
+				<descriptionDroped id="1">
+					Um bau jaz num canto da sala.
+				</descriptionDroped>
+			</status>	
 			<use></use>
 		</item>
 		<item id="diamante">
-			<description>
-				Uau! um diamante de verdade!
-			</description>
-			<descriptionDroped>
-				Tem um diamante no chao tambem!
-			</descriptionDroped>
+			<status>
+				<description id="1">
+					Uau! um diamante de verdade!
+				</description>
+				<descriptionDroped id="1">
+					Tem um diamante no chao tambem!
+				</descriptionDroped>
+			</status>
 			<use></use>
 		</item>
 	</inventory>
-	<room id="1">
-		<shortDescription>
-		Uma sala escura.
-		</shortDescription>
-		<description>
-		Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor.
-		</description>
-		<monster></monster>
-		<NextRoom>
-			<north>2</north>
-			<west></west>
-			<east></east>
-			<south></south>
-		</NextRoom>
-	</room>
-	<room id="2">
-		<shortDescription>
-		Uma sala bem iluminada.
-		</shortDescription>
-		<description>
-		Ao entrar na sala, vejo o lindo chão de parquê encerado com vinte e uma classes e suas respectivas cadeiras, além de minha mesa e cadeira, que fica ao lado do quadro. Sob este fica o apagador e os gizes coloridos.
-		A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
-		</description>
-		<monster></monster>
-		<NextRoom>
-			<north></north>
-			<west></west>
-			<east>3</east>
-			<south>1</south>
-		</NextRoom>
-	</room>
-	<room id="3">
-		<shortDescription>
-		Um vento frio vem dessa sala.
-		</shortDescription>
-		<description>
-		A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
-		</description>
-		<monster>5654</monster>
-		<NextRoom>
-			<north></north>
-			<west>2</west>
-			<east></east>
-			<south></south>
-		</NextRoom>
-	</room>
+	<rooms>
+		<room id="1">
+			<status>
+				<shortDescription id="1">
+				Uma sala escura.
+				</shortDescription>
+				<description id="1">
+				Você acaba de entrar numa sala do porão, estranhamente ela parece bem nova e está bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à que você veio há um corredor estreito, há uma curva que não te deixa ver o fim do corredor.
+				</description>
+			</status>
+			<NextRoom>
+				<north>2</north>
+				<west></west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="2">
+			<status>
+				<shortDescription id="1">
+				Uma sala bem iluminada.
+				</shortDescription>
+				<description id="1">
+				Ao entrar na sala, vejo o lindo chão de parquê encerado com vinte e uma classes e suas respectivas cadeiras, além de minha mesa e cadeira, que fica ao lado do quadro. Sob este fica o apagador e os gizes coloridos.
+				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				</description>
+			</status>
+			<NextRoom>
+				<north></north>
+				<west></west>
+				<east>3</east>
+				<south>1</south>
+			</NextRoom>
+		</room>
+		<room id="3">
+			<status>
+				<shortDescription>
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description>
+				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				</description>
+			</status>
+			<NextRoom>
+				<north></north>
+				<west>2</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+	</rooms>
 </xml>
