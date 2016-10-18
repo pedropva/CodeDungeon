@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <state>
 	<curRoom>
 		1
@@ -11,14 +10,3 @@
 	<room id="2">1</room>
 	<room id="3">1</room>
 </state>
-=======
-	<state>
-		<curRoom>
-			1
-		</curRoom>
-		<item id="chave" where="1" active="true"></item>
-		<item id="diamante" where="2" active="false"></item>
-		<item id="bau" where="2" active="alwaysTrue"></item>
-		<monster id="goblin" where="3" active="true">alive</monster>
-	</state>
->>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
