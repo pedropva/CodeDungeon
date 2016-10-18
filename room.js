@@ -217,7 +217,7 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 
 	descriptions = rooms[salaAtual].getElementsByTagName("description");
 	for (var i = descriptions.length - 1; i >= 0; i--){
-		if(parseInt(descriptions[i].getAttribute('id')) == roomsStates[salaAtual + 1]){
+		if(parseInt(descriptions[i].getAttribute('id')) == roomsStates[salaAtual]){
 			document.getElementById("descriptionRoom").innerHTML = descriptions[i].childNodes[0].nodeValue;
 			break;
 		}
@@ -225,7 +225,7 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 	 
 	//adiciona a descricao de items no chao
 	for (var i = items.length - 1; i >= 0; i--) {
-		if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
+		if(((items[i].getActive() == "true") || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
 			for(var j=0;j < itemm.length ;j++){
 				if(itemm[j].getAttribute('id') == items[i].getId()){
 					descriptions = itemm[j].getElementsByTagName("descriptionDroped");
@@ -234,8 +234,7 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 							descriptionDroped = descriptions[k].childNodes[0].nodeValue;
 							break;
 						}
-					}
-					
+					}	
 				}
 			}
 			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
@@ -243,10 +242,10 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 	}
 	//adiciona a descricao de monstros no chao
 	for (var i = monsters.length - 1; i >= 0; i--) {
-		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1))){			
+		if(((monsters[i].getActive() == "true" ) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1))){			
 			for(var j=0;j < monsterr.length ;j++){
 				if(monsterr[j].getAttribute('id') == monsters[i].getId()){
-					descriptions = monsterr[j].getElementsByTagName("description");
+					descriptions = monsterr[j].getElementsByTagName("shortDescription");
 					if(descriptions[i].getAttribute('id') == monsters[i].getState()){
 						descriptionDroped = descriptions[i].childNodes[0].nodeValue;
 						connect(xhttp,monsters[i].getId());
@@ -454,10 +453,10 @@ function testaHas(has){
 	return 1;
 }
 function extract(what){
-	for (var l = inventory.length - 1; l >= 0; l--) {
-		if(inventory[l].getId().indexOf(what) != -1){
-			items[inventory.length] = inventory[l];
-			inventory.splice(l, 1);
+	for (var i = inventory.length - 1; i >= 0; i--) {
+		if(inventory[i].getId().indexOf(what) != -1){
+			items[items.length] = inventory[i];
+			inventory.splice(i, 1);
 			items[items.length-1].setWhere(salaAtual+1);
 			feedBackHistory("Perdeu "+ what + "!");
 			return;
@@ -594,11 +593,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 	//5 - Se passou nos testes,carrega e executa os comandos basicos como print,drop,extract e give
 	//6- Se necessario faz o DoSomething pra modificar um atributo de um item
 
-	
-	//elementos do DoSomething
-	var victim;
-	var property;
-	var value;
+	//seria bom mudar o currroom
 	
 	//condicoes
 	var has = [];
@@ -610,35 +605,18 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 	//var give = []//tira do array de itens e bota no inventario;
 	//var extract = []//tira do array do inventario e bota no de itens,E MANTEM O ITEM DESATIVADO, OU SEJA ELE TA NO CHAO MAS NAO EH DESCRITO NEM PODE SER PEGO PELO JOGADOR;
 	
+
+	//elementos do DoSomething
+	var victim;
+	var property;
+	var value;
+	
 	var doSomething = [victim,property,value];//modifica uma propiedade de um item
-	/*xml pra consulta:
-	<use>
-		<in what="bau">
-			<condition>
-				<has>chave</has>	
-				<at>2</at>
-			</condition>
-			<action>
-				<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bauzinho!</print>
-				<give>diamond</give> 
-				<extract>chave<extract>
-				<do>
-					<item>bau</item>
-					<property>description</property>
-					<value>Um bauzinho aberto</value>
-				</do>
-				<do>
-					<item>diamond</item>
-					<property>active</property>
-					<value>false</value>
-				</do>
-			</action>
-		</in>
-	</use>
-*/
+
 	var inventoryXML;
 	var conditions;
 	var actions;
+	var computed = false;
 
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 
@@ -682,6 +660,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 							for (var k = actions.getElementsByTagName("print").length - 1; k >= 0; k--) {
 								feedBackHistory(actions.getElementsByTagName("print")[k].childNodes[0].nodeValue);
 							}
+							
 							//carrega e faz o give
 							for (var k = actions.getElementsByTagName("give").length - 1; k >= 0; k--) {
 								give(actions.getElementsByTagName("give")[k].childNodes[0].nodeValue);
@@ -695,52 +674,97 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								drop(actions.getElementsByTagName("drop")[k].childNodes[0].nodeValue);
 							}
 							//CARREGA O DO
-							/*
+
 							for (var k = actions.getElementsByTagName("do").length - 1; k >= 0; k--) {
 								doSomething.victim = actions.getElementsByTagName("do")[k].getElementsByTagName("victim")[0].childNodes[0].nodeValue;
 								doSomething.property = actions.getElementsByTagName("do")[k].getElementsByTagName("property")[0].childNodes[0].nodeValue;
 								doSomething.value = actions.getElementsByTagName("do")[k].getElementsByTagName("value")[0].childNodes[0].nodeValue;
-								
-								for (var i = inventory.length - 1; i >= 0; i--) {
-									if(inventory[i].getActive().indexOf("false") != -1 && inventory[i].getId().indexOf(victim) != -1){
-										swtich(doSomething.property){
-											case "id": 
-												inventory[i].setId(doSomething.value);
-												break;
+
+								//feedBackHistory("Carregado o DO,com as seguintes caracteristicas: "+"Vitima: "+doSomething.victim +" Property: "+ doSomething.property +" Value: "+ doSomething.value);
+								//mudando as caracteristicas de um item no inventario
+								computed = false;
+								for (var l = inventory.length - 1; l >= 0; l--){
+									if((inventory[l].getActive().indexOf("false") == 0) && (inventory[l].getId().indexOf(doSomething.victim) == 0)){
+										switch(doSomething.property){
 											case "where": 
-												inventory[i].setWhere(doSomething.value);
+												inventory[l].setWhere(doSomething.value);
 												break;
 											case "active": 
-												inventory[i].setActive(doSomething.value);
+												inventory[l].setActive(doSomething.value);
+												break;
+											case "state": 
+												inventory[l].setState(doSomething.value);
 												break;
 											default: 
-								
 												break;
 										}
-										return;
+										//feedBackHistory("Item modificado: "+inventory[l].getId()+" where: "+ inventory[l].getWhere() +" Active: "+ inventory[l].getActive() + " State: "+ inventory[l].getState());
+										computed = true;
+										break;
 									}
 								}
-								for (i = items.length - 1; i >= 0; i--) {
-									if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getId() == (victim))){
-										swtich(doSomething.property){
-											case "id":
-												items[i].setId(doSomething.value);
-												break;
-											case "where": 
-												items[i].setWhere(doSomething.value);
-												break;
-											case "active": 
-												items[i].setActive(doSomething.value);
-												break;
-											default: 
-
-												break;
+								//mudando as caracteristicas de um item no chao
+								if(computed != true ){
+									for (l = items.length - 1; l >= 0; l--) {
+										if(((items[l].getActive().indexOf("true") == 0) || (items[l].getActive() == ("alwaysTrue"))) && (items[l].getId() == (doSomething.victim))){
+											switch(doSomething.property){
+												case "where": 
+													items[l].setWhere(doSomething.value);
+													break;
+												case "active": 
+													items[l].setActive(doSomething.value);
+													break;
+												case "state": 
+													items[l].setState(doSomething.value);
+													break;
+												default: 
+													break;
+											}
+											//feedBackHistory("Item modificado: "+items[l].getId()+" where: "+ items[l].getWhere() +" Active: "+ items[l].getActive() + " State: "+ items[l].getState());
+											computed = true;
+											break;
 										}
-										return;
+									}
+									if(computed != true){
+										//mudando as caracteristicas de um monstro, no chao (é claro)
+										for (l = monsters.length - 1; l >= 0; l--) {
+											if(monsters[l].getId() == (doSomething.victim)){
+												switch(doSomething.property){
+													case "where": 
+														monsters[l].setWhere(doSomething.value);
+														break;
+													case "active": 
+														monsters[l].setActive(doSomething.value);
+														break;
+													case "state": 
+														monsters[l].setState(doSomething.value);
+														break;
+													default: 
+														break;
+												}
+												//feedBackHistory("Item modificado: "+monsters[l].getId()+" where: "+ monsters[l].getWhere() +" Active: "+ monsters[l].getActive() + " State: "+ monsters[l].getState());
+												computed = true;
+												break;
+											}
+										}
+										if(computed = true){
+											//mudando as caracteristicas de um quarto
+											for (l = roomsStates.length - 1; l >= 0; l--) {
+												//alert("teste do room");
+												if(parseInt(doSomething.victim) != NaN){
+													if(doSomething.property == "state"){
+														roomsStates[parseInt(doSomething.victim)-1] = doSomething.value;
+														//feedBackHistory("Sala modificada: "+parseInt(doSomething.victim));
+														break;
+													}
+												}
+											}
+										}
 									}
 								}
 							}
-							*/
+							//alert("fim do DO");
+							carregaSala(xhttp)
 							return;
 						}
 					}
@@ -809,20 +833,28 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 
 function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pro tratamento dos itens recebido
 	var xmlDoc = xml.responseXML;
+
 	var roomm = xmlDoc.getElementsByTagName("rooms")[0];
 	var room = roomm.getElementsByTagName("room")[salaAtual];
 	var nextRoom = room.getElementsByTagName("NextRoom")[0];
 	var itemDescription;
 	var inventoryXML;
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	var bestiaryXML;
+	bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
 	switch(where){
 		case "north": 
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){//se a tag n ta vazia
 				//http://stackoverflow.com/questions/10637467/prevent-javascript-from-breaking-when-xml-has-an-empty-node-value
 				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
-				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription);
+				var next = roomm.getElementsByTagName("room")[parseInt(numberNext)-1];
+				var shortDescription = next.getElementsByTagName("shortDescription");
+				var roomStatus = roomsStates[parseInt(numberNext)-1];
+				for (var i = shortDescription.length - 1; i >= 0; i--) {
+					if(shortDescription[i].getAttribute('id') == roomStatus){
+						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+					}
+				}
 			}else{
 				feedBackHistory("nao tem nada a frente");
 			}
@@ -830,9 +862,14 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 		case "south":
 			if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
-				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela.'+ shortDescription);
+				var next = roomm.getElementsByTagName("room")[parseInt(numberNext)-1];
+				var shortDescription = next.getElementsByTagName("shortDescription");
+				var roomStatus = roomsStates[parseInt(numberNext)-1];
+				for (var i = shortDescription.length - 1; i >= 0; i--) {
+					if(shortDescription[i].getAttribute('id') == roomStatus){
+						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+					}
+				}
 			}else{
 				feedBackHistory("nao tem nada pra tras");
 			}
@@ -840,9 +877,14 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 		case "west":
 			if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
-				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela.'+ shortDescription);
+				var next = roomm.getElementsByTagName("room")[parseInt(numberNext)-1];
+				var shortDescription = next.getElementsByTagName("shortDescription");
+				var roomStatus = roomsStates[parseInt(numberNext)-1];
+				for (var i = shortDescription.length - 1; i >= 0; i--) {
+					if(shortDescription[i].getAttribute('id') == roomStatus){
+						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+					}
+				}
 			}else{
 				feedBackHistory("nao tem nada pra esquerda");
 			}
@@ -850,32 +892,71 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 		case "east":
 			if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
-				var next = xmlDoc.getElementsByTagName("room")[parseInt(numberNext)-1];
-				var shortDescription = next.getElementsByTagName("shortDescription")[0].childNodes[0].nodeValue;
-				feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '"escrito sobre ela.'+ shortDescription);
+				var next = roomm.getElementsByTagName("room")[parseInt(numberNext)-1];
+				var shortDescription = next.getElementsByTagName("shortDescription");
+				var roomStatus = roomsStates[parseInt(numberNext)-1];
+				for (var i = shortDescription.length - 1; i >= 0; i--) {
+					if(shortDescription[i].getAttribute('id') == roomStatus){
+						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+					}
+				}
 			}else{
 				feedBackHistory("nao tem nada pra direita");
 			}
 			break;
-		default://tratamento de items,tem que ter tratamento pra quem ta fora do inventario tbm!
+		default://tratamento de items,tem que ter tratamento pra quem ta fora do inventario tbm e tbm dos monstros!
+			var itemStatus;
+			var descriptions;
+
+			//itens no inventario
 			for (var i = inventory.length - 1; i >= 0; i--) {
-				if(inventory[i].getActive().indexOf("false") != -1){
+				if(inventory[i].getActive().indexOf("false") != -1 && inventory[i].getId().indexOf(where) != -1){
+					itemStatus = inventory[i].getState();
 					for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 						if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == inventory[i].getId()){
-							itemDescription = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description")[0].childNodes[0].nodeValue;							
-							feedBackHistory(itemDescription); 
-							return;
+							descriptions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description");
+							for (var k = descriptions.length - 1; k >= 0; k--) {
+								if(descriptions[k].getAttribute('id') == itemStatus){
+									feedBackHistory("coisa1");
+									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									return;
+								}
+							}		
 						}
 					}
 				}
 			}
+			//items no chao
 			for (i = items.length - 1; i >= 0; i--) {
-				if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
+				if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1)) && items[i].getId().indexOf(where) != -1){
+					itemStatus = items[i].getState();
 					for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 						if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
-							itemDescription = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description")[0].childNodes[0].nodeValue;							
-							feedBackHistory(itemDescription); 
-							return;
+							descriptions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description");
+							for (var k = descriptions.length - 1; k >= 0; k--) {
+								if(descriptions[k].getAttribute('id') == itemStatus){
+									feedBackHistory("coisa2");
+									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									return;
+								}
+							}	
+						}
+					}
+				}
+			}
+			//monstros
+			for (i = monsters.length - 1; i >= 0; i--) {
+				if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(where) != -1)){
+					itemStatus = monsters[i].getState();
+					for(var j=0;j < bestiaryXML.getElementsByTagName("monster").length ;j++){
+						if(bestiaryXML.getElementsByTagName("monster")[j].getAttribute('id') == monsters[i].getId()){
+							descriptions = bestiaryXML.getElementsByTagName("monster")[j].getElementsByTagName("description");
+							for (var k = descriptions.length - 1; k >= 0; k--) {
+								if(descriptions[k].getAttribute('id') == itemStatus){
+									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									return;
+								}
+							}	
 						}
 					}
 				}

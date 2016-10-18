@@ -6,7 +6,7 @@
 		<item id="chave" where="1" active="true">1</item>
 		<item id="diamante" where="2" active="false">1</item>
 		<item id="bau" where="2" active="alwaysTrue">1</item>
-		<monster id="goblin" where="3" active="true" alive="true">1</monster>
+		<monster id="goblin" where="3" active="false">1</monster>
 		<room id="1">1</room>
 		<room id="2">1</room>
 		<room id="3">1</room>
@@ -14,8 +14,11 @@
 	<bestiary>
 		<monster id="goblin">
 			<status>
-				<description id="1">
+				<shortDescription id="1">
 					Tem um goblin no canto.
+				</shortDescription>
+				<description id="1">
+					Esse goblin está te desafiando pra lutar.
 				</description>
 			</status>
 			<problem>
@@ -48,12 +51,17 @@
 						<extract>chave</extract>
 						<do>
 							<victim>bau</victim>
-							<property>where</property>
-							<value>3</value>
+							<property>state</property>
+							<value>2</value>
 						</do>
 						<do>
-							<victim>bau</victim>
-							<property>description</property>
+							<victim>goblin</victim>
+							<property>active</property>
+							<value>true</value>
+						</do>
+						<do>
+							<victim>2</victim>
+							<property>state</property>
 							<value>2</value>
 						</do>
 					</action>
@@ -67,6 +75,12 @@
 				</description>
 				<descriptionDroped id="1">
 					Um bau jaz num canto da sala.
+				</descriptionDroped>
+				<description id="2">
+					Um bau velho e grande,está aberto.
+				</description>
+				<descriptionDroped id="2">
+					Um bau jaz aberto num canto da sala.
 				</descriptionDroped>
 			</status>	
 			<use></use>
@@ -109,6 +123,12 @@
 				Ao entrar na sala, vejo o lindo chão de parquê encerado com vinte e uma classes e suas respectivas cadeiras, além de minha mesa e cadeira, que fica ao lado do quadro. Sob este fica o apagador e os gizes coloridos.
 				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
 				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				O clima ficou tenso, a sala parece escurecer mais a cada segundo, sinto que estou sendo observado.
+				</description>
 			</status>
 			<NextRoom>
 				<north></north>
@@ -119,10 +139,10 @@
 		</room>
 		<room id="3">
 			<status>
-				<shortDescription>
+				<shortDescription id="1">
 				Um vento frio vem dessa sala.
 				</shortDescription>
-				<description>
+				<description id="1">
 				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
 				</description>
 			</status>
