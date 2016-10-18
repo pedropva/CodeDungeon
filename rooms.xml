@@ -3,6 +3,7 @@
 		<curRoom>
 			1
 		</curRoom>
+<<<<<<< HEAD
 		<item id="chave" where="1" active="true">1</item>
 		<item id="diamante" where="2" active="false">1</item>
 		<item id="bau" where="2" active="alwaysTrue">1</item>
@@ -27,6 +28,24 @@
 			<test>
 				1,2,3,4,5,6,7,8,9,10
 			</test>
+=======
+		<item id="chave" where="1" active="true"></item>
+		<item id="diamante" where="2" active="false"></item>
+		<item id="bau" where="2" active="alwaysTrue"></item>
+		<monster id="goblin" where="3" active="true">alive</monster>
+	</state>
+	<bestiary>
+		<monster id="goblin">
+			<description>
+				Tem um goblin no canto.
+			</description>
+			<descriptionDead>
+				Tem um goblin chorandinho no canto.
+			</descriptionDead>
+			<problem>
+				Vc precisa testar se a entrada é impar ou par
+			</problem>
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 		</monster>
 	</bestiary>
 	<inventory>

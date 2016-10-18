@@ -5,7 +5,10 @@
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
+<<<<<<< HEAD
 var roomsStates = [];
+=======
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
@@ -34,7 +37,11 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
+<<<<<<< HEAD
 	this.state = state;
+=======
+	
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 
 	this.getId= function(){
 		return this.id;
@@ -109,6 +116,47 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 	}
 }
 
+function monster(id,where,active,alive){//isso eh meio que uma classe...
+	this.id = id;
+	this.where = where;
+	this.active = active;
+	this.alive = alive;
+	
+
+	
+	this.getId= function(){
+		return this.id;
+	}
+
+	this.getWhere= function(){
+		return this.where;
+	}
+
+	this.getActive= function(){
+		return this.active;
+	}
+
+	this.getAlive= function(){
+		return this.alive;
+	}
+
+	this.setId= function(id){
+		this.id=id;
+	}
+
+	this.setWhere= function(where){
+		this.where=where;
+	}
+
+	this.setActive= function(active){
+		this.active=active;
+	}
+
+	this.setAlive= function(alive){
+		this.alive=alive;
+	}
+}
+
 function carregaTudo(){
 	carregaState();
 	xhttp.onreadystatechange = function() {
@@ -150,34 +198,54 @@ function loadGame(xml){
 	var id ="";
 	var where = "";
 	var active ="";
+<<<<<<< HEAD
 	var state ="";
+=======
+	var alive ="";
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 
 	salaAtual = parseInt(statusXML.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
 	
 	//carrega os monstru
 	var monsterr = statusXML.getElementsByTagName("monster");
+<<<<<<< HEAD
 	var itemm = statusXML.getElementsByTagName("item");
 	var roomss = statusXML.getElementsByTagName("room");
+=======
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 	for(var i=0;i<monsterr.length;i++){
 		id=	monsterr[i].getAttribute('id');
 		where= monsterr[i].getAttribute('where');
 		active= monsterr[i].getAttribute('active');
+<<<<<<< HEAD
 		state = monsterr[i].childNodes[0].nodeValue;
 		monsters[i] = new monster(id,where,active,state);
 	}
 	
 	//carreaga os item
 	
+=======
+		alive = monsterr[i].childNodes[0].nodeValue;
+		monsters[i] = new item(id,where,active,alive);
+	}
+	
+	//carreaga os item
+	var itemm = statusXML.getElementsByTagName("item");
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 	for(var i=0;i<itemm.length;i++){
 		id=	itemm[i].getAttribute('id');
 		where= itemm[i].getAttribute('where');
 		active= itemm[i].getAttribute('active');
+<<<<<<< HEAD
 		state = itemm[i].childNodes[0].nodeValue;
 		items[i] = new item(id,where,active,state);
 	}
 	// carrega as salas
 	for(var i=0;i<roomss.length;i++){
 		roomsStates[parseInt(roomss[i].getAttribute('id')-1)] =  roomss[i].childNodes[0].nodeValue;
+=======
+		items[i] = new item(id,where,active);
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 	}
 }
 
@@ -207,6 +275,7 @@ function tutorial(){
 function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o item continua aparecendo :(
 	var xmlDoc = xml.responseXML;
 	var descriptionDroped="";
+<<<<<<< HEAD
 	var roomss = xmlDoc.getElementsByTagName("rooms")[0];
 	var rooms = roomss.getElementsByTagName("room");
 	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
@@ -251,9 +320,39 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 						connect(xhttp,monsters[i].getId());
 						break;
 					}
+=======
+	var inventoryXML;
+	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+	var itemm = inventoryXML.getElementsByTagName("item");
+	var monsterr = bestiaryXML.getElementsByTagName("monster");
+
+	document.getElementById("descriptionRoom").innerHTML = xmlDoc.getElementsByTagName("room")[salaAtual].getElementsByTagName("description")[0].childNodes[0].nodeValue;	
+	//adiciona a descricao de items no chao
+	for (var i = items.length - 1; i >= 0; i--) {
+		if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1))){
+			for(var j=0;j < itemm.length ;j++){
+				if(itemm[j].getAttribute('id') == items[i].getId()){
+					descriptionDroped = itemm[j].getElementsByTagName("descriptionDroped")[0].childNodes[0].nodeValue;
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 				}
 			}
 			document.getElementById("descriptionRoom").innerHTML += descriptionDroped;  
+		}
+	}
+	//adiciona a descricao de monstros no chao
+	for (var i = monsters.length - 1; i >= 0; i--) {
+		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1))){			
+			for(var j=0;j < monsterr.length ;j++){
+				if(monsterr[j].getAttribute('id') == monsters[i].getId()){
+					if(monsterr[j].childNodes[0].nodeValue == "alive" ){
+						document.getElementById("descriptionRoom").innerHTML += monsterr[j].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+					}
+					else{
+						document.getElementById("descriptionRoom").innerHTML += monsterr[j].getElementsByTagName("descriptionDead")[0].childNodes[0].nodeValue;
+					}		
+				}
+			}
 		}
 	}
 }
@@ -345,6 +444,12 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 		case "ni":    	
 			seeNotInventory();
 			break;
+<<<<<<< HEAD
+=======
+		case "connect":    	
+			connect(xhttp,res[1]);
+			break;
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 		case "drop":    	
 			drop(res[1]);
 			break;
@@ -487,6 +592,7 @@ function connect(xml,what){
     connected = false;
     chalenge = "";
     for (var i = monsters.length - 1; i >= 0; i--) {
+<<<<<<< HEAD
   		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
   			for (var j = monsterr.length - 1; i >= 0; i--){	  				
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
@@ -498,6 +604,20 @@ function connect(xml,what){
   			feedBackHistory("Nao consigo ver nada isso!");
   		}
 	}
+=======
+	  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
+	  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+	  				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
+	  					alert(monsterr[j].getAttribute("id"));
+	  					chalenge = monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
+	  					connected = true;
+	  				}
+	  			}
+	  		}else{
+	  			feedBackHistory("Nao consigo ver nada isso!");
+	  		}
+	  	}
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 	if(connected == true){
 	    if(document.getElementById("overlay") == null){
 	    	var divPopup = document.createElement("DIV");
@@ -551,12 +671,20 @@ function connect(xml,what){
 		updateCode();
 	}
 }
+<<<<<<< HEAD
 
 function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
 	var code = "<br><pre>"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
   	document.getElementById('code').innerHTML = code;
+=======
+function updateCode(event) {
+
+  var code = "<br><br><pre>"+Blockly.JavaScript.workspaceToCode(workspace)+"</pre>";
+  //alert(code);
+  document.getElementById('code').innerHTML = code;
+>>>>>>> bde0b503fb7d7e520fbf41aa55d3b86628d589d9
 }
 
 function executeBlockCode() {
