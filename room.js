@@ -11,6 +11,8 @@ var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
 var workspace;
+var myInterpreter = null;
+var highlightPause = false;
 tutorial();
 carregaTudo();
 //connect();
@@ -486,11 +488,12 @@ function connect(xml,what){
     var monsterr = bestiaryXML.getElementsByTagName("monster");
     connected = false;
     chalenge = "";
+    //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
   		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
   			for (var j = monsterr.length - 1; i >= 0; i--){	  				
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
-  					chalenge = monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
+  					chalenge ="\t"+monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
   					connected = true;
   				}
   			}
@@ -498,8 +501,10 @@ function connect(xml,what){
   			feedBackHistory("Nao consigo ver nada isso!");
   		}
 	}
+	//criando as divs
 	if(connected == true){
 	    if(document.getElementById("overlay") == null){
+	    	//criando a div 
 	    	var divPopup = document.createElement("DIV");
 		    divPopup.id = "overlay";
 		    var divCaixaResposta = document.createElement("DIV");
@@ -529,11 +534,18 @@ function connect(xml,what){
 		    codeDiv.id = "codeDiv";
 			codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
 			codeDiv.innerHTML += "<div id=\"code\"></div>";
+			codeDiv.innerHTML += "<div id=\"result\"></div>";
 		    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
+		 
 		    document.getElementById("caixaResposta").appendChild(codeDiv);
 		  	
-		   	document.getElementById("caixaResposta").innerHTML += "<input type=\"submit\" class=\"btn\" value=\"Enter\" onclick=\"disconnect();\">"
-		    
+		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnStep\" value=\"Step\" onclick=\"stepCode();\">"
+		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Debug\" onclick=\"parseCode();\">"
+		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
+
+		   	document.getElementById('btnStep').disabled = 'disabled';
+		   	document.getElementById("btnStep").style.color = "#a6a6a6";
+
 		   	workspace = Blockly.inject('blocklyDiv',
 		    {toolbox: document.getElementById('toolbox'),
 		     zoom:
@@ -547,7 +559,11 @@ function connect(xml,what){
 		   	
 		  	workspace.addChangeListener(updateCode);
 		}
-		document.getElementById("chalenge").innerHTML += chalenge;
+
+		document.getElementById("result").innerHTML += "Resultado:<pre id=resultPre></pre>";
+		document.getElementById("chalenge").innerHTML += "Desafio:";
+		document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
+		document.getElementById("chalengePre").innerHTML += chalenge;
 		updateCode();
 	}
 }
@@ -555,8 +571,89 @@ function connect(xml,what){
 function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
-	var code = "<br><pre>"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
+	var code = "<br><br>Código:<br><pre id=\"codePre\">"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
   	document.getElementById('code').innerHTML = code;
+}
+function runCode(){
+	document.getElementById('btnStep').disabled = 'disabled';
+	document.getElementById('btnParse').disabled = 'disabled';
+	document.getElementById('btnRun').disabled = 'disabled';
+	var code = Blockly.JavaScript.workspaceToCode(workspace);
+	var myInterpreter = new Interpreter(code,initApi);
+	myInterpreter.run();
+	document.getElementById('btnStep').disabled = '';
+	document.getElementById('btnParse').disabled = '';
+	document.getElementById('btnRun').disabled = '';
+}
+
+function initApi(interpreter, scope) {
+  // Add an API function for the alert() block.
+  var wrapper = function(text) {
+    text = text ? text.toString() : '';
+    return interpreter.createPrimitive(alert(text));
+  };
+  interpreter.setProperty(scope, 'alert',
+      interpreter.createNativeFunction(wrapper));
+
+  // Add an API function for the prompt() block.
+  var wrapper = function(text) {
+    text = text ? text.toString() : '';
+    return interpreter.createPrimitive(prompt(text));
+  };
+  interpreter.setProperty(scope, 'prompt',
+      interpreter.createNativeFunction(wrapper));
+
+  // Add an API function for highlighting blocks.
+  var wrapper = function(id) {
+    id = id ? id.toString() : '';
+    return interpreter.createPrimitive(highlightBlock(id));
+  };
+  interpreter.setProperty(scope, 'highlightBlock',
+      interpreter.createNativeFunction(wrapper));
+}
+
+function highlightBlock(id) {
+  workspace.highlightBlock(id);
+  highlightPause = true;
+}
+
+function parseCode() {
+  // Generate JavaScript code and parse it.
+  Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
+  Blockly.JavaScript.addReservedWords('highlightBlock');
+  var code = Blockly.JavaScript.workspaceToCode(workspace);
+  myInterpreter = new Interpreter(code, initApi);
+
+  alert('Ready to execute the code!');
+  document.getElementById('btnStep').disabled = '';
+  document.getElementById("btnStep").style.color = "#333333";
+  document.getElementById('btnRun').disabled = 'disabled';
+  document.getElementById("btnRun").style.color = "#a6a6a6";
+  highlightPause = false;
+  workspace.traceOn(true);
+  workspace.highlightBlock(null);
+}
+
+function stepCode() {
+	try {
+		var ok = myInterpreter.step();
+    	}finally {
+    	if (!ok) {
+        	// Program complete, no more code to execute.
+        	document.getElementById('btnStep').disabled = 'disabled';
+        	document.getElementById("btnStep").style.color = "#a6a6a6";
+        	document.getElementById('btnRun').disabled = '';
+        	document.getElementById("btnRun").style.color = "#333333";
+        	return;
+        }
+  	}
+	if (highlightPause) {
+    	// A block has been highlighted.  Pause execution here.
+ 		highlightPause = false;
+	} else {
+    	// Keep executing until a highlight statement is reached.
+    	stepCode();
+	}
 }
 
 function executeBlockCode() {

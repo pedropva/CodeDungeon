@@ -5,7 +5,7 @@
 	<item id="chave" where="1" active="true">1</item>
 	<item id="diamante" where="2" active="false">1</item>
 	<item id="bau" where="2" active="alwaysTrue">1</item>
-	<monster id="goblin" where="3" active="false">1</monster>
+	<monster id="goblin" where="3" active="true">1</monster>
 	<room id="1">1</room>
 	<room id="2">1</room>
 	<room id="3">1</room>
