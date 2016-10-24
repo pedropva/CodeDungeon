@@ -539,10 +539,10 @@ function connect(xml,what){
 		 
 		    document.getElementById("caixaResposta").appendChild(codeDiv);
 		  	
+		  	document.getElementById('result').innerHTML='Resultado:<script>function codeToRun(){}</script>';
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnStep\" value=\"Step\" onclick=\"stepCode();\">"
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Debug\" onclick=\"parseCode();\">"
 		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
-
 		   	document.getElementById('btnStep').disabled = 'disabled';
 		   	document.getElementById("btnStep").style.color = "#a6a6a6";
 
@@ -560,21 +560,20 @@ function connect(xml,what){
 		  	workspace.addChangeListener(updateCode);
 		}
 
-		document.getElementById("result").innerHTML += "Resultado:<pre id=resultPre></pre>";
+		document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
 		document.getElementById("chalenge").innerHTML += "Desafio:";
 		document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
 		document.getElementById("chalengePre").innerHTML += chalenge;
 		updateCode();
 	}
 }
-
 function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
 	var code = "<br><br>Código:<br><pre id=\"codePre\">"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
   	document.getElementById('code').innerHTML = code;
 }
-function runCode(){
+function runCode2(){
 	document.getElementById('btnStep').disabled = 'disabled';
 	document.getElementById('btnParse').disabled = 'disabled';
 	document.getElementById('btnRun').disabled = 'disabled';
@@ -624,7 +623,7 @@ function parseCode() {
   var code = Blockly.JavaScript.workspaceToCode(workspace);
   myInterpreter = new Interpreter(code, initApi);
 
-  alert('Ready to execute the code!');
+  alert('Pronto para executar o codigo!');
   document.getElementById('btnStep').disabled = '';
   document.getElementById("btnStep").style.color = "#333333";
   document.getElementById('btnRun').disabled = 'disabled';
@@ -656,8 +655,13 @@ function stepCode() {
 	}
 }
 
-function executeBlockCode() {
-    var code = Blockly.JavaScript.workspaceToCode(workspace);
+function runCode() {
+	document.getElementById('btnStep').disabled = 'disabled';
+	document.getElementById('btnParse').disabled = 'disabled';
+	document.getElementById('btnRun').disabled = 'disabled';
+    var code2 = Blockly.JavaScript.workspaceToCode(workspace);
+    var code=comentaRapidao(code2);
+    //alert(code);
     var initFunc = function(interpreter, scope) {
       var alertWrapper = function(text) {
         text = text ? text.toString() : '';
@@ -678,10 +682,35 @@ function executeBlockCode() {
       stepsAllowed--;
     }
     if (!stepsAllowed) {
-      throw EvalError('Infinite loop.');
+       alert('Erro: Loop Infinito.');
+       return;
+    }else{
+    	alert('rodando...');
+    	var para = document.createElement('script');
+		var t = document.createTextNode(code2);      // Create a text node
+		para.appendChild(t);   
+		document.head.appendChild(para);
+
+    	//document.getElementById('result').innerHTML='Resultado:<script>function codeToRun(){'+code2+'}</script>';
+    	//eval(code2);
+    	//codeToRun();
     }
+    document.getElementById('btnStep').disabled = '';
+	document.getElementById('btnParse').disabled = '';
+	document.getElementById('btnRun').disabled = '';
   }
-  
+function comentaRapidao(code){
+	code = code.split(';');
+	for (var i = code.length - 1; i >= 0; i--) {
+		if(code[i].includes('document.')){
+			code[i] ='//'+code[i];
+		}
+	}
+	for (var i = code.length - 1; i > 0; i--) {
+		code[0].concat(code[i]);
+	}
+	return code[0];
+}
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario
 	var xmlDoc = xml.responseXML;
 	//1-ve se as entradas do use sao validas:

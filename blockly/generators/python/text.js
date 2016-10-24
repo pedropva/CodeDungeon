@@ -225,6 +225,13 @@ Blockly.Python['text_print'] = function(block) {
   return 'print(' + msg + ')\n';
 };
 
+Blockly.Python['text_submeter'] = function(block) {
+  var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'submeter('+value_imprime+');\n';
+  return code;
+};
+
 Blockly.Python['text_prompt_ext'] = function(block) {
   // Prompt function.
   var functionName = Blockly.Python.provideFunction_(

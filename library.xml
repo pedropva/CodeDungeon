@@ -1,0 +1,41 @@
+<xml xmlns="http://www.w3.org/1999/xhtml"><block type="factory_base" id="-EcKE5u/jLdi{!:ZUa|p" deletable="false" movable="false" x="0" y="0">
+    <mutation connections="BOTH"></mutation>
+    <field name="NAME">text_submeter</field>
+    <field name="INLINE">AUTO</field>
+    <field name="CONNECTIONS">BOTH</field>
+    <statement name="INPUTS">
+      <block type="input_value" id="#.N}I/Yo[,Jb|.A%WHJ=">
+        <field name="INPUTNAME">imprime</field>
+        <field name="ALIGN">LEFT</field>
+        <statement name="FIELDS">
+          <block type="field_static" id="@Gn_f0vguIRlcZ@n_`Ve">
+            <field name="TEXT">submeter</field>
+          </block>
+        </statement>
+        <value name="TYPE">
+          <shadow type="type_null" id="-HH#K?(?@ywpdE$uP~jX"></shadow>
+          <block type="type_group" id="BH/ou2-}Qw]aN7yU:hZ_">
+            <mutation types="2"></mutation>
+            <value name="TYPE0">
+              <block type="type_string" id="MZY#BM0.q$?=beeYF+76"></block>
+            </value>
+            <value name="TYPE1">
+              <block type="type_number" id="H^K!M||]mD7)_Meu)(+j"></block>
+            </value>
+          </block>
+        </value>
+      </block>
+    </statement>
+    <value name="TOPTYPE">
+      <shadow type="type_null" id=",t,qIog)!{!S8~`Y+8ml"></shadow>
+    </value>
+    <value name="BOTTOMTYPE">
+      <shadow type="type_null" id="/|{H%m*KVodgW%1R-9L~"></shadow>
+    </value>
+    <value name="COLOUR">
+      <block type="colour_hue" id="HHg?M/vqr+j4gp4x0YTT">
+        <mutation colour="#5ba58c"></mutation>
+        <field name="HUE">160</field>
+      </block>
+    </value>
+  </block></xml>

@@ -276,13 +276,20 @@ Blockly.JavaScript['text_trim'] = function(block) {
   return [text + operator, Blockly.JavaScript.ORDER_FUNCTION_CALL];
 };
 
+Blockly.JavaScript['text_submeter'] = function(block) {
+  var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
+  // TODO: Assemble JavaScript into code variable.
+  var code = 'document.getElementById("resultPre").innerHTML +='+value_imprime+';\n';
+  return code;
+};
+
 Blockly.JavaScript['text_print'] = function(block) {
   // Print statement.
   var msg = Blockly.JavaScript.valueToCode(block, 'TEXT',
       Blockly.JavaScript.ORDER_NONE) || '\'\'';
-  return 'window.alert(' + msg + ');\n';
+  return 'alert('+msg+');\n';
 };
-
+//'window.alert(' + msg + ');\n';
 Blockly.JavaScript['text_prompt_ext'] = function(block) {
   // Prompt function.
   if (block.getField('TEXT')) {

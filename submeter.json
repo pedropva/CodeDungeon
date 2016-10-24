@@ -1,0 +1,19 @@
+[{
+  "type": "print_submeter",
+  "message0": "submeter %1",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "imprime",
+      "check": [
+        "String",
+        "Number"
+      ]
+    }
+  ],
+  "previousStatement": null,
+  "nextStatement": null,
+  "colour": 160,
+  "tooltip": "",
+  "helpUrl": "http://www.example.com/"
+}]

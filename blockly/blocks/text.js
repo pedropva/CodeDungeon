@@ -595,6 +595,30 @@ Blockly.Blocks['text_print'] = {
   }
 };
 
+Blockly.Blocks['text_submeter'] = {
+  init: function() {
+    this.jsonInit({
+      "type": "text_submeter",
+      "message0": "submeter %1",
+      "args0": [
+        {
+          "type": "input_value",
+          "name": "TEXT",
+          "check": [
+            "String",
+            "Number"
+          ]
+        }
+      ],
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 160,
+      "tooltip": "Insira aqui um dos números que deseja inserir na sequencia de resposta",
+      "helpUrl": "http://www.pedropva.esy.es.com/"
+    });
+  }
+};
+
 Blockly.Blocks['text_prompt_ext'] = {
   /**
    * Block for prompt function (external message).
