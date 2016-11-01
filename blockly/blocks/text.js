@@ -579,7 +579,7 @@ Blockly.Blocks['text_print'] = {
    */
   init: function() {
     this.jsonInit({
-      "message0": Blockly.Msg.TEXT_PRINT_TITLE,
+      "message0": "alerta %1",
       "args0": [
         {
           "type": "input_value",
@@ -599,7 +599,7 @@ Blockly.Blocks['text_submeter'] = {
   init: function() {
     this.jsonInit({
       "type": "text_submeter",
-      "message0": "submeter %1",
+      "message0": "imprimir %1",
       "args0": [
         {
           "type": "input_value",

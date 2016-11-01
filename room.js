@@ -497,8 +497,6 @@ function connect(xml,what){
   					connected = true;
   				}
   			}
-  		}else{
-  			feedBackHistory("Nao consigo ver nada isso!");
   		}
 	}
 	//criando as divs
@@ -541,7 +539,7 @@ function connect(xml,what){
 		  	
 		  	document.getElementById('result').innerHTML='Resultado:<script>function codeToRun(){}</script>';
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnStep\" value=\"Step\" onclick=\"stepCode();\">"
-		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Debug\" onclick=\"parseCode();\">"
+		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Parse\" onclick=\"parseCode();\">"
 		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
 		   	document.getElementById('btnStep').disabled = 'disabled';
 		   	document.getElementById("btnStep").style.color = "#a6a6a6";
@@ -621,6 +619,8 @@ function parseCode() {
   Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
   Blockly.JavaScript.addReservedWords('highlightBlock');
   var code = Blockly.JavaScript.workspaceToCode(workspace);
+
+  code = comentaRapidao(code,'submeter');
   myInterpreter = new Interpreter(code, initApi);
 
   alert('Pronto para executar o codigo!');
@@ -634,11 +634,25 @@ function parseCode() {
 }
 
 function stepCode() {
+	var code2 = Blockly.JavaScript.workspaceToCode(workspace); 
 	try {
 		var ok = myInterpreter.step();
     	}finally {
     	if (!ok) {
-        	// Program complete, no more code to execute.
+    		// Program complete, no more code to execute.
+    		alert('Rodando javascript na página...');
+	    	document.getElementById('resultPre').innerHTML='';
+	    	var para = document.createElement('script');
+			code2 = comentaRapidao(code2,'imprimir');
+			var t = document.createTextNode(code2);      // Create a text node
+			para.appendChild(t);   
+			document.head.appendChild(para);
+			//NAO ESQUECE DE TIRAR ISSO SENAO DA MERDA
+			//document.getElementById('resultPre').innerHTML='1,2,3,4,5,6,7,8,9,10.';
+			testaResultado();
+			highlightPause = true;
+  			workspace.traceOn(false);
+      
         	document.getElementById('btnStep').disabled = 'disabled';
         	document.getElementById("btnStep").style.color = "#a6a6a6";
         	document.getElementById('btnRun').disabled = '';
@@ -660,7 +674,8 @@ function runCode() {
 	document.getElementById('btnParse').disabled = 'disabled';
 	document.getElementById('btnRun').disabled = 'disabled';
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
-    var code=comentaRapidao(code2);
+    var code=comentaRapidao(code2,'submeter');
+    code = comentaRapidao(code,'highlight');
     //alert(code);
     var initFunc = function(interpreter, scope) {
       var alertWrapper = function(text) {
@@ -683,33 +698,273 @@ function runCode() {
     }
     if (!stepsAllowed) {
        alert('Erro: Loop Infinito.');
-       return;
+       
+       //return;
     }else{
-    	alert('rodando...');
+    	alert('Rodando javascript na página...');
+
+    	document.getElementById('resultPre').innerHTML='';
     	var para = document.createElement('script');
+		code2 = comentaRapidao(code2,'imprimir');
+		code2 = comentaRapidao(code2,'highlight');
 		var t = document.createTextNode(code2);      // Create a text node
 		para.appendChild(t);   
 		document.head.appendChild(para);
-
-    	//document.getElementById('result').innerHTML='Resultado:<script>function codeToRun(){'+code2+'}</script>';
-    	//eval(code2);
-    	//codeToRun();
+		//NAO ESQUECE DE TIRAR ISSO SENAO DA MERDA
+		//document.getElementById('resultPre').innerHTML='1,2,3,4,5,6,7,8,9,10.';
+		testaResultado();
     }
     document.getElementById('btnStep').disabled = '';
 	document.getElementById('btnParse').disabled = '';
 	document.getElementById('btnRun').disabled = '';
   }
-function comentaRapidao(code){
-	code = code.split(';');
-	for (var i = code.length - 1; i >= 0; i--) {
-		if(code[i].includes('document.')){
-			code[i] ='//'+code[i];
+ function limpaString(coisa){
+ 	var novaCoisa='';
+
+ 	coisa = coisa.toLowerCase();
+ 	var j = 0;
+ 	for (var i = 0; i < coisa.length - 1; i++) {
+ 		
+ 		switch(coisa[i]){
+ 			case ',':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '.':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '0':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '1':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '2':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '3':
+				novaCoisa[j] += coisa[i];
+ 				j++; 				
+ 				break;
+ 			case '4':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '5':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '6':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '7':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '8':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '9':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'a':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'b':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'c':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'd':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'e':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'f':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'g':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'h':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'i':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'j':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'k':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'l':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'm':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'n':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'o':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'p':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'q':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'r':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 's':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 't':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'u':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'v':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'w':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'x':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'y':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'z':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			default:
+ 				break;
+ 		}
+ 	}
+ 	return novaCoisa;
+ }
+function testaResultado(){
+	var teste= document.getElementById('chalengePre').innerHTML;
+	teste = teste.trim(); 
+	//teste = limpaString(teste);
+	if(document.getElementById('resultPre').innerHTML == teste){
+		disconnect();
+	}
+	
+}
+function replaceCommand(code,what){
+	var i=0;
+	var j=0;
+	var aux='';
+	var newCode=[];
+	newCode[0] = '';
+	while(i<code.length){
+		newCode[j]+=code[i];
+		if(code[i] == ';' || code[i] == '{' || code[i] == '}' || code[i]== '\n'){
+			//newCode[j]+='\0'
+			j++;
+			newCode[j]='';
 		}
+		i++;
 	}
-	for (var i = code.length - 1; i > 0; i--) {
-		code[0].concat(code[i]);
+	for (var i = newCode.length - 1; i >= 0; i--) {
+		if(what == 'submeter'){
+			if(newCode[i].includes('submeter(')){
+				var value='';
+				for(var k=newCode[i].search('(');k<newCode[i].search(')');k++){
+					value += newCode[i][k];
+				}
+				newCode[i] = 'document.getElementById("chalengePre").innerHTML='+value+';';
+
+			}	
+		}else if(what == 'highlight'){
+			if(newCode[i].includes('highlightBlock(')){
+				newCode[i] ='';
+			}
+		}		
 	}
-	return code[0];
+	for (var i = 0; i < newCode.length - 1; i++) {
+		aux+=newCode[i];
+	}
+	alert(aux);
+	return aux;
+}
+function comentaRapidao(code,what){3
+	var i=0;
+	var j=0;
+	var aux='';
+	var newCode=[];
+	newCode[0] = '';
+	while(i<code.length){
+		newCode[j]+=code[i];
+		if(code[i] == ';' || code[i] == '{' || code[i] == '}' || code[i]== '\n'){
+			//newCode[j]+='\0'
+			j++;
+			newCode[j]='';
+		}
+		i++;
+	}
+	for (var i = newCode.length - 1; i >= 0; i--) {
+		if(what == 'submeter'){
+			if(newCode[i].includes('submeter(')){
+				newCode[i] ='//'+newCode[i];
+			}	
+		}else if(what == 'imprimir'){
+			if(newCode[i].includes('alert(')){
+				newCode[i] ='//'+newCode[i];
+			}
+		}else if(what == 'highlight'){
+			if(newCode[i].includes('highlightBlock(')){
+				newCode[i] ='//'+newCode[i];
+			}
+		}		
+	}
+	for (var i = 0; i < newCode.length - 1; i++) {
+		aux+=newCode[i];
+	}
+	alert(aux);
+	return aux;
 }
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario
 	var xmlDoc = xml.responseXML;
