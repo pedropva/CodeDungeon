@@ -4,7 +4,7 @@
 			1
 		</curRoom>
 		<item id="chave" where="1" active="true">1</item>
-		<item id="diamante" where="2" active="false">1</item>
+		<item id="if" where="2" active="false">1</item>
 		<item id="bau" where="2" active="alwaysTrue">1</item>
 		<monster id="goblin" where="3" active="false">1</monster>
 		<room id="1">1</room>
@@ -43,7 +43,7 @@
 					</conditions>
 					<action>
 						<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bau velho!</print>
-						<give>diamante</give> 
+						<give>if</give>
 						<extract>chave</extract>
 						<do>
 							<victim>bau</victim>
@@ -81,16 +81,49 @@
 			</status>	
 			<use></use>
 		</item>
-		<item id="diamante">
+		<item id="if">
 			<status>
 				<description id="1">
-					Uau! um diamante de verdade!
+					Parece um tipo de bloco de metal com as letras I e F escritas nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um diamante no chao tambem!
+					Tem um bloco de metal verde no chão.
 				</descriptionDroped>
 			</status>
-			<use></use>
+			<use>[block type="controls_if"][/block]</use>
+		</item>
+		<item id="submeter">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com a palavra SUBMETER escrito nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão.
+				</descriptionDroped>
+			</status>
+			<use>[block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
+		</item>
+		<item id="alert">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com as letras I e F escritas nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão.
+				</descriptionDroped>
+			</status>
+			<use>[block type="controls_if"][/block]</use>
+		</item>
+		<item id="for">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com as letras I e F escritas nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão.
+				</descriptionDroped>
+			</status>
+			<use>[block type="controls_if"][/block]</use>
 		</item>
 	</inventory>
 	<rooms>

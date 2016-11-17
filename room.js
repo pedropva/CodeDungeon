@@ -6,6 +6,7 @@ var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
 var roomsStates = [];
+var blocks = [];//guarda o index da posicao de um bloco no inventario
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
@@ -216,6 +217,7 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 	var itemm = inventoryXML.getElementsByTagName("item");
 	var monsterr = bestiaryXML.getElementsByTagName("monster");
 	var descriptions;
+	blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
 
 	descriptions = rooms[salaAtual].getElementsByTagName("description");
 	for (var i = descriptions.length - 1; i >= 0; i--){
@@ -482,7 +484,109 @@ function disconnect(){
         $('#overlay, #overlay-back').fadeOut(500);                
     });
 }
+
+function blocksManager(){//deve ser chamado sempre que se meche no inventario
+	//atualiza o array blocks com os indexs dos blocos que o jogador tem
+	var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
+	var catLoops = ['repeat','while','for','break'];
+	var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
+	var catText = ['print','submeter'];
+	catLogic = catLogic.concat(catLoops);
+	catMath = catMath.concat(catLogic);
+	var existingBlocks =  catText.concat(catMath);
+	blocks=[];//esvazia os blocos antes de atualizar
+	for (var i = inventory.length - 1; i >= 0; i--) {
+		for (var j = existingBlocks.length - 1; j >= 0; j--) {
+			if(inventory[i].getId() == existingBlocks[j]){
+				blocks[blocks.length] = i;
+			}
+		}
+	}
+}
+
+function  toolboxManager(){
+	var xmlDoc = xhttp.responseXML;
+	var xmlDoc2 = xhttp2.responseXML;
+	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	var itemm = inventoryXML.getElementsByTagName("item");
+	var blocksXML='';//guarda uma string grandona com a tag use de cada bloco
+	var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
+	var logica='';
+	var catLoops = ['repeat','while','for','break'];
+	var loops='';
+	var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
+	var matematica ='';
+	var catText = ['print','submeter'];
+	var texto='';
+	if(blocks.length == 0){
+		alert('não tem mais blocos para lutar!');
+	}else{
+		//adiciona ou retira os blocos da nova toolbox
+		for (var i = blocks.length - 1; i >= 0; i--) {
+			for (var j = itemm.length - 1; j >= 0; j--) {
+				if(itemm[j].getAttribute('id') == inventory[blocks[i]].getId()){
+					//tem que testar se ele nao inicia uma categoria nova
+					for (var k = catLogic.length - 1; k >= 0; k--) {
+						if(catLogic[k] == itemm[j].getAttribute('id')){
+							logica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+						}
+					}
+					for (var k = catLoops.length - 1; k >= 0; k--) {
+						if(catLoops[k] == itemm[j].getAttribute('id')){
+							loops+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+						}
+					}
+					for (var k = catMath.length - 1; k >= 0; k--) {
+						if(catMath[k] == itemm[j].getAttribute('id')){
+							matematica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+						}
+					}
+					for (var k = catText.length - 1; k >= 0; k--) {
+						if(catText[k] == itemm[j].getAttribute('id')){
+							texto+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+						}
+					}
+					if(logica!=''){
+						logica='<category id="catLogic" colour="210" name="Logic">'+logica+'</category>';
+					}
+					if(loops!=''){
+						loops='<category id="catLoops" colour="120" name="Loops">'+loops+'</category>';
+					}
+					if(matematica!=''){
+						matematica='<category id="catMath" colour="230" name="Math">'+matematica+'</category>';
+					}
+					if(texto!=''){
+						texto='<category id="catText" colour="160" name="Text">'+texto+'</category>';
+					}
+					blocksXML +=logica+loops+matematica+texto; 
+				}
+			}
+		}
+		blocksXML=replaceBrakets(blocksXML);
+		//cria a toolbox se ela ainda nao existir e sobreescreve ela se ja existir
+		if(document.getElementById("toolbox") != null){
+			document.getElementById('toolbox').innerHTML = blocksXML;
+		}else{
+			var code = '<xml id="toolbox" style="display: none">'+blocksXML+'</xml>';
+			document.body.innerHTML+= code;
+		}
+	}
+}
+function replaceBrakets(code){
+	code = code.split('');
+	result="";
+	for (var i = 0; i <= code.length - 1; i++) {
+		if(code[i] == '['){
+			code[i]= '<';
+		}else if(code[i] == ']'){
+			code[i] = '>';
+		}
+		result+=code[i];
+	}
+	return result;
+}
 function connect(xml,what){
+	toolboxManager();//atualiza os blocos que o cara tem
 	var xmlDoc = xml.responseXML;
     bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
@@ -501,7 +605,7 @@ function connect(xml,what){
 	}
 	//criando as divs
 	if(connected == true){
-	    if(document.getElementById("overlay") == null){
+	    if(document.getElementById("overlay") == null && document.getElementById("toolbox") != null){//testa se o blockly ainda n foi injetado e se a toolbox n ta vazia
 	    	//criando a div 
 	    	var divPopup = document.createElement("DIV");
 		    divPopup.id = "overlay";
@@ -512,13 +616,11 @@ function connect(xml,what){
 		    
 		    divPopup.appendChild(divCaixaResposta);
 		    document.getElementById("divPrincipal").appendChild(divPopup);
-	    }
-
-	    $(document).ready(function(){
-	        $('#overlay, #overlay-back').fadeIn(500);                
-	    });
 	    
-	    if(document.getElementById("blocklyDiv") == null){
+
+		    $(document).ready(function(){
+		        $('#overlay, #overlay-back').fadeIn(500);                
+		    });
 		    //inserindo o blockly
 		    var blocklyDiv = document.createElement("DIV");
 		    blocklyDiv.id = "blocklyDiv";
@@ -537,7 +639,7 @@ function connect(xml,what){
 		 
 		    document.getElementById("caixaResposta").appendChild(codeDiv);
 		  	
-		  	document.getElementById('result').innerHTML='Resultado:<script>function codeToRun(){}</script>';
+		  	document.getElementById('result').innerHTML='Resultado:';
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnStep\" value=\"Step\" onclick=\"stepCode();\">"
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Parse\" onclick=\"parseCode();\">"
 		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
@@ -556,19 +658,20 @@ function connect(xml,what){
 		     trashcan: true});
 		   	
 		  	workspace.addChangeListener(updateCode);
+			
+			document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
+			document.getElementById("chalenge").innerHTML += "Desafio:";
+			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
+			document.getElementById("chalengePre").innerHTML += chalenge;
+			updateCode();
 		}
-
-		document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
-		document.getElementById("chalenge").innerHTML += "Desafio:";
-		document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
-		document.getElementById("chalengePre").innerHTML += chalenge;
-		updateCode();
 	}
 }
 function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
-	var code = "<br><br>Código:<br><pre id=\"codePre\">"+Blockly[languageSelection].workspaceToCode(workspace)+"</pre>";
+	var code = Blockly[languageSelection].workspaceToCode(workspace);
+	code = "<br><br>Código:<br><pre id=\"codePre\">"+replaceCommand(code,'highlight')+"</pre>";
   	document.getElementById('code').innerHTML = code;
 }
 function runCode2(){
@@ -643,15 +746,14 @@ function stepCode() {
     		alert('Rodando javascript na página...');
 	    	document.getElementById('resultPre').innerHTML='';
 	    	var para = document.createElement('script');
-			code2 = comentaRapidao(code2,'imprimir');
+	    	code2 = replaceCommand(code2,'imprimir');
+			code2 = comentaRapidao(code2,'alert');
+			code2 = comentaRapidao(code2,'highlight');
 			var t = document.createTextNode(code2);      // Create a text node
 			para.appendChild(t);   
 			document.head.appendChild(para);
-			//NAO ESQUECE DE TIRAR ISSO SENAO DA MERDA
-			//document.getElementById('resultPre').innerHTML='1,2,3,4,5,6,7,8,9,10.';
+			alert(code2);
 			testaResultado();
-			highlightPause = true;
-  			workspace.traceOn(false);
       
         	document.getElementById('btnStep').disabled = 'disabled';
         	document.getElementById("btnStep").style.color = "#a6a6a6";
@@ -674,7 +776,7 @@ function runCode() {
 	document.getElementById('btnParse').disabled = 'disabled';
 	document.getElementById('btnRun').disabled = 'disabled';
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
-    var code=comentaRapidao(code2,'submeter');
+    var code=comentaRapidao(code2,'imprimir');
     code = comentaRapidao(code,'highlight');
     //alert(code);
     var initFunc = function(interpreter, scope) {
@@ -705,13 +807,13 @@ function runCode() {
 
     	document.getElementById('resultPre').innerHTML='';
     	var para = document.createElement('script');
-		code2 = comentaRapidao(code2,'imprimir');
+    	code2 = replaceCommand(code2,'imprimir');
+		code2 = comentaRapidao(code2,'alert');
 		code2 = comentaRapidao(code2,'highlight');
 		var t = document.createTextNode(code2);      // Create a text node
 		para.appendChild(t);   
 		document.head.appendChild(para);
-		//NAO ESQUECE DE TIRAR ISSO SENAO DA MERDA
-		//document.getElementById('resultPre').innerHTML='1,2,3,4,5,6,7,8,9,10.';
+		alert(code2);
 		testaResultado();
     }
     document.getElementById('btnStep').disabled = '';
@@ -901,7 +1003,7 @@ function replaceCommand(code,what){
 	newCode[0] = '';
 	while(i<code.length){
 		newCode[j]+=code[i];
-		if(code[i] == ';' || code[i] == '{' || code[i] == '}' || code[i]== '\n'){
+		if((code[i] == ';' || code[i] == '{' || code[i] == '}') && code[i+1]== '\n'){
 			//newCode[j]+='\0'
 			j++;
 			newCode[j]='';
@@ -909,13 +1011,13 @@ function replaceCommand(code,what){
 		i++;
 	}
 	for (var i = newCode.length - 1; i >= 0; i--) {
-		if(what == 'submeter'){
-			if(newCode[i].includes('submeter(')){
+		if(what == 'imprimir'){
+			if(newCode[i].includes('imprimir(')){
 				var value='';
-				for(var k=newCode[i].search('(');k<newCode[i].search(')');k++){
+				for(var k=newCode[i].indexOf('(');k<newCode[i].indexOf(')');k++){
 					value += newCode[i][k];
 				}
-				newCode[i] = 'document.getElementById("chalengePre").innerHTML='+value+';';
+				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML='+value+');';
 
 			}	
 		}else if(what == 'highlight'){
@@ -927,7 +1029,6 @@ function replaceCommand(code,what){
 	for (var i = 0; i < newCode.length - 1; i++) {
 		aux+=newCode[i];
 	}
-	alert(aux);
 	return aux;
 }
 function comentaRapidao(code,what){3
@@ -946,11 +1047,11 @@ function comentaRapidao(code,what){3
 		i++;
 	}
 	for (var i = newCode.length - 1; i >= 0; i--) {
-		if(what == 'submeter'){
-			if(newCode[i].includes('submeter(')){
+		if(what == 'imprimir'){
+			if(newCode[i].includes('imprimir(')){
 				newCode[i] ='//'+newCode[i];
 			}	
-		}else if(what == 'imprimir'){
+		}else if(what == 'alert'){
 			if(newCode[i].includes('alert(')){
 				newCode[i] ='//'+newCode[i];
 			}
@@ -963,7 +1064,7 @@ function comentaRapidao(code,what){3
 	for (var i = 0; i < newCode.length - 1; i++) {
 		aux+=newCode[i];
 	}
-	alert(aux);
+	//alert(aux);
 	return aux;
 }
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario

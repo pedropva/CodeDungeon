@@ -279,7 +279,7 @@ Blockly.JavaScript['text_trim'] = function(block) {
 Blockly.JavaScript['text_submeter'] = function(block) {
   var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.
-  var code = 'submeter('+value_imprime+');\n';
+  var code = 'imprimir('+value_imprime+');\n';
   return code;
 };
 
