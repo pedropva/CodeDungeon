@@ -4,8 +4,11 @@
 			1
 		</curRoom>
 		<item id="chave" where="1" active="true">1</item>
-		<item id="if" where="2" active="false">1</item>
 		<item id="bau" where="2" active="alwaysTrue">1</item>
+		<item id="if" where="2" active="false">1</item>
+		<item id="for" where="1" active="true">1</item>
+		<item id="alert" where="1" active="true">1</item>
+		<item id="submeter" where="1" active="true">1</item>
 		<monster id="goblin" where="3" active="false">1</monster>
 		<room id="1">1</room>
 		<room id="2">1</room>
@@ -22,7 +25,7 @@
 				</description>
 			</status>
 			<problem>1,2,3,4,5,6,7,8,9,10.</problem>
-			<test>1,2,3,4,5,6,7,8,9,10.</test>
+			<test>12345678910</test>
 		</monster>
 	</bestiary>
 	<inventory>
@@ -42,7 +45,7 @@
 						<at>2</at>
 					</conditions>
 					<action>
-						<print>Voce abre o bau!Voçe achou um diamante solitario no fundo do bau velho!</print>
+						<print>Voce abre o bau!Voçe achou um bloco estranho no fundo do bau velho!</print>
 						<give>if</give>
 						<extract>chave</extract>
 						<do>
@@ -87,7 +90,7 @@
 					Parece um tipo de bloco de metal com as letras I e F escritas nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde no chão.
+					Tem um bloco de metal azul no chão com a palavra IF escritas nele.
 				</descriptionDroped>
 			</status>
 			<use>[block type="controls_if"][/block]</use>
@@ -98,7 +101,7 @@
 					Parece um tipo de bloco de metal com a palavra SUBMETER escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde no chão.
+					Tem um bloco de metal verde escuro no chão com a palavra SUBMETER escritas nele.
 				</descriptionDroped>
 			</status>
 			<use>[block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
@@ -106,24 +109,24 @@
 		<item id="alert">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com as letras I e F escritas nele.
+					Parece um tipo de bloco de metal com a palavra ALERT escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde no chão.
+					Tem um bloco de metal verde escuro no chão com a palavra ALERT escritas nele.
 				</descriptionDroped>
 			</status>
-			<use>[block type="controls_if"][/block]</use>
+			<use>[block type="text_print"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="for">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com as letras I e F escritas nele.
+					Parece um tipo de bloco de metal com a palavra FOR escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde no chão.
+					Tem um bloco de metal verde no chão com a palavra FOR escritas nele.
 				</descriptionDroped>
 			</status>
-			<use>[block type="controls_if"][/block]</use>
+			<use>[block type="controls_for"][value name="FROM"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][value name="TO"][shadow type="math_number"][field name="NUM"]10[/field][/shadow][/value][value name="BY"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][/block]</use>
 		</item>
 	</inventory>
 	<rooms>

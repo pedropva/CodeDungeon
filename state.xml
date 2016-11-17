@@ -3,8 +3,11 @@
 		1
 	</curRoom>
 	<item id="chave" where="1" active="true">1</item>
-	<item id="if" where="1" active="true">1</item>
 	<item id="bau" where="2" active="alwaysTrue">1</item>
+	<item id="if" where="1" active="true">1</item>
+	<item id="for" where="1" active="true">1</item>
+	<item id="alert" where="1" active="true">1</item>
+	<item id="submeter" where="1" active="true">1</item>
 	<monster id="goblin" where="3" active="true">1</monster>
 	<room id="1">1</room>
 	<room id="2">1</room>

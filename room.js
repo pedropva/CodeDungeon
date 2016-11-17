@@ -14,6 +14,12 @@ var xhttp2 = new XMLHttpRequest();
 var workspace;
 var myInterpreter = null;
 var highlightPause = false;
+var currentMonster='';//segura o monstro atual que esta em combate
+//lista de blocos que o jogo aceita
+var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
+var catLoops = ['repeat','while','for','break'];
+var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
+var catText = ['alert','submeter'];
 tutorial();
 carregaTudo();
 //connect();
@@ -487,13 +493,9 @@ function disconnect(){
 
 function blocksManager(){//deve ser chamado sempre que se meche no inventario
 	//atualiza o array blocks com os indexs dos blocos que o jogador tem
-	var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
-	var catLoops = ['repeat','while','for','break'];
-	var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
-	var catText = ['print','submeter'];
-	catLogic = catLogic.concat(catLoops);
-	catMath = catMath.concat(catLogic);
-	var existingBlocks =  catText.concat(catMath);
+	var catLogic2 = catLogic.concat(catLoops);
+	catLogic2 = catMath.concat(catLogic2);
+	var existingBlocks =  catText.concat(catLogic2);
 	blocks=[];//esvazia os blocos antes de atualizar
 	for (var i = inventory.length - 1; i >= 0; i--) {
 		for (var j = existingBlocks.length - 1; j >= 0; j--) {
@@ -510,16 +512,12 @@ function  toolboxManager(){
 	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 	var itemm = inventoryXML.getElementsByTagName("item");
 	var blocksXML='';//guarda uma string grandona com a tag use de cada bloco
-	var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
 	var logica='';
-	var catLoops = ['repeat','while','for','break'];
 	var loops='';
-	var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 	var matematica ='';
-	var catText = ['print','submeter'];
 	var texto='';
 	if(blocks.length == 0){
-		alert('não tem mais blocos para lutar!');
+		alert('Não tem mais blocos para lutar!');
 	}else{
 		//adiciona ou retira os blocos da nova toolbox
 		for (var i = blocks.length - 1; i >= 0; i--) {
@@ -543,25 +541,25 @@ function  toolboxManager(){
 					}
 					for (var k = catText.length - 1; k >= 0; k--) {
 						if(catText[k] == itemm[j].getAttribute('id')){
-							texto+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+							texto+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
 						}
 					}
-					if(logica!=''){
-						logica='<category id="catLogic" colour="210" name="Logic">'+logica+'</category>';
-					}
-					if(loops!=''){
-						loops='<category id="catLoops" colour="120" name="Loops">'+loops+'</category>';
-					}
-					if(matematica!=''){
-						matematica='<category id="catMath" colour="230" name="Math">'+matematica+'</category>';
-					}
-					if(texto!=''){
-						texto='<category id="catText" colour="160" name="Text">'+texto+'</category>';
-					}
-					blocksXML +=logica+loops+matematica+texto; 
 				}
 			}
 		}
+		if(logica!=''){
+			logica='<category id="catLogic" colour="210" name="Logic">'+logica+'</category>';
+		}
+		if(loops!=''){
+			loops='<category id="catLoops" colour="120" name="Loops">'+loops+'</category>';
+		}
+		if(matematica!=''){
+			matematica='<category id="catMath" colour="230" name="Math">'+matematica+'</category>';
+		}
+		if(texto!=''){
+			texto='<category id="catText" colour="160" name="Text">'+texto+'</category>';
+		}
+		blocksXML +=logica+loops+matematica+texto+'<sep></sep><category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>'; 
 		blocksXML=replaceBrakets(blocksXML);
 		//cria a toolbox se ela ainda nao existir e sobreescreve ela se ja existir
 		if(document.getElementById("toolbox") != null){
@@ -587,6 +585,7 @@ function replaceBrakets(code){
 }
 function connect(xml,what){
 	toolboxManager();//atualiza os blocos que o cara tem
+	currentMonster=what;
 	var xmlDoc = xml.responseXML;
     bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
@@ -726,7 +725,6 @@ function parseCode() {
   code = comentaRapidao(code,'submeter');
   myInterpreter = new Interpreter(code, initApi);
 
-  alert('Pronto para executar o codigo!');
   document.getElementById('btnStep').disabled = '';
   document.getElementById("btnStep").style.color = "#333333";
   document.getElementById('btnRun').disabled = 'disabled';
@@ -743,7 +741,6 @@ function stepCode() {
     	}finally {
     	if (!ok) {
     		// Program complete, no more code to execute.
-    		alert('Rodando javascript na página...');
 	    	document.getElementById('resultPre').innerHTML='';
 	    	var para = document.createElement('script');
 	    	code2 = replaceCommand(code2,'imprimir');
@@ -752,7 +749,6 @@ function stepCode() {
 			var t = document.createTextNode(code2);      // Create a text node
 			para.appendChild(t);   
 			document.head.appendChild(para);
-			alert(code2);
 			testaResultado();
       
         	document.getElementById('btnStep').disabled = 'disabled';
@@ -778,7 +774,6 @@ function runCode() {
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
     var code=comentaRapidao(code2,'imprimir');
     code = comentaRapidao(code,'highlight');
-    //alert(code);
     var initFunc = function(interpreter, scope) {
       var alertWrapper = function(text) {
         text = text ? text.toString() : '';
@@ -803,8 +798,6 @@ function runCode() {
        
        //return;
     }else{
-    	alert('Rodando javascript na página...');
-
     	document.getElementById('resultPre').innerHTML='';
     	var para = document.createElement('script');
     	code2 = replaceCommand(code2,'imprimir');
@@ -813,185 +806,34 @@ function runCode() {
 		var t = document.createTextNode(code2);      // Create a text node
 		para.appendChild(t);   
 		document.head.appendChild(para);
-		alert(code2);
 		testaResultado();
     }
     document.getElementById('btnStep').disabled = '';
 	document.getElementById('btnParse').disabled = '';
 	document.getElementById('btnRun').disabled = '';
-  }
- function limpaString(coisa){
- 	var novaCoisa='';
-
- 	coisa = coisa.toLowerCase();
- 	var j = 0;
- 	for (var i = 0; i < coisa.length - 1; i++) {
- 		
- 		switch(coisa[i]){
- 			case ',':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '.':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '0':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '1':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '2':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '3':
-				novaCoisa[j] += coisa[i];
- 				j++; 				
- 				break;
- 			case '4':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '5':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '6':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '7':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '8':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '9':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'a':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'b':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'c':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'd':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'e':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'f':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'g':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'h':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'i':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'j':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'k':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'l':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'm':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'n':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'o':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'p':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'q':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'r':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 's':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 't':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'u':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'v':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'w':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'x':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'y':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'z':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			default:
- 				break;
- 		}
- 	}
- 	return novaCoisa;
- }
+}
 function testaResultado(){
-	var teste= document.getElementById('chalengePre').innerHTML;
-	teste = teste.trim(); 
-	//teste = limpaString(teste);
-	if(document.getElementById('resultPre').innerHTML == teste){
+	var xmlDoc = xhttp.responseXML;
+    bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+    var monsterr = bestiaryXML.getElementsByTagName("monster");
+    chalenge = "";
+    //carregando o desafio do xml
+    for (var i = monsters.length - 1; i >= 0; i--) {
+  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(currentMonster) != -1)){			
+  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
+  					chalenge =monsterr[j].getElementsByTagName("test")[0].childNodes[0].nodeValue;//carrega o TESTE E NAO O PROBLEMA
+  				}
+  			}
+  		}
+	}
+	alert(chalenge);
+	alert(document.getElementById('resultPre').innerHTML);
+	if(document.getElementById('resultPre').innerHTML == chalenge){
+		currentMonster='';
 		disconnect();
+	}else{
+		alert('Resposta errada!');
 	}
 	
 }
@@ -1017,7 +859,7 @@ function replaceCommand(code,what){
 				for(var k=newCode[i].indexOf('(');k<newCode[i].indexOf(')');k++){
 					value += newCode[i][k];
 				}
-				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML='+value+');';
+				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML+='+value+');';
 
 			}	
 		}else if(what == 'highlight'){
@@ -1447,3 +1289,170 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 			break;
 	}
 }
+
+ function limpaString(coisa){
+ 	var novaCoisa='';
+
+ 	coisa = coisa.toLowerCase();
+ 	var j = 0;
+ 	for (var i = 0; i < coisa.length - 1; i++) {
+ 		
+ 		switch(coisa[i]){
+ 			case ',':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '.':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '0':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '1':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '2':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '3':
+				novaCoisa[j] += coisa[i];
+ 				j++; 				
+ 				break;
+ 			case '4':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '5':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '6':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '7':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '8':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case '9':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'a':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'b':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'c':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'd':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'e':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'f':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'g':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'h':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'i':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'j':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'k':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'l':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'm':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'n':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'o':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'p':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'q':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'r':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 's':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 't':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'u':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'v':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'w':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'x':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'y':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			case 'z':
+ 				novaCoisa[j] += coisa[i];
+ 				j++;
+ 				break;
+ 			default:
+ 				break;
+ 		}
+ 	}
+ 	return novaCoisa;
+ }
