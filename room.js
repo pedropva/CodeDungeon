@@ -1,6 +1,7 @@
 /**
  * Created by LAWS on 08/07/2016.
  */
+ //include room2.ts
 //um programa pra formatar o xml
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
@@ -15,6 +16,7 @@ var workspace;
 var myInterpreter = null;
 var highlightPause = false;
 var currentMonster='';//segura o monstro atual que esta em combate
+
 //lista de blocos que o jogo aceita
 var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repeat','while','for','break'];
@@ -296,80 +298,82 @@ function updateScroll(){
 document.getElementById('CommandInput').onkeypress = function(e) {
 	var event = e || window.event;
 	var charCode = event.which || event.keyCode;
-
-	if ( charCode == '13' ) {
-		// Enter pressed
-		var texto;
-		texto = document.getElementById("CommandInput").value;
-		texto=texto.toLowerCase();
-		document.getElementById("CommandInput").value = "";
-		CommandHistory(texto);
-		var res = texto.split(" ");
-		switch(res[0]){
-		case "go":    
-			switch(res[1]){
-				case "n":
-					res[1]="north";
-					break;
-				case "s":
-					res[1]="south";
-					break;
-				case "w":
-					res[1]="west";
-					break;
-				case "e":
-					res[1]="east";
-					break;
-			}	
-			go(res[1],xhttp);    
-			break;
-		case "look":
-			switch(res[1]){
-				case "n":
-					res[1]="north";
-					break;
-				case "s":
-					res[1]="south";
-					break;
-				case "w":
-					res[1]="west";
-					break;
-				case "e":
-					res[1]="east";
-					break;
-			}	    	
-			look(res[1],xhttp);
-			break;
-		case "pick":    	
-			pick(res[1]);
-			break;
-		case "take":    	
-			pick(res[1]);
-			break;
-		case "inventory":    	
-			seeInventory();
-			break;
-		case "i":    	
-			seeInventory();
-			break;
-		case "ni":    	
-			seeNotInventory();
-			break;
-		case "drop":    	
-			drop(res[1]);
-			break;
-		case "use":    	
-			use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
-			break;
-		default:
-			feedBackHistory("Isso nao faz sentido!");
-		break;
-		}
-
-		return false;
+	if ( charCode == '13') {
+		processInput(e);
 	}
 }
+function processInput(e){	
+	// Enter pressed
+	var texto;
+	texto = document.getElementById("CommandInput").value;
+	texto=texto.toLowerCase();
+	document.getElementById("CommandInput").value = "";
+	CommandHistory(texto);
+	var res = texto.split(" ");
+	switch(res[0]){
+	case "go":    
+		switch(res[1]){
+			case "n":
+				res[1]="north";
+				break;
+			case "s":
+				res[1]="south";
+				break;
+			case "w":
+				res[1]="west";
+				break;
+			case "e":
+				res[1]="east";
+				break;
+		}	
+		go(res[1],xhttp);    
+		break;
+	case "look":
+		switch(res[1]){
+			case "n":
+				res[1]="north";
+				break;
+			case "s":
+				res[1]="south";
+				break;
+			case "w":
+				res[1]="west";
+				break;
+			case "e":
+				res[1]="east";
+				break;
+		}	    	
+		look(res[1],xhttp);
+		break;
+	case "pick":    	
+		pick(res[1]);
+		break;
+	case "take":    	
+		pick(res[1]);
+		break;
+	case "inventory":    	
+		seeInventory();
+		break;
+	case "i":    	
+		seeInventory();
+		break;
+	case "ni":    	
+		seeNotInventory();
+		break;
+	case "drop":    	
+		drop(res[1]);
+		break;
+	case "use":    	
+		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
+		break;
+	default:
+		feedBackHistory("Isso nao faz sentido!");
+	break;
+	}
 
+	return false;
+
+}
 function pick(what){
 	for(var i = items.length - 1; i >= 0; i--){
 		if(what.indexOf(items[i].getId()) != -1){
@@ -485,9 +489,22 @@ function give(what){
 		}
 	}
 }
+
 function disconnect(){
-	 $(document).ready(function(){
-        $('#overlay, #overlay-back').fadeOut(500);                
+    $('#overlay, #overlay-back').fadeOut(500,function(){
+		$(".blocklyTooltipDiv").remove();
+		$(".blocklyWidgetDiv").remove();
+		$(".overlay").remove();
+		$(".toolbox").remove();
+		document.getElementById('CommandInput').onkeypress = function(e) {
+			var event = e || window.event;
+			var charCode = event.which || event.keyCode;
+			if ( charCode == '13') {
+				processInput(e);
+			}
+		}
+		document.getElementById('CommandInput').focus();
+		updateScroll();
     });
 }
 
@@ -565,7 +582,7 @@ function  toolboxManager(){
 		if(document.getElementById("toolbox") != null){
 			document.getElementById('toolbox').innerHTML = blocksXML;
 		}else{
-			var code = '<xml id="toolbox" style="display: none">'+blocksXML+'</xml>';
+			var code = '<xml id="toolbox" class="toolbox" style="display: none">'+blocksXML+'</xml>';
 			document.body.innerHTML+= code;
 		}
 	}
@@ -608,11 +625,11 @@ function connect(xml,what){
 	    	//criando a div 
 	    	var divPopup = document.createElement("DIV");
 		    divPopup.id = "overlay";
+		    divPopup.className = "overlay";
 		    var divCaixaResposta = document.createElement("DIV");
 		    divCaixaResposta.id = "caixaResposta";
 		    divPopup.style.width = "85%";
 			divPopup.style.height = "85%";
-		    
 		    divPopup.appendChild(divCaixaResposta);
 		    document.getElementById("divPrincipal").appendChild(divPopup);
 	    
@@ -623,6 +640,7 @@ function connect(xml,what){
 		    //inserindo o blockly
 		    var blocklyDiv = document.createElement("DIV");
 		    blocklyDiv.id = "blocklyDiv";
+		    blocklyDiv.className = "blocklyDiv";
 		    blocklyDiv.style.position= "absolute";
 		    blocklyDiv.style.width = "45%";
 			blocklyDiv.style.height = "95%";
@@ -631,10 +649,10 @@ function connect(xml,what){
 		    //inserindo a div do script
 		    var codeDiv = document.createElement("DIV");
 		    codeDiv.id = "codeDiv";
-			codeDiv.innerHTML += "<div id=\"chalenge\"></div>";
-			codeDiv.innerHTML += "<div id=\"code\"></div>";
-			codeDiv.innerHTML += "<div id=\"result\"></div>";
-		    codeDiv.innerHTML += "<select id=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
+			codeDiv.innerHTML += "<div id=\"chalenge\" class=\"chalenge\"></div>";
+			codeDiv.innerHTML += "<div id=\"code\" class=\"code\"></div>";
+			codeDiv.innerHTML += "<div id=\"result\" class=\"result\"></div>";
+		    codeDiv.innerHTML += "<select id=\"languageDropdown\" class=\"languageDropdown\" onchange=\"updateCode();\"><option value=\"JavaScript\">JavaScript</option><option value=\"Python\">Python</option><option value=\"PHP\">PHP</option><option value=\"Lua\">Lua</option><option value=\"Dart\">Dart</option></select>";
 		 
 		    document.getElementById("caixaResposta").appendChild(codeDiv);
 		  	
@@ -643,7 +661,7 @@ function connect(xml,what){
 		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Parse\" onclick=\"parseCode();\">"
 		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
 		   	document.getElementById('btnStep').disabled = 'disabled';
-		   	document.getElementById("btnStep").style.color = "#a6a6a6";
+		   	document.getElementById("btnStep").style.backgroundColor = "#4d4d4d";
 
 		   	workspace = Blockly.inject('blocklyDiv',
 		    {toolbox: document.getElementById('toolbox'),
@@ -670,7 +688,7 @@ function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
 	var code = Blockly[languageSelection].workspaceToCode(workspace);
-	code = "<br><br>Código:<br><pre id=\"codePre\">"+replaceCommand(code,'highlight')+"</pre>";
+	code = "<br>Código:<br><pre id=\"codePre\">"+replaceCommand(code,'highlight')+"</pre>";
   	document.getElementById('code').innerHTML = code;
 }
 function runCode2(){
@@ -726,9 +744,9 @@ function parseCode() {
   myInterpreter = new Interpreter(code, initApi);
 
   document.getElementById('btnStep').disabled = '';
-  document.getElementById("btnStep").style.color = "#333333";
+  document.getElementById("btnStep").style.backgroundColor = "#a6a6a6";
   document.getElementById('btnRun').disabled = 'disabled';
-  document.getElementById("btnRun").style.color = "#a6a6a6";
+  document.getElementById("btnRun").style.backgroundColor = "#4d4d4d";
   highlightPause = false;
   workspace.traceOn(true);
   workspace.highlightBlock(null);
@@ -752,9 +770,9 @@ function stepCode() {
 			testaResultado();
       
         	document.getElementById('btnStep').disabled = 'disabled';
-        	document.getElementById("btnStep").style.color = "#a6a6a6";
+        	document.getElementById("btnStep").style.backgroundColor = "#4d4d4d";
         	document.getElementById('btnRun').disabled = '';
-        	document.getElementById("btnRun").style.color = "#333333";
+        	document.getElementById("btnRun").style.backgroundColor = "#a6a6a6";
         	return;
         }
   	}
@@ -827,9 +845,8 @@ function testaResultado(){
   			}
   		}
 	}
-	alert(chalenge);
-	alert(document.getElementById('resultPre').innerHTML);
 	if(document.getElementById('resultPre').innerHTML == chalenge){
+		alert('Resposta certa!');
 		currentMonster='';
 		disconnect();
 	}else{

@@ -1,0 +1,347 @@
+html{
+    height: 90%;
+}
+body{
+    height: 93.5%;
+    align-items: center;
+    background-image: url("pattern.png");
+    background-repeat: repeat;
+}
+div.titleQuestion{
+    perspective: inherit;
+    width: 100%;
+    text-align: center;
+    font-family:Arial;
+    font-size:21px;
+    margin-bottom: 1%;
+}
+div.desc{
+    border-style: transparent;
+    width: 80%;
+    margin-bottom: 3%;
+    font-family:Arial;
+    font-size:16px;
+}
+div.result{
+    border-style: transparent;
+    width: 16%;
+    height: 16%;
+    bottom: 2%;
+}
+div.tabs{
+    position: relative;
+    margin-bottom: -20px;
+}
+div.code{
+    position: relative;
+    padding-left: 5%;
+    padding-right: 5%;
+    border-style: transparent;
+    float: left;
+    white-space: pre;
+    font-family: "Courier New", Courier, monospace;
+    font-size:13px;
+    border-radius:12px;    
+    background: #d9d9d9;
+    color: #001133;
+    max-height: 350px;
+    max-width: 500px;
+    min-width: 300px;
+    overflow: auto;
+}
+
+div.input{
+    position: inherit;
+    margin-right: 0%;
+    margin-bottom: 5%;
+}
+.input input{
+    margin-bottom: 5%;
+}
+.logo{
+    margin: 0 auto;
+    width: 60%;
+    background: rgb(230, 230, 230);
+    padding-top: 1%;
+    padding-bottom: 4%;
+    padding-left: 3%;
+    padding-right: 3%;
+    border-radius:20px 20px 0px 0px;
+}
+.imgLogo{
+    perspective: relative;
+    max-width: 50%;
+}
+.parceiro{
+    perspective: relative;
+    max-width: 20%;
+    float: right;
+}
+div.total{
+    margin: 0 auto;
+    margin-top: -3%;
+    background: #4d4d4d;
+    font-family:Arial;
+    font-size:12px;
+    color:#ffffff;
+    width: 60%;
+    height: 80%;
+    padding: 3%;
+    border-radius:20px;
+}
+
+.btnMenu{
+    background-color:#a6a6a6;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:20px 20px 20px 20px;
+    border-style: transparent;
+    display:inline-block;
+    cursor:pointer;
+    color:#333333;
+    font-family:Arial;
+    font-size:17px;
+    font-weight:bold;
+    padding:8px 17px;
+    text-decoration:none;
+    position: absolute;
+    right: 20%;
+    bottom: 5%;
+}
+.btnMenu:hover {
+    background-color:#e6e6e6;
+}
+
+#overlay-back {
+    position   : absolute;
+    top        : 0;
+    left       : 0;
+    width      : 100%;
+    height     : 100%;
+    background : #000;
+    opacity    : 0.6;
+    filter     : alpha(opacity=60);
+    z-index    : 5;
+    display    : none;
+}
+
+#overlay {
+    position : absolute;
+    top      : 0;
+    left     : 0;
+    width    : 100%;
+    height   : 100%;
+    z-index  : 10;
+    display  : none;
+    text-align: center;
+} 
+
+#caixaResposta {
+    margin-top: 20px;
+    display: inline-block;
+    border-radius: 25px;
+    background: #808080;
+    padding: 20px; 
+    width: 300px;
+    height: 150px; 
+    font-family:Arial;
+    font-size:18px;
+    font-weight:bold;
+    text-decoration:none;
+    text-shadow:0px 2px 0px #2b665e;
+    color:#ffffff;
+}
+.caixaRespostaButton {
+    -moz-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+    -webkit-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+    box-shadow:inset 0px 1px 3px 0px #91b8b3;
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #768d87), color-stop(1, #6c7c7c));
+    background:-moz-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background:-webkit-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background:-o-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background:-ms-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background:linear-gradient(to bottom, #768d87 5%, #6c7c7c 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#768d87', endColorstr='#6c7c7c',GradientType=0);
+    background-color:#768d87;
+    -moz-border-radius:22px;
+    -webkit-border-radius:22px;
+    border-radius:22px;
+    border:1px solid #566963;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:15px;
+    font-weight:bold;
+    padding:19px 19px;
+    text-decoration:none;
+    text-shadow:0px 2px 0px #2b665e;
+}
+.caixaRespostaButton:hover {
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #6c7c7c), color-stop(1, #768d87));
+    background:-moz-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+    background:-webkit-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+    background:-o-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+    background:-ms-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+    background:linear-gradient(to bottom, #6c7c7c 5%, #768d87 100%);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#6c7c7c', endColorstr='#768d87',GradientType=0);
+    background-color:#6c7c7c;
+}
+.caixaRespostaButton:active {
+    position:relative;
+    top:1px;
+}
+
+.buttonTab {
+    background-color:#666666;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:12px 12px 0px 0px;
+    border-style: transparent;
+    display:inline-block;
+    cursor:pointer;
+    color:#333333;
+    font-family:Arial;
+    font-size:17px;
+    font-weight:bold;
+    padding:22px 17px;
+    text-decoration:none;
+}
+.buttonTab:hover {
+    background-color:#a6a6a6;
+}
+.buttonTab:active {
+    position:relative;
+    top:1px;
+}
+
+.buttonTab:focus{
+    background-color:#d9d9d9;
+}
+
+.input{
+    font-family:Arial;
+    font-size:16px;
+    font-weight:bold;
+    float: right;
+}
+
+.variableInput {
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  padding: 10px 10px;
+  border: 1px solid #b7b7b7;
+  border-right-width: 0;
+  -webkit-border-radius: 17px;
+  border-radius: 17px;
+  font: normal 13px/normal "Lucida Console", Monaco, monospace;
+  color: rgba(255,255,255,1);
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background: rgb(166, 166, 166);
+  -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+  box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2) inset;
+}
+
+.submit {
+    background-color:#a6a6a6;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:20px 20px 20px 20px;
+    border-style: transparent;
+    display:inline-block;
+    cursor:pointer;
+    color:#333333;
+    font-family:Arial;
+    font-size:17px;
+    font-weight:bold;
+    padding:8px 17px;
+    text-decoration:none;
+    margin-right: 0px;
+    float: right;
+}
+.submit:hover {
+    background-color:#e6e6e6;
+}
+.submit:active {
+    position:relative;
+    top:1px;
+}
+
+.tableMenu{
+    width: 100%;
+    height: 100%;
+}
+.menu{
+    width: 80%;
+    height: 85%;
+    float: center;
+    margin: 0 auto;
+}
+.menuQuestion {
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 70px;
+  height: 70px;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  font: normal normal bold 16px/normal Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background-color: #416d7f;
+
+  
+
+  
+}
+
+.menuQuestion:disabled {
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 70px;
+  height: 70px;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  font: normal normal bold 16px/normal Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  
+  background-color: #cddee5;
+  background-image: url("locked.png"); 
+  background-size: 30% 30%;
+  background-repeat: no-repeat;
+  background-position: left top;
+  pointer-events: none;
+}
+
+.menuQuestion:hover{
+  background-color: #78a7ba;
+}
+
+.instruction{
+    position: relative;
+    font-family:Arial;
+    font-size:40px;
+    color:#ffffff;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 5%;
+}
