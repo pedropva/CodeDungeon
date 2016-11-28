@@ -5,10 +5,14 @@
 		</curRoom>
 		<item id="chave" where="1" active="true">1</item>
 		<item id="bau" where="2" active="alwaysTrue">1</item>
-		<item id="if" where="2" active="false">1</item>
-		<item id="for" where="1" active="true">1</item>
-		<item id="alert" where="1" active="true">1</item>
-		<item id="submeter" where="1" active="true">1</item>
+		<item id="se" where="1" active="true">1</item>
+		<item id="contar" where="1" active="true">1</item>
+		<item id="enquanto" where="1" active="true">1</item>
+		<item id="repetir" where="1" active="true">1</item>
+		<item id="alerta" where="1" active="true">1</item>
+		<item id="imprimir" where="1" active="true">1</item>
+		<item id="ler" where="1" active="true">1</item>
+		<item id="matematica" where="1" active="true">1</item>
 		<monster id="goblin" where="3" active="false">1</monster>
 		<room id="1">1</room>
 		<room id="2">1</room>
@@ -26,6 +30,7 @@
 			</status>
 			<problem>1,2,3,4,5,6,7,8,9,10.</problem>
 			<test>12345678910</test>
+			<read>1,2,3,4,5,6,7,8,9,10.</read>
 		</monster>
 	</bestiary>
 	<inventory>
@@ -84,49 +89,216 @@
 			</status>	
 			<use></use>
 		</item>
-		<item id="if">
+		<item id="se">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com as letras I e F escritas nele.
+					Parece um tipo de bloco de metal com as letras S e E escritas nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal azul no chão com a palavra IF escritas nele.
+					Tem um bloco de metal azul no chão com a palavra SE escritas nele.
 				</descriptionDroped>
 			</status>
-			<use>[block type="controls_if"][/block]</use>
+			<use>[block type="controls_if"][/block]
+				 [block type="logic_compare"][/block]
+			     [block type="logic_operation"][/block]
+			     [block type="logic_negate"][/block]
+			     [block type="logic_boolean"][/block]
+			     [block type="logic_null"][/block]
+			     [block type="logic_ternary"][/block]
+			</use>
 		</item>
-		<item id="submeter">
+		<item id="imprimir">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com a palavra SUBMETER escrito nele.
+					Parece um tipo de bloco de metal com a palavra IMPRIMIR escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde escuro no chão com a palavra SUBMETER escritas nele.
+					Tem um bloco de metal verde escuro no chão com a palavra IMPRIMIR escritas nele.
 				</descriptionDroped>
 			</status>
 			<use>[block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
-		<item id="alert">
+		<item id="alerta">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com a palavra ALERT escrito nele.
+					Parece um tipo de bloco de metal com a palavra ALERTA escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde escuro no chão com a palavra ALERT escritas nele.
+					Tem um bloco de metal verde escuro no chão com a palavra ALERTA escritas nele.
 				</descriptionDroped>
 			</status>
 			<use>[block type="text_print"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
-		<item id="for">
+		<item id="ler">
 			<status>
 				<description id="1">
-					Parece um tipo de bloco de metal com a palavra FOR escrito nele.
+					Parece um tipo de bloco de metal com a palavra LER escrito nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um bloco de metal verde no chão com a palavra FOR escritas nele.
+					Tem um bloco de metal verde escuro no chão com a palavra LER escritas nele.
+				</descriptionDroped>
+			</status>
+			<use>[block type="text_read"][/block]</use>
+		</item>
+		<item id="matematica">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal verde escuro com varias palavras escritas como PLUS,MINUS,RANDOM e ROUND nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde escuro no chão com várias palavras escritas nele, mas a palavra MATATEMATICA se destaca no meio.
+				</descriptionDroped>
+			</status>
+			<use>
+					[block type="math_number"][/block]
+			      [block type="math_arithmetic"]
+			        [value name="A"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="B"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_single"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]9[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_trig"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]45[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_constant"][/block]
+			      [block type="math_number_property"]
+			        [value name="NUMBER_TO_CHECK"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]0[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_change"]
+			        [value name="DELTA"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_round"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]3.1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_on_list"][/block]
+			      [block type="math_modulo"]
+			        [value name="DIVIDEND"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]64[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="DIVISOR"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]10[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_constrain"]
+			        [value name="VALUE"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]50[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="LOW"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="HIGH"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]100[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_random_int"]
+			        [value name="FROM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="TO"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]100[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_random_float"][/block]
+			</use>
+		</item>
+		<item id="contar">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com a palavra CONTAR escrito nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão com a palavra CONTAR escritas nele.
 				</descriptionDroped>
 			</status>
 			<use>[block type="controls_for"][value name="FROM"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][value name="TO"][shadow type="math_number"][field name="NUM"]10[/field][/shadow][/value][value name="BY"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][/block]</use>
+		</item>
+		<item id="repetir">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com a palavra REPETIR escrito nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão com a palavra REPETIR escritas nele.
+				</descriptionDroped>
+			</status>
+			<use>[block type="controls_repeat_ext"]
+	        [value name="TIMES"]
+	          [shadow type="math_number"]
+	            [field name="NUM"]10[/field]
+	          [/shadow]
+	        [/value]
+	      [/block]</use>
+		</item>
+		<item id="enquanto">
+			<status>
+				<description id="1">
+					Parece um tipo de bloco de metal com a palavra ENQUANTO escrito nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um bloco de metal verde no chão com a palavra ENQUANTO escritas nele.
+				</descriptionDroped>
+			</status>
+			<use>[block type="controls_whileUntil"][/block]
+	      [block type="controls_for"]
+	        [value name="FROM"]
+	          [shadow type="math_number"]
+	            [field name="NUM"]1[/field]
+	          [/shadow]
+	        [/value]
+	        [value name="TO"]
+	          [shadow type="math_number"]
+	            [field name="NUM"]10[/field]
+	          [/shadow]
+	        [/value]
+	        [value name="BY"]
+	          [shadow type="math_number"]
+	            [field name="NUM"]1[/field]
+	          [/shadow]
+	        [/value]
+	      [/block][block type="controls_flow_statements"][/block]</use>
 		</item>
 	</inventory>
 	<rooms>

@@ -263,6 +263,12 @@ Blockly.Lua['text_print'] = function(block) {
       Blockly.Lua.ORDER_NONE) || '\'\'';
   return 'print(' + msg + ')\n';
 };
+
+Blockly.Lua['text_read'] = function(block) {
+  var code = 'ler()';
+  return [code, Blockly.Lua.ORDER_UNARY_POSTFIX];
+};
+
 Blockly.Lua['text_submeter'] = function(block) {
   var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.

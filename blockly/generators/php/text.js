@@ -228,6 +228,12 @@ Blockly.PHP['text_print'] = function(block) {
       Blockly.PHP.ORDER_NONE) || '\'\'';
   return 'print(' + msg + ');\n';
 };
+
+Blockly.PHP['text_read'] = function(block) {
+  var code = 'ler()';
+  return [code, Blockly.PHP.ORDER_UNARY_POSTFIX];
+};
+
 Blockly.PHP['text_submeter'] = function(block) {
   var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.

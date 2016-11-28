@@ -283,6 +283,11 @@ Blockly.JavaScript['text_submeter'] = function(block) {
   return code;
 };
 
+Blockly.JavaScript['text_read'] = function(block) {
+  var code = 'ler()';
+  return [code, Blockly.JavaScript.ORDER_UNARY_POSTFIX];
+};
+
 Blockly.JavaScript['text_print'] = function(block) {
   // Print statement.
   var msg = Blockly.JavaScript.valueToCode(block, 'TEXT',

@@ -271,6 +271,14 @@ Blockly.Dart['text_print'] = function(block) {
       Blockly.Dart.ORDER_NONE) || '\'\'';
   return 'print(' + msg + ');\n';
 };
+
+Blockly.Dart['text_read'] = function(block) {
+  var code = 'ler()';
+  return [code, Blockly.Dart.ORDER_UNARY_POSTFIX];
+};
+
+
+
 Blockly.Dart['text_submeter'] = function(block) {
   var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.

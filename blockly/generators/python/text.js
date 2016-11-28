@@ -225,6 +225,11 @@ Blockly.Python['text_print'] = function(block) {
   return 'print(' + msg + ')\n';
 };
 
+Blockly.Python['text_read'] = function(block) {
+  var code = 'ler()';
+  return [code, Blockly.Python.ORDER_UNARY_POSTFIX];
+};
+
 Blockly.Python['text_submeter'] = function(block) {
   var value_imprime = Blockly.JavaScript.valueToCode(block, 'TEXT', Blockly.JavaScript.ORDER_ATOMIC);
   // TODO: Assemble JavaScript into code variable.

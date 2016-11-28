@@ -4,10 +4,14 @@
 	</curRoom>
 	<item id="chave" where="1" active="true">1</item>
 	<item id="bau" where="2" active="alwaysTrue">1</item>
-	<item id="if" where="1" active="true">1</item>
-	<item id="for" where="1" active="true">1</item>
-	<item id="alert" where="1" active="true">1</item>
-	<item id="submeter" where="1" active="true">1</item>
+	<item id="se" where="1" active="true">1</item>
+	<item id="enquanto" where="1" active="true">1</item>
+	<item id="repetir" where="1" active="true">1</item>
+	<item id="contar" where="1" active="true">1</item>
+	<item id="alerta" where="1" active="true">1</item>
+	<item id="imprimir" where="1" active="true">1</item>
+	<item id="ler" where="1" active="true">1</item>
+	<item id="matematica" where="1" active="true">1</item>
 	<monster id="goblin" where="3" active="true">1</monster>
 	<room id="1">1</room>
 	<room id="2">1</room>

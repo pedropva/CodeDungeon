@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Created by LAWS on 08/07/2016.
  */
  //include room2.ts
@@ -18,10 +18,10 @@ var highlightPause = false;
 var currentMonster='';//segura o monstro atual que esta em combate
 
 //lista de blocos que o jogo aceita
-var catLogic = ['if','compare','operation','negate','boolean','null','ternary'];
-var catLoops = ['repeat','while','for','break'];
-var catMath = ['number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
-var catText = ['alert','submeter'];
+var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
+var catLoops = ['repeat','while','contar','break'];
+var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
+var catText = ['alerta','imprimir','ler'];
 tutorial();
 carregaTudo();
 //connect();
@@ -565,19 +565,25 @@ function  toolboxManager(){
 			}
 		}
 		if(logica!=''){
-			logica='<category id="catLogic" colour="210" name="Logic">'+logica+'</category>';
+			logica='<category id="catLogic" colour="210" name="Logica">'+logica+'</category>';
 		}
 		if(loops!=''){
 			loops='<category id="catLoops" colour="120" name="Loops">'+loops+'</category>';
 		}
 		if(matematica!=''){
-			matematica='<category id="catMath" colour="230" name="Math">'+matematica+'</category>';
+			matematica='<category id="catMath" colour="230" name="Matematica">'+matematica+'</category>';
 		}
 		if(texto!=''){
-			texto='<category id="catText" colour="160" name="Text">'+texto+'</category>';
+			texto='<category id="catText" colour="160" name="Entrada/Saida">'+texto+'</category>';
 		}
-		blocksXML +=logica+loops+matematica+texto+'<sep></sep><category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>'; 
+		blocksXML +=texto+logica+loops+matematica;
 		blocksXML=replaceBrakets(blocksXML);
+		if(loops!=''){
+			blocksXML+='<sep></sep><category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>'; 
+		}
+		if(loops!='' && matematica !='' && logica!='' && texto!=''){
+			blocksXML+='<category id="catFunctions" colour="290" custom="PROCEDURE" name="Functions"></category>'; 
+		}
 		//cria a toolbox se ela ainda nao existir e sobreescreve ela se ja existir
 		if(document.getElementById("toolbox") != null){
 			document.getElementById('toolbox').innerHTML = blocksXML;
@@ -688,19 +694,11 @@ function updateCode(event) {
 	var languageDropdown = document.getElementById('languageDropdown');
     var languageSelection = languageDropdown.options[languageDropdown.selectedIndex].value;
 	var code = Blockly[languageSelection].workspaceToCode(workspace);
-	code = "<br>Código:<br><pre id=\"codePre\">"+replaceCommand(code,'highlight')+"</pre>";
+	if(languageSelection == 'JavaScript'){
+		code = replaceCommand(code,'highlight');
+	}
+	code = "<br>Código:<br><pre id=\"codePre\">"+code+"</pre>";
   	document.getElementById('code').innerHTML = code;
-}
-function runCode2(){
-	document.getElementById('btnStep').disabled = 'disabled';
-	document.getElementById('btnParse').disabled = 'disabled';
-	document.getElementById('btnRun').disabled = 'disabled';
-	var code = Blockly.JavaScript.workspaceToCode(workspace);
-	var myInterpreter = new Interpreter(code,initApi);
-	myInterpreter.run();
-	document.getElementById('btnStep').disabled = '';
-	document.getElementById('btnParse').disabled = '';
-	document.getElementById('btnRun').disabled = '';
 }
 
 function initApi(interpreter, scope) {
@@ -792,6 +790,7 @@ function runCode() {
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
     var code=comentaRapidao(code2,'imprimir');
     code = comentaRapidao(code,'highlight');
+    code= comentaRapidao(code,'ler');
     var initFunc = function(interpreter, scope) {
       var alertWrapper = function(text) {
         text = text ? text.toString() : '';
@@ -816,14 +815,20 @@ function runCode() {
        
        //return;
     }else{
+    	//colocando o codigo no html
     	document.getElementById('resultPre').innerHTML='';
     	var para = document.createElement('script');
+    	para.id="CodeResposta";
+    	para.className="CodeResposta";
+    	$(".CodeResposta").remove();//removo o script anterior
     	code2 = replaceCommand(code2,'imprimir');
 		code2 = comentaRapidao(code2,'alert');
 		code2 = comentaRapidao(code2,'highlight');
+		code2 = replaceCommand(code2,'ler');
 		var t = document.createTextNode(code2);      // Create a text node
 		para.appendChild(t);   
 		document.head.appendChild(para);
+		
 		testaResultado();
     }
     document.getElementById('btnStep').disabled = '';
@@ -832,9 +837,9 @@ function runCode() {
 }
 function testaResultado(){
 	var xmlDoc = xhttp.responseXML;
-    bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+    var bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
-    chalenge = "";
+    var chalenge = "";
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
   		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(currentMonster) != -1)){			
@@ -854,11 +859,38 @@ function testaResultado(){
 	}
 	
 }
+function placeArrayRead(code){
+	var xmlDoc = xhttp.responseXML;
+    var bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+    var monsterr = bestiaryXML.getElementsByTagName("monster");
+    var read = "";
+    var arrayRead=[];
+    var i=0,j=0;
+    //carregando o desafio do xml
+    for (var i = monsters.length - 1; i >= 0; i--) {
+  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(currentMonster) != -1)){			
+  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
+  					read =monsterr[j].getElementsByTagName("read")[0].childNodes[0].nodeValue;//carrega o read
+  				}
+  			}
+  		}
+	}
+	read=read.split("");
+	read[read.length-1]='';
+	for (var i = 1; i <= read.length - 1; i++) {
+		read[0]+=read[i];
+	}
+	code = "var read=["+read[0]+"];\n"+code;
+	return code;
+}
 function replaceCommand(code,what){
 	var i=0;
 	var j=0;
 	var aux='';
+	var aux2='';
 	var newCode=[];
+	var Nread=0;
 	newCode[0] = '';
 	while(i<code.length){
 		newCode[j]+=code[i];
@@ -873,24 +905,47 @@ function replaceCommand(code,what){
 		if(what == 'imprimir'){
 			if(newCode[i].includes('imprimir(')){
 				var value='';
-				for(var k=newCode[i].indexOf('(');k<newCode[i].indexOf(')');k++){
+				//alert(newCode[i]);
+				for(var k=newCode[i].indexOf('(');k<=newCode[i].lastIndexOf(')');k++){
 					value += newCode[i][k];
 				}
-				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML+='+value+');';
+				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML+='+value+';';
+				//alert(newCode[i]);
+			}
 
-			}	
-		}else if(what == 'highlight'){
+		}
+		else if(what == 'highlight'){
 			if(newCode[i].includes('highlightBlock(')){
 				newCode[i] ='';
 			}
-		}		
+		}
+		else if(what == 'ler'){
+			if(newCode[i].includes('ler()')){
+				//alert(newCode[i]);
+				aux2=newCode[i].split('ler()');
+				//alert(newCode[i][0]);
+				//alert(newCode[i][1]);
+				aux2[1]='read[auxRead'+Nread+'++]'+aux2[1];
+				newCode[i]=aux2[0]+aux2[1];
+				//alert(newCode[i]);
+				Nread++;
+			}
+		}			
 	}
-	for (var i = 0; i < newCode.length - 1; i++) {
+	for (i = 0; i < newCode.length; i++) {
 		aux+=newCode[i];
+	}
+	if(Nread>0){
+		//alert(aux);
+		for (i = 0; i < Nread; i++) {
+			aux="var auxRead"+i+"=0;\n"+aux;
+		}
+		aux=placeArrayRead(aux);
+		alert(aux);
 	}
 	return aux;
 }
-function comentaRapidao(code,what){3
+function comentaRapidao(code,what){
 	var i=0;
 	var j=0;
 	var aux='';
@@ -916,6 +971,10 @@ function comentaRapidao(code,what){3
 			}
 		}else if(what == 'highlight'){
 			if(newCode[i].includes('highlightBlock(')){
+				newCode[i] ='//'+newCode[i];
+			}
+		}else if(what == 'ler'){
+			if(newCode[i].includes('ler(')){
 				newCode[i] ='//'+newCode[i];
 			}
 		}		
