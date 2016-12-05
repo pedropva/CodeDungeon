@@ -203,16 +203,48 @@ function nSala(){//bota no numero da sala no canto da div :)
 }
 
 function tutorial(){
-	feedBackHistory("Ola! Bem vindo! Para comecar a jogar primeiro voce tem que aprender os comandos:");
-	feedBackHistory("-inventory ou i: Mostra o inventario atual do jogador(vc).");
-	feedBackHistory("-go <where>: Serve pra se movimentar entre as salas.");
-	feedBackHistory("-<where>: Eh pra onde ir,north/n,south/s,west/w e east/e.");
-	feedBackHistory("-look <where> ou <what>: Serve pra tentar prever o que vai ter na sala,cuidado ao entrar em salas que vc nao olhou primeiro!");
-	feedBackHistory("-<where>: Eh observar melhor, pode ser iten ou um desafio.");
-	feedBackHistory("-pick/take <what>: Com esse comando vc pega um item selecionado!");
-	feedBackHistory("-drop <what>: Solta o item do inventario no chao.");
-	feedBackHistory("-use <what> on <what>: Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele item.");
-	feedBackHistory("Eh isso!Boa sorte!");
+	//criando a div 
+	var divPopup = document.createElement("DIV");
+    divPopup.id = "overlay1";
+    divPopup.className = "overlay1";
+    var divCaixaResposta = document.createElement("DIV");
+    divCaixaResposta.id = "divTutorial";
+    divPopup.style.width = "80%";
+	divPopup.style.height = "80%";
+    divPopup.appendChild(divCaixaResposta);
+    document.getElementById("divPrincipal").appendChild(divPopup);
+    document.getElementById('divTutorial').innerHTML='Ola! Bem vindo! Para comecar a jogar primeiro voce tem que aprender os comandos:<dl>';
+	document.getElementById('divTutorial').innerHTML+="<dt>- Inventory ou I";
+	document.getElementById('divTutorial').innerHTML+="<dd>Mostra o inventario atual do jogador(vc).</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- Go (where)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd>Move o jogador para outra sala, dependendo da direção informada.</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- (where)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd>É pra onde ir,north/n,south/s,west/w e east/e.</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- Look (where) ou (what)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd>Serve pra tentar prever o que vai ter na sala,cuidado ao entrar em salas que vc nao olhou primeiro!</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- (what)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd>Pode ser item ou um monstro.</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- Pick/take (what)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd> Com esse comando vc pega um item selecionado!</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- Drop (what)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd>Solta o item do inventario no chao.</dd>";
+	document.getElementById('divTutorial').innerHTML+="<dt>- Use (what) on (what)</dt>";
+	document.getElementById('divTutorial').innerHTML+="<dd> Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele item.</dd>";
+	document.getElementById('divTutorial').innerHTML+="</dl><br>Boa sorte!<br><br> ";
+	document.getElementById("divTutorial").innerHTML += "<input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endTutorial();\">"
+	
+	
+    $(document).ready(function(){
+        $('#overlay1, #overlay-back').fadeIn(500);                
+    });
+}
+function endTutorial(){
+	$('#overlay1, #overlay-back').fadeOut(500,function(){		
+		$(".divTutorial").remove();
+		$(".overlay1").remove();
+		document.getElementById('CommandInput').focus();
+		updateScroll();
+    });
 }
 
 function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o item continua aparecendo :(
