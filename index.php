@@ -78,7 +78,7 @@
 					O que fazer?
 					<div class="divScrollMaior">
 						<div class="divScroll" id="scrollDiv"></div>
-						<input id="CommandInput" autofocus="on" class="inputText"/>
+						<input id="CommandInput" class="inputText"/>
 					</div>
 					<br>
 				</div>

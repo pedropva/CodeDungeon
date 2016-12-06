@@ -22,7 +22,9 @@ var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repeat','while','contar','break'];
 var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 var catText = ['alerta','imprimir','ler'];
+criaJanela();
 tutorial();
+fadeJanela("");
 carregaTudo();
 //connect();
 
@@ -201,8 +203,7 @@ function nSala(){//bota no numero da sala no canto da div :)
 	
 	document.getElementById("roomNumber").innerHTML ="Sala: "+ parseInt(salaAtual+1);
 }
-
-function tutorial(){
+function criaJanela(){
 	//criando a div 
 	var divPopup = document.createElement("DIV");
     divPopup.id = "overlay1";
@@ -213,6 +214,18 @@ function tutorial(){
 	divPopup.style.height = "80%";
     divPopup.appendChild(divCaixaResposta);
     document.getElementById("divPrincipal").appendChild(divPopup);
+}
+function fadeJanela(q){
+    if(q==""){
+  		document.getElementById("divTutorial").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanelaOverlay();\">";
+   	}else{
+    	document.getElementById("divTutorial").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanela();\">";
+    }
+    $(document).ready(function(){
+        $('#overlay1, #overlay-back').fadeIn(500);                
+    });
+}
+function tutorial(){
     document.getElementById('divTutorial').innerHTML='Ola! Bem vindo! Para comecar a jogar primeiro voce tem que aprender os comandos:<dl>';
 	document.getElementById('divTutorial').innerHTML+="<dt>- Inventory ou I";
 	document.getElementById('divTutorial').innerHTML+="<dd>Mostra o inventario atual do jogador(vc).</dd>";
@@ -230,15 +243,17 @@ function tutorial(){
 	document.getElementById('divTutorial').innerHTML+="<dd>Solta o item do inventario no chao.</dd>";
 	document.getElementById('divTutorial').innerHTML+="<dt>- Use (what) on (what)</dt>";
 	document.getElementById('divTutorial').innerHTML+="<dd> Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele item.</dd>";
-	document.getElementById('divTutorial').innerHTML+="</dl><br>Boa sorte!<br><br> ";
-	document.getElementById("divTutorial").innerHTML += "<input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endTutorial();\">"
-	
-	
-    $(document).ready(function(){
-        $('#overlay1, #overlay-back').fadeIn(500);                
+	document.getElementById('divTutorial').innerHTML+="</dl>Boa sorte!";
+}
+function endJanela(){
+	$('#overlay1').fadeOut(500,function(){		
+		$(".divTutorial").remove();
+		$(".overlay1").remove();
+		document.getElementById('CommandInput').focus();
+		updateScroll();
     });
 }
-function endTutorial(){
+function endJanelaOverlay(){
 	$('#overlay1, #overlay-back').fadeOut(500,function(){		
 		$(".divTutorial").remove();
 		$(".overlay1").remove();
@@ -843,7 +858,10 @@ function runCode() {
       stepsAllowed--;
     }
     if (!stepsAllowed) {
-       alert('Erro: Loop Infinito.');
+       	criaJanela();
+		document.getElementById('divTutorial').innerHTML+="Loop Infinito!<br><br>";
+		document.getElementById("divTutorial").className="overlay2";
+		fadeJanela();
        
        //return;
     }else{
@@ -883,11 +901,17 @@ function testaResultado(){
   		}
 	}
 	if(document.getElementById('resultPre').innerHTML == chalenge){
-		alert('Resposta certa!');
+		criaJanela();
+		document.getElementById('divTutorial').innerHTML+="Resposta Certa!<br><br>";
+		document.getElementById("divTutorial").className="overlay2";
+		fadeJanela();
 		currentMonster='';
 		disconnect();
 	}else{
-		alert('Resposta errada!');
+		criaJanela();
+		document.getElementById('divTutorial').innerHTML+="Resposta Errada!<br><br>";
+		document.getElementById("divTutorial").className="overlay2";
+		fadeJanela();
 	}
 	
 }
