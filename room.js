@@ -22,9 +22,11 @@ var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repeat','while','contar','break'];
 var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 var catText = ['alerta','imprimir','ler'];
-criaJanela();
+var blocksHad =[];
+var blocksTutorial =[];
+criaJanela("tutorial");
 tutorial();
-fadeJanela("");
+fadeJanela("fadebackground");
 carregaTudo();
 //connect();
 
@@ -203,23 +205,33 @@ function nSala(){//bota no numero da sala no canto da div :)
 	
 	document.getElementById("roomNumber").innerHTML ="Sala: "+ parseInt(salaAtual+1);
 }
-function criaJanela(){
+function criaJanela(tipo,texto){
 	//criando a div 
 	var divPopup = document.createElement("DIV");
     divPopup.id = "overlay1";
-    divPopup.className = "overlay1";
+    divPopup.className = "overlayTutorial";
     var divCaixaResposta = document.createElement("DIV");
     divCaixaResposta.id = "divTutorial";
-    divPopup.style.width = "80%";
-	divPopup.style.height = "80%";
     divPopup.appendChild(divCaixaResposta);
     document.getElementById("divPrincipal").appendChild(divPopup);
+	if(texto!=undefined)document.getElementById('divTutorial').innerHTML=texto;
+	if(tipo == "alerta"){
+		divPopup.className = "overlayAlerta";
+		document.getElementById('divTutorial').innerHTML+="<br><br>";
+	}else if(tipo == "tutorial"){
+		divPopup.className = "overlayTutorial";
+		document.getElementById('divTutorial').innerHTML+="<br>";
+	}
 }
 function fadeJanela(q){
-    if(q==""){
-  		document.getElementById("divTutorial").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanelaOverlay();\">";
+    if(q=="hook"){
+    	document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"blockTutorial();\">";
+    }else if(q=="fadebackground"){
+  		document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanelaOverlay();\">";
+    }else if(q=="disconnect"){
+  		document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanelaDisconnect();\">";
    	}else{
-    	document.getElementById("divTutorial").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanela();\">";
+    	document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanela();\">";
     }
     $(document).ready(function(){
         $('#overlay1, #overlay-back').fadeIn(500);                
@@ -248,17 +260,36 @@ function tutorial(){
 function endJanela(){
 	$('#overlay1').fadeOut(500,function(){		
 		$(".divTutorial").remove();
-		$(".overlay1").remove();
+		$(".overlayTutorial").remove();
+		$(".overlayAlerta").remove();
 		document.getElementById('CommandInput').focus();
 		updateScroll();
     });
 }
 function endJanelaOverlay(){
-	$('#overlay1, #overlay-back').fadeOut(500,function(){		
+	$('#overlay1,#overlay-back').fadeOut(500,function(){		
 		$(".divTutorial").remove();
-		$(".overlay1").remove();
+		$(".overlayTutorial").remove();
+		$(".overlayAlerta").remove();
 		document.getElementById('CommandInput').focus();
 		updateScroll();
+    });
+}
+function endJanelaOverlay(){
+	$('#overlay1').fadeOut(500,function(){		
+		$(".divTutorial").remove();
+		$(".overlayTutorial").remove();
+		$(".overlayAlerta").remove();
+		document.getElementById('CommandInput').focus();
+		updateScroll();
+		disconnect();
+    });
+}
+function endJanelaHook(){
+	$('#overlay1').fadeOut(500,function(){		
+		$(".divTutorial").remove();
+		$(".overlayTutorial").remove();
+		$(".overlayAlerta").remove();
     });
 }
 
@@ -537,24 +568,6 @@ function give(what){
 	}
 }
 
-function disconnect(){
-    $('#overlay, #overlay-back').fadeOut(500,function(){
-		$(".blocklyTooltipDiv").remove();
-		$(".blocklyWidgetDiv").remove();
-		$(".overlay").remove();
-		$(".toolbox").remove();
-		document.getElementById('CommandInput').onkeypress = function(e) {
-			var event = e || window.event;
-			var charCode = event.which || event.keyCode;
-			if ( charCode == '13') {
-				processInput(e);
-			}
-		}
-		document.getElementById('CommandInput').focus();
-		updateScroll();
-    });
-}
-
 function blocksManager(){//deve ser chamado sempre que se meche no inventario
 	//atualiza o array blocks com os indexs dos blocos que o jogador tem
 	var catLogic2 = catLogic.concat(catLoops);
@@ -580,8 +593,10 @@ function  toolboxManager(){
 	var loops='';
 	var matematica ='';
 	var texto='';
+	var jaTem=0;//variavel auxiliar pra testar se aquele bloco ja tem nos blocos que o carinha ja teve
 	if(blocks.length == 0){
-		alert('Não tem mais blocos para lutar!');
+		criaJanela("alerta","Você não tem os blocos necessários para lutar!");
+		fadeJanela("fadebackground");
 	}else{
 		//adiciona ou retira os blocos da nova toolbox
 		for (var i = blocks.length - 1; i >= 0; i--) {
@@ -590,22 +605,62 @@ function  toolboxManager(){
 					//tem que testar se ele nao inicia uma categoria nova
 					for (var k = catLogic.length - 1; k >= 0; k--) {
 						if(catLogic[k] == itemm[j].getAttribute('id')){
-							logica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+							logica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
+							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							for (var l = blocksHad.length - 1; l >= 0; l--) {
+								if(blocksHad[l]==itemm[j].getAttribute('id')){
+									jaTem=1;
+								}
+							}
+							if(jaTem==0){
+								blocksHad[blocksHad.length]=itemm[j].getAttribute('id');
+								blocksTutorial[blocksTutorial.length]=itemm[j].getAttribute('id');
+							}
 						}
 					}
 					for (var k = catLoops.length - 1; k >= 0; k--) {
 						if(catLoops[k] == itemm[j].getAttribute('id')){
-							loops+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+							loops+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 	
+							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							for (var l = blocksHad.length - 1; l >= 0; l--) {
+								if(blocksHad[l]==itemm[j].getAttribute('id')){
+									jaTem=1;
+								}
+							}
+							if(jaTem==0){
+								blocksHad[blocksHad.length]=itemm[j].getAttribute('id');
+								blocksTutorial[blocksTutorial.length]=itemm[j].getAttribute('id');
+							}
 						}
 					}
 					for (var k = catMath.length - 1; k >= 0; k--) {
 						if(catMath[k] == itemm[j].getAttribute('id')){
-							matematica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 			
+							matematica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
+							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							for (var l = blocksHad.length - 1; l >= 0; l--) {
+								if(blocksHad[l]==itemm[j].getAttribute('id')){
+									jaTem=1;
+								}
+							}
+							if(jaTem==0){
+								blocksHad[blocksHad.length]=itemm[j].getAttribute('id');
+								blocksTutorial[blocksTutorial.length]=itemm[j].getAttribute('id');
+							}	
 						}
 					}
 					for (var k = catText.length - 1; k >= 0; k--) {
 						if(catText[k] == itemm[j].getAttribute('id')){
 							texto+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
+							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							for (var l = blocksHad.length - 1; l >= 0; l--) {
+								if(blocksHad[l]==itemm[j].getAttribute('id')){
+									jaTem=1;
+								}
+							}
+							if(jaTem==0){
+								blocksHad[blocksHad.length]=itemm[j].getAttribute('id');
+								blocksTutorial[blocksTutorial.length]=itemm[j].getAttribute('id');
+							}
 						}
 					}
 				}
@@ -640,19 +695,52 @@ function  toolboxManager(){
 		}
 	}
 }
-function replaceBrakets(code){
-	code = code.split('');
-	result="";
-	for (var i = 0; i <= code.length - 1; i++) {
-		if(code[i] == '['){
-			code[i]= '<';
-		}else if(code[i] == ']'){
-			code[i] = '>';
+
+function blockTutorial(){
+	var xmlDoc = xhttp.responseXML;
+	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
+	var itemm = inventoryXML.getElementsByTagName("item");
+
+	for (var i = blocksTutorial.length - 1; i >= 0; i--) {
+		for (var j = itemm.length - 1; j >= 0; j--) {
+			if(itemm[j].getAttribute('id') == blocksTutorial[i]){
+				//achou o bloco no xml agora é soh printar a janela com o tutorial dele e tirar ele da lista de blocksTutorial
+				blocksTutorial.splice(blocksTutorial.length-1);
+				if(document.getElementById('divTutorial')==null){
+					criaJanela("tutorial",itemm[j].getElementsByTagName("tutorial")[0].childNodes[0].nodeValue);
+					fadeJanela("hook");
+				}else{
+					document.getElementById('divTutorial').innerHTML = itemm[j].getElementsByTagName("tutorial")[0].childNodes[0].nodeValue;
+				}
+				return;
+			}
 		}
-		result+=code[i];
 	}
-	return result;
+	endJanelaHook();
 }
+
+function disconnect(){
+    $('#overlay, #overlay-back,#blocklyTooltipDiv,#blocklyWidgetDiv').fadeOut(500,function(){
+		//$(".blocklyTooltipDiv").remove();
+		//$(".blocklyWidgetDiv").remove();
+
+		//$(".overlay").remove();
+		//$(".toolbox").remove();
+		block = obtain(workspace, "");
+		new Delete(block);
+		run(true);
+		document.getElementById('CommandInput').onkeypress = function(e) {
+			var event = e || window.event;
+			var charCode = event.which || eventk.eCode;
+			if ( charCode == '13') {
+				processInput(e);
+			}
+		}
+		document.getElementById('CommandInput').focus();
+		updateScroll();
+    });
+}
+
 function connect(xml,what){
 	toolboxManager();//atualiza os blocos que o cara tem
 	currentMonster=what;
@@ -685,11 +773,11 @@ function connect(xml,what){
 			divPopup.style.height = "85%";
 		    divPopup.appendChild(divCaixaResposta);
 		    document.getElementById("divPrincipal").appendChild(divPopup);
-	    
-
+	    	
 		    $(document).ready(function(){
-		        $('#overlay, #overlay-back').fadeIn(500);                
-		    });
+		    	$('#overlay, #overlay-back').fadeIn(500);                
+			});
+
 		    //inserindo o blockly
 		    var blocklyDiv = document.createElement("DIV");
 		    blocklyDiv.id = "blocklyDiv";
@@ -729,11 +817,23 @@ function connect(xml,what){
 		   	
 		  	workspace.addChangeListener(updateCode);
 			
+			
 			document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
 			document.getElementById("chalenge").innerHTML += "Desafio:";
 			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
 			document.getElementById("chalengePre").innerHTML += chalenge;
 			updateCode();
+			blockTutorial();
+		}else{
+			document.getElementById("resultPre").innerHTML = "";
+			document.getElementById("chalenge").innerHTML = "Desafio:";
+			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
+			document.getElementById("chalengePre").innerHTML += chalenge;
+			updateCode();
+			blockTutorial();
+			 $(document).ready(function(){
+		    	$('#overlay, #overlay-back').fadeIn(500);                
+			});
 		}
 	}
 }
@@ -858,9 +958,7 @@ function runCode() {
       stepsAllowed--;
     }
     if (!stepsAllowed) {
-       	criaJanela();
-		document.getElementById('divTutorial').innerHTML+="Loop Infinito!<br><br>";
-		document.getElementById("divTutorial").className="overlay2";
+       	criaJanela("alerta","Loop Infinito!");
 		fadeJanela();
        
        //return;
@@ -901,19 +999,27 @@ function testaResultado(){
   		}
 	}
 	if(document.getElementById('resultPre').innerHTML == chalenge){
-		criaJanela();
-		document.getElementById('divTutorial').innerHTML+="Resposta Certa!<br><br>";
-		document.getElementById("divTutorial").className="overlay2";
-		fadeJanela();
+		criaJanela("alerta","Resposta Certa!");
+		fadeJanela("fadebackground");
 		currentMonster='';
-		disconnect();
 	}else{
-		criaJanela();
-		document.getElementById('divTutorial').innerHTML+="Resposta Errada!<br><br>";
-		document.getElementById("divTutorial").className="overlay2";
+		criaJanela("alerta","Resposta Errada!");
 		fadeJanela();
 	}
 	
+}
+function replaceBrakets(code){
+	code = code.split('');
+	result="";
+	for (var i = 0; i <= code.length - 1; i++) {
+		if(code[i] == '['){
+			code[i]= '<';
+		}else if(code[i] == ']'){
+			code[i] = '>';
+		}
+		result+=code[i];
+	}
+	return result;
 }
 function placeArrayRead(code){
 	var xmlDoc = xhttp.responseXML;

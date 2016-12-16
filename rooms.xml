@@ -98,6 +98,7 @@
 					Tem um bloco de metal azul no chão com a palavra SE escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>O bloco Se representa um bloco de condição, se a condição que ele recebe for verdadeira,então os blocos que estão dentro dele serão executados, no caso de a condiçao ser falsa o jogador pode escolher entre não fazer nada ou executar outro conjunto de blocos, clicando na engrenagem do bloco e selecionando a formação if/else ,pois assim o bloco if terá um conjunto de blocos para executar caso a condicao seja falsa e outro caso seja verdadeira;</tutorial>
 			<use>[block type="controls_if"][/block]
 				 [block type="logic_compare"][/block]
 			     [block type="logic_operation"][/block]
@@ -116,6 +117,7 @@
 					Tem um bloco de metal verde escuro no chão com a palavra IMPRIMIR escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>O bloco imprimir recebe os dados do bloco conectado a ele e imprime-os no local de resposta, se o dado impresso no local de resposta satisfazer as condições para derrotar o monstro então esta janela de combate será fechada e você retornará para o jogo de texto, caso a resposta não satisfaça as condições o jogador também será notificado.</tutorial>
 			<use>[block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="alerta">
@@ -127,6 +129,7 @@
 					Tem um bloco de metal verde escuro no chão com a palavra ALERTA escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto alerta.</tutorial>
 			<use>[block type="text_print"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="ler">
@@ -138,6 +141,7 @@
 					Tem um bloco de metal verde escuro no chão com a palavra LER escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto ler.</tutorial>
 			<use>[block type="text_read"][/block]</use>
 		</item>
 		<item id="matematica">
@@ -149,6 +153,7 @@
 					Tem um bloco de metal verde escuro no chão com várias palavras escritas nele, mas a palavra MATATEMATICA se destaca no meio.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto matematica.</tutorial>
 			<use>
 					[block type="math_number"][/block]
 			      [block type="math_arithmetic"]
@@ -253,6 +258,7 @@
 					Tem um bloco de metal verde no chão com a palavra CONTAR escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto contar.</tutorial>
 			<use>[block type="controls_for"][value name="FROM"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][value name="TO"][shadow type="math_number"][field name="NUM"]10[/field][/shadow][/value][value name="BY"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="repetir">
@@ -264,6 +270,7 @@
 					Tem um bloco de metal verde no chão com a palavra REPETIR escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto repeat.</tutorial>
 			<use>[block type="controls_repeat_ext"]
 	        [value name="TIMES"]
 	          [shadow type="math_number"]
@@ -281,6 +288,7 @@
 					Tem um bloco de metal verde no chão com a palavra ENQUANTO escritas nele.
 				</descriptionDroped>
 			</status>
+			<tutorial>tuto enquanto.</tutorial>
 			<use>[block type="controls_whileUntil"][/block]
 	      [block type="controls_for"]
 	        [value name="FROM"]
