@@ -12,14 +12,14 @@ var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id 
 var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
-var workspace;
+var workspace=null;
 var myInterpreter = null;
 var highlightPause = false;
 var currentMonster='';//segura o monstro atual que esta em combate
 
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
-var catLoops = ['repeat','while','contar','break'];
+var catLoops = ['repeat','enquanto','contar','break'];
 var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];
@@ -720,15 +720,18 @@ function blockTutorial(){
 }
 
 function disconnect(){
-    $('#overlay, #overlay-back,#blocklyTooltipDiv,#blocklyWidgetDiv').fadeOut(500,function(){
-		//$(".blocklyTooltipDiv").remove();
-		//$(".blocklyWidgetDiv").remove();
-
-		//$(".overlay").remove();
-		//$(".toolbox").remove();
-		block = obtain(workspace, "");
-		new Delete(block);
-		run(true);
+    $('#overlay, #overlay-back,#blocklyTooltipDiv,#blocklyWidgetDiv').fadeOut(500,function(){	
+		/*
+		workspace.updateToolbox({toolbox: document.getElementById('toolbox'),
+		     zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		     trashcan: true});
+		*/
 		document.getElementById('CommandInput').onkeypress = function(e) {
 			var event = e || window.event;
 			var charCode = event.which || eventk.eCode;
@@ -739,6 +742,7 @@ function disconnect(){
 		document.getElementById('CommandInput').focus();
 		updateScroll();
     });
+    if(workspace!=null)workspace.clear();
 }
 
 function connect(xml,what){
@@ -825,6 +829,7 @@ function connect(xml,what){
 			updateCode();
 			blockTutorial();
 		}else{
+			workspace.updateToolbox(document.getElementById('toolbox'));
 			document.getElementById("resultPre").innerHTML = "";
 			document.getElementById("chalenge").innerHTML = "Desafio:";
 			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
@@ -1103,7 +1108,7 @@ function replaceCommand(code,what){
 			aux="var auxRead"+i+"=0;\n"+aux;
 		}
 		aux=placeArrayRead(aux);
-		alert(aux);
+		//alert(aux);
 	}
 	return aux;
 }
