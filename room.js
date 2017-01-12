@@ -9,7 +9,6 @@ var monsters = [];
 var roomsStates = [];
 var blocks = [];//guarda o index da posicao de um bloco no inventario
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
-var nSalas = 1;//guarda o numero de salas do xml
 var xhttp = new XMLHttpRequest();
 var xhttp2 = new XMLHttpRequest();
 var workspace=null;
@@ -19,7 +18,7 @@ var currentMonster='';//segura o monstro atual que esta em combate
 
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
-var catLoops = ['repeat','enquanto','contar','break'];
+var catLoops = ['repetir','enquanto','contar','break'];
 var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];
@@ -275,11 +274,12 @@ function endJanelaOverlay(){
 		updateScroll();
     });
 }
-function endJanelaOverlay(){
+function endJanelaDisconnect(){
 	$('#overlay1').fadeOut(500,function(){		
 		$(".divTutorial").remove();
 		$(".overlayTutorial").remove();
 		$(".overlayAlerta").remove();
+		carregaSala(xhttp);
 		document.getElementById('CommandInput').focus();
 		updateScroll();
 		disconnect();
@@ -336,9 +336,12 @@ function descriptionRoom(xml){//por algum motivo,mesmo depois de desativado o it
 			for(var j=0;j < monsterr.length ;j++){
 				if(monsterr[j].getAttribute('id') == monsters[i].getId()){
 					descriptions = monsterr[j].getElementsByTagName("shortDescription");
-					if(descriptions[i].getAttribute('id') == monsters[i].getState()){
-						descriptionDroped = descriptions[i].childNodes[0].nodeValue;
+					if(monsters[i].getState() == 1){//monstro ainda nao enfrentado
+						descriptionDroped = descriptions[0].childNodes[0].nodeValue;
 						connect(xhttp,monsters[i].getId());
+						break;
+					}else if(monsters[i].getState() == 2){// monstro ja derrotado
+						descriptionDroped = descriptions[1].childNodes[0].nodeValue;
 						break;
 					}
 				}
@@ -454,8 +457,8 @@ function processInput(e){
 }
 function pick(what){
 	for(var i = items.length - 1; i >= 0; i--){
-		if(what.indexOf(items[i].getId()) != -1){
-			if(items[i].getActive() == "true"){
+		if(what.trim() == items[i].getId()){
+			if(items[i].getActive() == "true" && items[i].getWhere() == (salaAtual+1)){
 				inventory[inventory.length] = items[i];
 				items.splice(i, 1);
 				feedBackHistory("Pegou "+ what + "!");
@@ -475,7 +478,7 @@ function pick(what){
 //&& inventory[i].getWhere() == (salaAtual+1)
 function drop(what){
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if(what.indexOf(inventory[i].getId()) != -1 && inventory[i].getActive() == "false"){
+		if((what.trim() ==inventory[i].getId()) && inventory[i].getActive() == "false"){
 			items[items.length] = inventory[i];
 			inventory.splice(i, 1);
 			feedBackHistory("Soltou "+ what + " na Sala "+ (salaAtual+1) +"!" );
@@ -491,7 +494,7 @@ function drop(what){
 /*
 	forzinho padrao pra consulta de items no inventario
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if(what.indexOf(inventory[i].getId()) !== -1 && inventory[i].getActive() == "false" ){
+		if((what.trim() ==inventory[i].getId()) && inventory[i].getActive() == "false" ){
 			
 			return;	
 		}
@@ -533,7 +536,7 @@ function testaAt(at){
 function testaHas(has){
 	for (var k = has.length - 1; k >= 0; k--) {
 		for (var l = inventory.length - 1; l >= 0; l--) {
-			if(has[k].indexOf(inventory[l].getId()) != -1){
+			if(has[k].trim() == inventory[l].getId()){
 				has[k] = 1;
 				break; 
 			}	
@@ -546,7 +549,7 @@ function testaHas(has){
 }
 function extract(what){
 	for (var i = inventory.length - 1; i >= 0; i--) {
-		if(inventory[i].getId().indexOf(what) != -1){
+		if(inventory[i].getId().trim() == what.trim()){
 			items[items.length] = inventory[i];
 			inventory.splice(i, 1);
 			items[items.length-1].setWhere(salaAtual+1);
@@ -557,7 +560,7 @@ function extract(what){
 }
 function give(what){
 	for(var i = items.length - 1; i >= 0; i--){
-		if(what.indexOf(items[i].getId()) != -1){
+		if(what.trim() == items[i].getId()){
 			inventory[inventory.length] = items[i];
 			items.splice(i, 1);
 			feedBackHistory("Pegou "+ what + "!");
@@ -583,7 +586,7 @@ function blocksManager(){//deve ser chamado sempre que se meche no inventario
 	}
 }
 
-function  toolboxManager(){
+function toolboxManager(){
 	var xmlDoc = xhttp.responseXML;
 	var xmlDoc2 = xhttp2.responseXML;
 	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
@@ -597,6 +600,7 @@ function  toolboxManager(){
 	if(blocks.length == 0){
 		criaJanela("alerta","Você não tem os blocos necessários para lutar!");
 		fadeJanela("fadebackground");
+		return false;
 	}else{
 		//adiciona ou retira os blocos da nova toolbox
 		for (var i = blocks.length - 1; i >= 0; i--) {
@@ -694,6 +698,7 @@ function  toolboxManager(){
 			document.body.innerHTML+= code;
 		}
 	}
+	return true;
 }
 
 function blockTutorial(){
@@ -746,8 +751,10 @@ function disconnect(){
 }
 
 function connect(xml,what){
-	toolboxManager();//atualiza os blocos que o cara tem
-	currentMonster=what;
+	if(!toolboxManager()){//atualiza os blocos que o cara tem
+		return;
+	}
+	currentMonster=what.trim();
 	var xmlDoc = xml.responseXML;
     bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
@@ -755,8 +762,8 @@ function connect(xml,what){
     chalenge = "";
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
-  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(what) != -1)){			
-  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && (monsters[i].getId().trim() == what.trim()))){			
+  			for (var j = monsterr.length - 1; j >= 0; j--){	  		
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
   					chalenge ="\t"+monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
   					connected = true;
@@ -781,7 +788,7 @@ function connect(xml,what){
 		    $(document).ready(function(){
 		    	$('#overlay, #overlay-back').fadeIn(500);                
 			});
-
+		  
 		    //inserindo o blockly
 		    var blocklyDiv = document.createElement("DIV");
 		    blocklyDiv.id = "blocklyDiv";
@@ -824,7 +831,7 @@ function connect(xml,what){
 			
 			document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
 			document.getElementById("chalenge").innerHTML += "Desafio:";
-			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
+			document.getElementById("chalenge").innerHTML += "<div id=chalengePre></div>";
 			document.getElementById("chalengePre").innerHTML += chalenge;
 			updateCode();
 			blockTutorial();
@@ -832,7 +839,7 @@ function connect(xml,what){
 			workspace.updateToolbox(document.getElementById('toolbox'));
 			document.getElementById("resultPre").innerHTML = "";
 			document.getElementById("chalenge").innerHTML = "Desafio:";
-			document.getElementById("chalenge").innerHTML += "<pre id=chalengePre></pre>";
+			document.getElementById("chalenge").innerHTML += "<div id=chalengePre></div>";
 			document.getElementById("chalengePre").innerHTML += chalenge;
 			updateCode();
 			blockTutorial();
@@ -995,22 +1002,28 @@ function testaResultado(){
     var chalenge = "";
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
-  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(currentMonster) != -1)){			
-  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  		if(((monsters[i].getActive().trim() =="true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().trim() == currentMonster.trim())){			
+  			for (var j = monsterr.length - 1; j >= 0; j--){	  				
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
   					chalenge =monsterr[j].getElementsByTagName("test")[0].childNodes[0].nodeValue;//carrega o TESTE E NAO O PROBLEMA
+						if(document.getElementById('resultPre').innerHTML == chalenge){
+						criaJanela("alerta","Resposta Certa!");
+						fadeJanela("disconnect");
+						currentMonster='';
+						//setar o monstro atual como derrotado
+						monsters[i].setState(2);
+						//setar o novo estado da sala
+						roomsStates[parseInt(salaAtual)] = 2;
+					}else{
+						criaJanela("alerta","Resposta Errada!");
+						fadeJanela();
+					}
+					return;
   				}
   			}
   		}
 	}
-	if(document.getElementById('resultPre').innerHTML == chalenge){
-		criaJanela("alerta","Resposta Certa!");
-		fadeJanela("fadebackground");
-		currentMonster='';
-	}else{
-		criaJanela("alerta","Resposta Errada!");
-		fadeJanela();
-	}
+
 	
 }
 function replaceBrakets(code){
@@ -1035,7 +1048,7 @@ function placeArrayRead(code){
     var i=0,j=0;
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
-  		if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(currentMonster) != -1)){			
+  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().trim() == currentMonster)){			
   			for (var j = monsterr.length - 1; i >= 0; i--){	  				
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
   					read =monsterr[j].getElementsByTagName("read")[0].childNodes[0].nodeValue;//carrega o read
@@ -1188,11 +1201,11 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if(what.indexOf(inventory[i].getId()) !== -1 && inventory[i].getActive() == "false" ){//achando o assassino que eu vou usar o use
+		if(what.trim() ==inventory[i].getId() && inventory[i].getActive() == "false" ){//achando o assassino que eu vou usar o use
 			for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
-				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id').indexOf(inventory[i].getId()) != -1){//se i tem que eu uero usar eh o item no xml
+				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id').trim() == inventory[i].getId()){//se i tem que eu uero usar eh o item no xml
 					if(inventoryXML.getElementsByTagName("use")[j].childNodes.length > 0){//se a tag use ta vazia
-						if(inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("in")[0].getAttribute('what').indexOf(onWhat) != -1){//achando a tag da vitima
+						if(inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("in")[0].getAttribute('what').trim() == onWhat){//achando a tag da vitima
 							//feedBackHistory("achei! vitima= "+inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("in")[0].getAttribute('what') +" assassino= "+ inventory[i].getId());
 							conditions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("in")[0].getElementsByTagName("conditions")[0];
 							actions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("in")[0].getElementsByTagName("action")[0];
@@ -1251,7 +1264,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								//mudando as caracteristicas de um item no inventario
 								computed = false;
 								for (var l = inventory.length - 1; l >= 0; l--){
-									if((inventory[l].getActive().indexOf("false") == 0) && (inventory[l].getId().indexOf(doSomething.victim) == 0)){
+									if((inventory[l].getActive().trim() == "false") && (inventory[l].getId().trim() == doSomething.victim)){
 										switch(doSomething.property){
 											case "where": 
 												inventory[l].setWhere(doSomething.value);
@@ -1273,7 +1286,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								//mudando as caracteristicas de um item no chao
 								if(computed != true ){
 									for (l = items.length - 1; l >= 0; l--) {
-										if(((items[l].getActive().indexOf("true") == 0) || (items[l].getActive() == ("alwaysTrue"))) && (items[l].getId() == (doSomething.victim))){
+										if(((items[l].getActive().trim() == "true") || (items[l].getActive() == ("alwaysTrue"))) && (items[l].getId() == (doSomething.victim))){
 											switch(doSomething.property){
 												case "where": 
 													items[l].setWhere(doSomething.value);
@@ -1477,14 +1490,13 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 
 			//itens no inventario
 			for (var i = inventory.length - 1; i >= 0; i--) {
-				if(inventory[i].getActive().indexOf("false") != -1 && inventory[i].getId().indexOf(where) != -1){
+				if(inventory[i].getActive().trim() == "false" && inventory[i].getId().trim() == where){
 					itemStatus = inventory[i].getState();
 					for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 						if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == inventory[i].getId()){
 							descriptions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description");
 							for (var k = descriptions.length - 1; k >= 0; k--) {
 								if(descriptions[k].getAttribute('id') == itemStatus){
-									feedBackHistory("coisa1");
 									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
 									return;
 								}
@@ -1495,14 +1507,13 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 			}
 			//items no chao
 			for (i = items.length - 1; i >= 0; i--) {
-				if(((items[i].getActive().indexOf("true") != -1) || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1)) && items[i].getId().indexOf(where) != -1){
+				if(((items[i].getActive().trim() == "true") || (items[i].getActive() == ("alwaysTrue"))) && (items[i].getWhere() == (salaAtual+1)) && items[i].getId().trim() == where){
 					itemStatus = items[i].getState();
 					for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 						if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id') == items[i].getId()){
 							descriptions = inventoryXML.getElementsByTagName("item")[j].getElementsByTagName("description");
 							for (var k = descriptions.length - 1; k >= 0; k--) {
 								if(descriptions[k].getAttribute('id') == itemStatus){
-									feedBackHistory("coisa2");
 									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
 									return;
 								}
@@ -1513,7 +1524,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 			}
 			//monstros
 			for (i = monsters.length - 1; i >= 0; i--) {
-				if(((monsters[i].getActive().indexOf("true") != -1) || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().indexOf(where) != -1)){
+				if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().trim() == where)){
 					itemStatus = monsters[i].getState();
 					for(var j=0;j < bestiaryXML.getElementsByTagName("monster").length ;j++){
 						if(bestiaryXML.getElementsByTagName("monster")[j].getAttribute('id') == monsters[i].getId()){
