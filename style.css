@@ -7,25 +7,20 @@
 }
 #codePre {
     display: block;
-    font-family: monospace;
     font-size: 15px;
-    white-space: pre;
     text-align: left;
 }
 
 #resultPre {
     display: block;
-    font-family: monospace;
     font-size: 15px;
-    white-space: pre;
     text-align: left;
 }
-#chalengePre {
-    display: block;
+#chalengeUl {
     font-family: monospace;
     font-size: 15px;
-    white-space: pre;
     text-align: left;
+    list-style-type: none;
 }
 .title{
     color:#000000;

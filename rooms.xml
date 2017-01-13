@@ -50,8 +50,8 @@
 				</description>
 			</status>
 			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me 1,2,3,4,5,6,7,8,9,10.</problem>
-			<test>12345678910</test>
-			<read>1,2,3,4,5,6,7,8,9,10.</read>
+			<test>123456789</test>
+			<read>1,2,3,4,5,6,7,8,9.</read>
 		</monster>
 		<monster id="esqueleto 1">
 			<status>
@@ -68,9 +68,9 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me 1,2,3,4,5,6,7,8,9,10</problem>
-			<test>12345678910</test>
-			<read>1,2,3,4,5,6,7,8,9,10.</read>
+			<problem>Dê me o que você lê.</problem>
+			<test>456654</test>
+			<read>456654.</read>
 		</monster>
 		<monster id="esqueleto 2">
 			<status>
@@ -87,9 +87,9 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me 1,2,3,4,5,6,7,8,9,10</problem>
-			<test>12345678910</test>
-			<read>1,2,3,4,5,6,7,8,9,10.</read>
+			<problem>Dê me os numeros pares.</problem>
+			<test>2224262830</test>
+			<read>21,22,23,24,25,26,27,28,29,30.</read>
 		</monster>
 		<monster id="esqueleto 3">
 			<status>
@@ -106,8 +106,8 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me 1,2,3,4,5,6,7,8,9,10</problem>
-			<test>12345678910</test>
+			<problem>Use matemática para duplicar os impares.</problem>
+			<test>26101418</test>
 			<read>1,2,3,4,5,6,7,8,9,10.</read>
 		</monster>
 		<monster id="esqueleto 4">
@@ -125,9 +125,9 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me 1,2,3,4,5,6,7,8,9,10</problem>
-			<test>12345678910</test>
-			<read>1,2,3,4,5,6,7,8,9,10.</read>
+			<problem>Fatorial!</problem>
+			<test>3628800</test>
+			<read>10</read>
 		</monster>
 	</bestiary>
 	<inventory>

@@ -25,6 +25,7 @@ var blocksHad =[];
 var blocksTutorial =[];
 criaJanela("tutorial");
 tutorial();
+tutorialAux();
 fadeJanela("fadebackground");
 carregaTudo();
 //connect();
@@ -256,12 +257,16 @@ function tutorial(){
 	document.getElementById('divTutorial').innerHTML+="<dd> Usa um item em algum outro item,dentro do inventario ou nao, desde que o jogador esteja na sala daquele item.</dd>";
 	document.getElementById('divTutorial').innerHTML+="</dl>Boa sorte!";
 }
+function tutorialAux(){
+	feedBackHistory("Lembre-se:");
+	feedBackHistory("inventory,go,look,pick/take,drop,use.");
+	feedBackHistory("Esses são os comandos do jogo!");
+}
 function endJanela(){
 	$('#overlay1').fadeOut(500,function(){		
 		$(".divTutorial").remove();
 		$(".overlayTutorial").remove();
 		$(".overlayAlerta").remove();
-		document.getElementById('CommandInput').focus();
 		updateScroll();
     });
 }
@@ -831,16 +836,16 @@ function connect(xml,what){
 			
 			document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
 			document.getElementById("chalenge").innerHTML += "Desafio:";
-			document.getElementById("chalenge").innerHTML += "<div id=chalengePre></div>";
-			document.getElementById("chalengePre").innerHTML += chalenge;
+			document.getElementById("chalenge").innerHTML += "<ul id=chalengeUl><li id=chalengeText></li></div>";
+			document.getElementById("chalengeText").innerHTML += chalenge;
 			updateCode();
 			blockTutorial();
 		}else{
 			workspace.updateToolbox(document.getElementById('toolbox'));
 			document.getElementById("resultPre").innerHTML = "";
 			document.getElementById("chalenge").innerHTML = "Desafio:";
-			document.getElementById("chalenge").innerHTML += "<div id=chalengePre></div>";
-			document.getElementById("chalengePre").innerHTML += chalenge;
+			document.getElementById("chalenge").innerHTML += "<ul id=chalengeUl><li id=chalengeText></li></div>";
+			document.getElementById("chalengeText").innerHTML += chalenge;
 			updateCode();
 			blockTutorial();
 			 $(document).ready(function(){
@@ -897,7 +902,11 @@ function parseCode() {
   Blockly.JavaScript.addReservedWords('highlightBlock');
   var code = Blockly.JavaScript.workspaceToCode(workspace);
 
-  code = comentaRapidao(code,'submeter');
+
+	code=comentaRapidao(code,'imprimir');
+    code = comentaRapidao(code,'highlight');
+    code= replaceCommand(code,'ler');
+  
   myInterpreter = new Interpreter(code, initApi);
 
   document.getElementById('btnStep').disabled = '';
@@ -949,7 +958,7 @@ function runCode() {
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
     var code=comentaRapidao(code2,'imprimir');
     code = comentaRapidao(code,'highlight');
-    code= comentaRapidao(code,'ler');
+    code= replaceCommand(code,'ler');
     var initFunc = function(interpreter, scope) {
       var alertWrapper = function(text) {
         text = text ? text.toString() : '';
@@ -1016,7 +1025,7 @@ function testaResultado(){
 						roomsStates[parseInt(salaAtual)] = 2;
 					}else{
 						criaJanela("alerta","Resposta Errada!");
-						fadeJanela();
+						fadeJanela("overlay");
 					}
 					return;
   				}
@@ -1048,8 +1057,8 @@ function placeArrayRead(code){
     var i=0,j=0;
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
-  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().trim() == currentMonster)){			
-  			for (var j = monsterr.length - 1; i >= 0; i--){	  				
+  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && monsters[i].getId().trim() == currentMonster.trim())){			
+  			for (var j = monsterr.length - 1; j >= 0; j--){	  				
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
   					read =monsterr[j].getElementsByTagName("read")[0].childNodes[0].nodeValue;//carrega o read
   				}
@@ -1061,7 +1070,7 @@ function placeArrayRead(code){
 	for (var i = 1; i <= read.length - 1; i++) {
 		read[0]+=read[i];
 	}
-	code = "var read=["+read[0]+"];\n"+code;
+	code = "var read=['"+read[0]+"'];\n"+code;
 	return code;
 }
 function replaceCommand(code,what){
@@ -1085,11 +1094,21 @@ function replaceCommand(code,what){
 		if(what == 'imprimir'){
 			if(newCode[i].includes('imprimir(')){
 				var value='';
+				var value2='';
 				//alert(newCode[i]);
 				for(var k=newCode[i].indexOf('(');k<=newCode[i].lastIndexOf(')');k++){
 					value += newCode[i][k];
+					value2 += newCode[i][k];
+					if(value2.length == 2 && newCode[i].indexOf("'")!=-1){
+						value2+=',';
+					}
 				}
-				newCode[i] = '\ndocument.getElementById("resultPre").innerHTML+='+value+';';
+				if(newCode[i].indexOf("'")!=-1){
+					newCode[i] = '\nif(document.getElementById("resultPre").innerHTML==""){document.getElementById("resultPre").innerHTML+='+value+';}else{document.getElementById("resultPre").innerHTML+='+value2+';}';
+				}else if(newCode[i].indexOf("'")==-1){
+					newCode[i] = '\ndocument.getElementById("resultPre").innerHTML+='+value+';';
+				}
+				
 				//alert(newCode[i]);
 			}
 
@@ -1103,8 +1122,8 @@ function replaceCommand(code,what){
 			if(newCode[i].includes('ler()')){
 				//alert(newCode[i]);
 				aux2=newCode[i].split('ler()');
-				//alert(newCode[i][0]);
-				//alert(newCode[i][1]);
+				//alert(aux2[0]);
+				//alert(aux2[1]);
 				aux2[1]='read[auxRead'+Nread+'++]'+aux2[1];
 				newCode[i]=aux2[0]+aux2[1];
 				//alert(newCode[i]);
@@ -1125,6 +1144,7 @@ function replaceCommand(code,what){
 	}
 	return aux;
 }
+
 function comentaRapidao(code,what){
 	var i=0;
 	var j=0;
@@ -1432,7 +1452,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				var roomStatus = roomsStates[parseInt(numberNext)-1];
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
-						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
 					}
 				}
 			}else{
@@ -1447,7 +1467,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				var roomStatus = roomsStates[parseInt(numberNext)-1];
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
-						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
 					}
 				}
 			}else{
@@ -1462,7 +1482,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				var roomStatus = roomsStates[parseInt(numberNext)-1];
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
-						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
 					}
 				}
 			}else{
