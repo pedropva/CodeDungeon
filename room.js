@@ -1074,17 +1074,24 @@ function placeArrayRead(code){
 	for (var i = 1; i <= read.length - 1; i++) {
 		read[0]+=read[i];
 	}
-	code = "var read=['"+read[0]+"'];\n"+code;
+	code = "var read=["+read[0]+"];\n"+code;
 	return code;
 }
-function replaceCommand(code,what){
+function replaceCommand(code,what,Nreads){
 	var i=0;
 	var j=0;
 	var aux='';
-	var aux2='';
+	var aux2=[];
 	var newCode=[];
-	var Nread=0;
+	var Nread;
+	if(Nreads != null && Nreads != undefined){
+		Nread=Nreads;
+	}else{
+		Nread=0;
+	}
+	
 	newCode[0] = '';
+	var moreReadOnSameLine =false;
 	while(i<code.length){
 		newCode[j]+=code[i];
 		if((code[i] == ';' || code[i] == '{' || code[i] == '}') && code[i+1]== '\n'){
@@ -1125,26 +1132,31 @@ function replaceCommand(code,what){
 		else if(what == 'ler'){
 			if(newCode[i].includes('ler()')){
 				//alert(newCode[i]);
-				aux2=newCode[i].split('ler()');
+				aux2[0]=newCode[i].slice(0,newCode[i].indexOf('ler()'));
+				aux2[1]=newCode[i].slice(newCode[i].indexOf('ler()')+5,newCode[i].length);
 				//alert(aux2[0]);
 				//alert(aux2[1]);
 				aux2[1]='read[auxRead'+Nread+'++]'+aux2[1];
 				newCode[i]=aux2[0]+aux2[1];
 				//alert(newCode[i]);
 				Nread++;
+				if(newCode[i].includes('ler()'))moreReadOnSameLine=true;
 			}
 		}			
 	}
 	for (i = 0; i < newCode.length; i++) {
 		aux+=newCode[i];
 	}
-	if(Nread>0){
+	if(Nread>0 && !moreReadOnSameLine){
 		//alert(aux);
 		for (i = 0; i < Nread; i++) {
 			aux="var auxRead"+i+"=0;\n"+aux;
 		}
 		aux=placeArrayRead(aux);
 		//alert(aux);
+	}
+	if(moreReadOnSameLine){
+		aux=replaceCommand(aux,what,Nread);
 	}
 	return aux;
 }

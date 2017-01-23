@@ -624,9 +624,9 @@ Blockly.Blocks['text_read'] = {
     this.jsonInit({
       "type": "text_read",
       "message0": "ler",
-      "output": "Number",
+      "output": null,
       "colour": 160,
-      "tooltip": "Le um numero da sequencia dada,na proxima chamada ele le o proximo numero até c",
+      "tooltip": "Le um numero da sequencia dada,na proxima chamada ele le o proximo numero até o fim.",
       "helpUrl": "http://www.pedropva.esy.es.com/"
     });
   }

@@ -87,9 +87,9 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Dê me os numeros pares.</problem>
-			<test>2224262830</test>
-			<read>21,22,23,24,25,26,27,28,29,30.</read>
+			<problem>Me diga se o primeiro é igual a 23, responda 'true' para sim e 'false' para não.</problem>
+			<test>true</test>
+			<read>23,23.</read>
 		</monster>
 		<monster id="esqueleto 3">
 			<status>
@@ -107,7 +107,7 @@
 				</description>
 			</status>
 			<problem>Use matemática para duplicar os impares.</problem>
-			<test>26101418</test>
+			<test>1,6,10,14,18.</test>
 			<read>1,2,3,4,5,6,7,8,9,10.</read>
 		</monster>
 		<monster id="esqueleto 4">
@@ -210,7 +210,7 @@
 				</descriptionDroped>
 			</status>
 			<tutorial>O bloco imprimir recebe os dados do bloco conectado a ele e imprime-os no local de resposta, se o dado impresso no local de resposta satisfazer as condições do terminal então esta janela de combate será fechada e você retornará para o jogo de texto, caso a resposta não satisfaça as condições o jogador também será notificado.</tutorial>
-			<use>[block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
+			<use>[block type="text"][/block][block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="alerta">
 			<status>
