@@ -395,7 +395,7 @@
 				Acabo de entrar numa sala do porão, estranhamente ela parece bem nova e bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à porta pela qual eu vim há um corredor estreito, há uma curva que não me deixa ver o fim desse corredor.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
 				<north>2</north>
 				<west></west>
 				<east></east>
@@ -405,7 +405,7 @@
 		<room id="2">
 			<status>
 				<shortDescription id="1">
-				Não consigo ver dentro da sala.
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
 				Ao entrar na sala, vejo o chão de tijolos mais claramente, são tijolos de cimento desgastados, parece que esse lugar já foi bastante movimentado mas devido às infiltracões e recentes terremotos está abandonado agora.
@@ -418,7 +418,13 @@
 				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal e sinto que não tenho opção a não ser seguir em frente.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south>1</south>
+			</NextRoom>
+			<NextRoom id="2">
 				<north></north>
 				<west></west>
 				<east>3</east>
@@ -431,10 +437,10 @@
 				Um vento frio vem dessa sala.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				Parece uma sala padrao de reabastecimento, geralmente salas assim sao seguidas de longos corredores de transporte, mas esse parece ter sido abandonada.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
 				<north></north>
 				<west>2</west>
 				<east>4</east>
@@ -444,13 +450,25 @@
 		<room id="4">
 			<status>
 				<shortDescription id="1">
-				Um vento frio vem dessa sala.
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				A sala tem suas paredes brancas e frias a luz vermelha de emergencia e a luz do terminal sao as unicas fontes de luz.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal e sinto que não tenho opção a não ser seguir em frente.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id = "1">
+				<north></north>
+				<west>3</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
 				<north></north>
 				<west>3</west>
 				<east></east>
@@ -463,10 +481,10 @@
 				Um vento frio vem dessa sala.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				Mais uma sala de reabastecimento padrao, sinto que devo continuar. 
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id = "1">
 				<north>4</north>
 				<west></west>
 				<east></east>
@@ -476,13 +494,25 @@
 		<room id="6">
 			<status>
 				<shortDescription id="1">
-				Um vento frio vem dessa sala.
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id = "1">
+				<north>5</north>
+				<west></west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
 				<north>5</north>
 				<west></west>
 				<east>7</east>
@@ -495,10 +525,10 @@
 				Um vento frio vem dessa sala.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				Mais uma sala vazia e escura, malditos terremotos.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
 				<north>8</north>
 				<west>6</west>
 				<east></east>
@@ -508,13 +538,25 @@
 		<room id="8">
 			<status>
 				<shortDescription id="1">
-				Um vento frio vem dessa sala.
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south>7</south>
+			</NextRoom>
+			<NextRoom id="2">
 				<north>9</north>
 				<west></west>
 				<east></east>
@@ -527,10 +569,10 @@
 				Um vento frio vem dessa sala.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				wow,mais uma sala estranha.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
 				<north></north>
 				<west></west>
 				<east>10</east>
@@ -540,13 +582,25 @@
 		<room id="10">
 			<status>
 				<shortDescription id="1">
-				Um vento frio vem dessa sala.
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
+				<north></north>
+				<west>9</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id="2">
 				<north>11</north>
 				<west>9</west>
 				<east></east>
@@ -562,7 +616,7 @@
 				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id="1">
 				<north></north>
 				<west>12</west>
 				<east></east>
@@ -572,17 +626,29 @@
 		<room id="12">
 			<status>
 				<shortDescription id="1">
-				Um vento frio vem dessa sala.
+					Uma escotilha fechada, deve estar aguardando por comando do terminal.
 				</shortDescription>
 				<description id="1">
-				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+					A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+					Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+					Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes.. oh nao! as paredes! elas continuam brancas!.
 				</description>
 			</status>
-			<NextRoom>
+			<NextRoom id = "1">
 				<north></north>
 				<west></west>
 				<east>11</east>
 				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
+				<north></north>
+				<west></west>
+				<east>11</east>
+				<south>1</south>
 			</NextRoom>
 		</room>
 

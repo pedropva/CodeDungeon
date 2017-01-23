@@ -6,7 +6,7 @@
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
-var roomsStates = [];
+var roomsStates = [];//guarda os states das salas recebe como argumento salaAtual, assim roomsStates[salaAtual] = "2";
 var blocks = [];//guarda o index da posicao de um bloco no inventario
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var xhttp = new XMLHttpRequest();
@@ -616,6 +616,7 @@ function toolboxManager(){
 						if(catLogic[k] == itemm[j].getAttribute('id')){
 							logica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
 							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							jaTem=0;
 							for (var l = blocksHad.length - 1; l >= 0; l--) {
 								if(blocksHad[l]==itemm[j].getAttribute('id')){
 									jaTem=1;
@@ -631,6 +632,7 @@ function toolboxManager(){
 						if(catLoops[k] == itemm[j].getAttribute('id')){
 							loops+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 	
 							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							jaTem=0;
 							for (var l = blocksHad.length - 1; l >= 0; l--) {
 								if(blocksHad[l]==itemm[j].getAttribute('id')){
 									jaTem=1;
@@ -646,6 +648,7 @@ function toolboxManager(){
 						if(catMath[k] == itemm[j].getAttribute('id')){
 							matematica+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
 							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							jaTem=0;
 							for (var l = blocksHad.length - 1; l >= 0; l--) {
 								if(blocksHad[l]==itemm[j].getAttribute('id')){
 									jaTem=1;
@@ -661,6 +664,7 @@ function toolboxManager(){
 						if(catText[k] == itemm[j].getAttribute('id')){
 							texto+=itemm[j].getElementsByTagName("use")[0].childNodes[0].nodeValue; 
 							//isso tudo pra ver se ele ja teve esse bloco e nao chamar o tutorial duas vezes
+							jaTem=0;
 							for (var l = blocksHad.length - 1; l >= 0; l--) {
 								if(blocksHad[l]==itemm[j].getAttribute('id')){
 									jaTem=1;
@@ -1377,13 +1381,18 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 	feedBackHistory("Nao tenho nenhum item assim");//n tem no inventario ou n jogo
 }
 
-
 function go(where,xml){//tem q por as siglas w,e,s,n
 	var xmlDoc = xml.responseXML;
 	var numberNext;
 	var roomm = xmlDoc.getElementsByTagName("rooms")[0];
 	var room = roomm.getElementsByTagName("room")[salaAtual];
-	var nextRoom = room.getElementsByTagName("NextRoom")[0];
+	var nextRoom = room.getElementsByTagName("NextRoom");
+	//alert(nextRoom.length);
+	for (var i = 0; i <= nextRoom.length - 1; i++) {
+		if (parseInt(nextRoom[i].getAttribute("id")) == roomsStates[salaAtual]) {
+			nextRoom = nextRoom[i];
+		}
+	}
 	switch(where){
 		case "north":
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){
@@ -1392,7 +1401,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("tem nada pra frente");
+				feedBackHistory("não consigo ir pra frente");
 			}
 			break;
 		case "south":
@@ -1402,7 +1411,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("tem nada pra tras");
+				feedBackHistory("não consigo ir pra tras");
 			}
 			break;
 		case "west":
@@ -1412,7 +1421,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("tem nada pra esquerda");
+				feedBackHistory("não consigo ir pra direita");
 			}
 			break;
 
@@ -1423,11 +1432,11 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("tem nada pra direita");
+				feedBackHistory("não consigo ir pra esquerda");
 			}
 			break;
 		default:
-			feedBackHistory("nao tem nada que valha a pena andar");
+			feedBackHistory("nao tem nada que valha a pena ir nessa direção");
 	}
 }
 
@@ -1442,6 +1451,11 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 	var bestiaryXML;
 	bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
+	for (var i = nextRoom.length - 1; i >= 0; i--) {
+		if (nextRoom[i].getAttribute("id") == roomsStates[salaAtual]) {
+			nextRoom = nextRoom[i];
+		}
+	}
 	switch(where){
 		case "north": 
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){//se a tag n ta vazia
