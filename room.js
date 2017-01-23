@@ -1457,13 +1457,13 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 
 	var roomm = xmlDoc.getElementsByTagName("rooms")[0];
 	var room = roomm.getElementsByTagName("room")[salaAtual];
-	var nextRoom = room.getElementsByTagName("NextRoom")[0];
+	var nextRoom = room.getElementsByTagName("NextRoom");
 	var itemDescription;
 	var inventoryXML;
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 	var bestiaryXML;
 	bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
-	for (var i = nextRoom.length - 1; i >= 0; i--) {
+	for (var i = 0; i <= nextRoom.length - 1; i++) {
 		if (nextRoom[i].getAttribute("id") == roomsStates[salaAtual]) {
 			nextRoom = nextRoom[i];
 		}
@@ -1482,7 +1482,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada a frente");
+				feedBackHistory("nao tem nada para o norte");
 			}
 			break;
 		case "south":
@@ -1497,7 +1497,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada pra tras");
+				feedBackHistory("nao tem nada para o sul");
 			}
 			break;
 		case "west":
@@ -1512,7 +1512,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada pra esquerda");
+				feedBackHistory("nao tem nada para o oeste");
 			}
 			break;
 		case "east":
@@ -1527,7 +1527,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada pra direita");
+				feedBackHistory("nao tem nada pra leste");
 			}
 			break;
 		default://tratamento de items,tem que ter tratamento pra quem ta fora do inventario tbm e tbm dos monstros!

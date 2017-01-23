@@ -106,9 +106,9 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Use matemática para duplicar os impares.</problem>
-			<test>1,6,10,14,18.</test>
-			<read>1,2,3,4,5,6,7,8,9,10.</read>
+			<problem>Use matemática para duplicar a entrada.</problem>
+			<test>912</test>
+			<read>456.</read>
 		</monster>
 		<monster id="esqueleto 4">
 			<status>
@@ -296,7 +296,6 @@
 			          [/shadow]
 			        [/value]
 			      [/block]
-			      [block type="math_on_list"][/block]
 			      [block type="math_modulo"]
 			        [value name="DIVIDEND"]
 			          [shadow type="math_number"]
