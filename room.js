@@ -15,6 +15,7 @@ var workspace=null;
 var myInterpreter = null;
 var highlightPause = false;
 var currentMonster='';//segura o monstro atual que esta em combate
+var finalRoom;//guarda o numero da ultima sala
 
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
@@ -128,6 +129,7 @@ function carregaTudo(){
 	carregaState();
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue)-1;	
 			carregaSala(xhttp);
 		}else{
 			//feedBackHistory("Carregando...");  
@@ -199,6 +201,7 @@ function loadGame(xml){
 function carregaSala(xhttp){
 	nSala(xhttp);
 	descriptionRoom(xhttp);	
+	fimDeJogo();
 }
 
 function nSala(){//bota no numero da sala no canto da div :)
@@ -1589,170 +1592,10 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 			break;
 	}
 }
-
- function limpaString(coisa){
- 	var novaCoisa='';
-
- 	coisa = coisa.toLowerCase();
- 	var j = 0;
- 	for (var i = 0; i < coisa.length - 1; i++) {
- 		
- 		switch(coisa[i]){
- 			case ',':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '.':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '0':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '1':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '2':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '3':
-				novaCoisa[j] += coisa[i];
- 				j++; 				
- 				break;
- 			case '4':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '5':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '6':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '7':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '8':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case '9':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'a':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'b':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'c':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'd':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'e':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'f':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'g':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'h':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'i':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'j':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'k':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'l':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'm':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'n':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'o':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'p':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'q':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'r':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 's':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 't':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'u':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'v':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'w':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'x':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'y':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			case 'z':
- 				novaCoisa[j] += coisa[i];
- 				j++;
- 				break;
- 			default:
- 				break;
- 		}
- 	}
- 	return novaCoisa;
- }
+function fimDeJogo(){
+	if((salaAtual+1) == finalRoom){
+		criaJanela("alerta","Fim do jogo!");
+		fadeJanela("fadebackground");
+	}
+}
+ 

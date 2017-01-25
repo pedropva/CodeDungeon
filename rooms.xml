@@ -4,7 +4,9 @@
 			1
 		</curRoom>
 		<item id="chave" where="12" active="true">1</item>
+		<item id="cartao" where="5" active="false">1</item>
 		<item id="bau" where="5" active="alwaysTrue">1</item>
+		<item id="saida" where="12" active="alwaysTrue">1</item>
 
 		<item id="imprimir" where="1" active="true">1</item>
 		<item id="alerta" where="1" active="true">1</item>
@@ -32,7 +34,9 @@
 		<room id="10">1</room>
 		<room id="11">1</room>
 		<room id="12">1</room>
+		<room id="13">1</room>
 	</state>
+	<finalRoom>13</finalRoom>
 	<bestiary>
 		<monster id="esqueleto 0">
 			<status>
@@ -134,24 +138,51 @@
 		<item id="chave">
 			<status>
 				<description id="1">
-					Uma chip velho de metal, mas polido pelo uso.
+					Um chip velho de metal, polido pelo uso.
 				</description>
 				<descriptionDroped id="1">
-					Uma chip estranho está jogado no chão entre os tijolos.
+					Um chip estranho está jogado no chão entre os tijolos.
 				</descriptionDroped>
 			</status>			
 			<use>
 				<in what="bau">
 					<conditions>
 						<has>chave</has>	
-						<at>2</at>
+						<at>5</at>
 					</conditions>
 					<action>
 						<print>Voce abre o bau!Acho um cartão estranho no fundo do bau velho!</print>
-						<give>if</give>
+						<give>cartao</give>
 						<extract>chave</extract>
 						<do>
 							<victim>bau</victim>
+							<property>state</property>
+							<value>2</value>
+						</do>
+					</action>
+				</in>
+			</use>
+		</item>
+		<item id="cartao">
+			<status>
+				<description id="1">
+					Uma cartão velho de metal, deve ser minha chave para a liberdade.
+				</description>
+				<descriptionDroped id="1">
+					Um cartão estranho está jogado no chão entre os tijolos.
+				</descriptionDroped>
+			</status>			
+			<use>
+				<in what="saida">
+					<conditions>
+						<has>cartao</has>	
+						<at>12</at>
+					</conditions>
+					<action>
+						<print>A porta se abre!</print>
+						<extract>cartao</extract>
+						<do>
+							<victim>saida</victim>
 							<property>state</property>
 							<value>2</value>
 						</do>
@@ -167,7 +198,7 @@
 		<item id="bau">
 			<status>
 				<description id="1">
-					Um bau velho e grande,mas parece estar vazio pela falta de peso a mais.
+					Um bau velho e grande.
 				</description>
 				<descriptionDroped id="1">
 					Um bau jaz num canto da sala.
@@ -177,6 +208,23 @@
 				</description>
 				<descriptionDroped id="2">
 					O bau jaz aberto num canto da sala.
+				</descriptionDroped>
+			</status>	
+			<use></use>
+		</item>
+		<item id="saida">
+			<status>
+				<description id="1">
+					Uma porta enorme e enferrujada, mas com a fechadura eletronica ainda em funcionamento.
+				</description>
+				<descriptionDroped id="1">
+					Uma grande porta com a palavra SAIDA em letras garrafais se estende em toda a parede norte.
+				</descriptionDroped>
+				<description id="2">
+					A grande porta está aberta.
+				</description>
+				<descriptionDroped id="2">
+					A porta se abriu lentamente, travando em certos pontos, agora estou livre novamente. 
 				</descriptionDroped>
 			</status>	
 			<use></use>
@@ -636,6 +684,12 @@
 				<description id="2">
 					Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes.. oh nao! as paredes! elas continuam brancas!.
 				</description>
+				<shortDescription id="3">
+					Uma sala mal iluminada.
+				</shortDescription>
+				<description id="3">
+					A ultima sala agora está iluminada com a luz suave que entra pela porta de saida.
+				</description>
 			</status>
 			<NextRoom id = "1">
 				<north></north>
@@ -648,6 +702,28 @@
 				<west></west>
 				<east>11</east>
 				<south>1</south>
+			</NextRoom>
+			<NextRoom id = "3">
+				<north>13</north>
+				<west></west>
+				<east>11</east>
+				<south>1</south>
+			</NextRoom>
+		</room>
+		<room id="13">
+			<status>
+				<shortDescription id="1">
+				Uma brisa alegre vem de fora.
+				</shortDescription>
+				<description id="1">
+				Me estico ao sol, feliz.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south></south>
 			</NextRoom>
 		</room>
 
