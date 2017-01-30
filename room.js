@@ -16,7 +16,7 @@ var myInterpreter = null;
 var highlightPause = false;
 var currentMonster='';//segura o monstro atual que esta em combate
 var finalRoom;//guarda o numero da ultima sala
-
+var carregado=false;//guarda se a pag foi carregada com sucesso
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repetir','enquanto','contar','break'];
@@ -131,11 +131,15 @@ function carregaTudo(){
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue)-1;	
 			carregaSala(xhttp);
+			carregado=true;
+			document.getElementById('loadingCat').style.display='none';
+			//cria o arquivo de save
 		}else{
+			//carregado=false;
 			//feedBackHistory("Carregando...");  
 		}
 	};
-	xhttp.open("GET", "rooms.xml", false);//aqui determina o carregamento assincrono
+	xhttp.open("GET", "rooms.xml", true);//aqui determina o carregamento assincrono
 	xhttp.send();
 }
 
@@ -143,23 +147,21 @@ function carregaState(){
 	xhttp2.onreadystatechange = function() {
 		if (xhttp2.readyState == 4 && xhttp2.status == 200) {
 			loadGame(xhttp2);
-		}else{
 			//cria o arquivo de save
-			function test(){    
-				var v = new  XMLWriter();
-				v.writeStartDocument(true);
-				v.writeElementString('test','Hello World');
-				v.writeAttributeString('foo','bar');
-				v.writeEndDocument();
-				console.log( v.flush() );
-			}
+			carregado=true;
+			document.getElementById('loadingCat').style.display='none';
+		}else{
+			//carregado=false;
 			
 		}
 	};
-	xhttp2.open("GET", "state.xml", false);//aqui determina o carregamento assincrono
+	xhttp2.open("GET", "state.xml", true);//aqui determina o carregamento assincrono
 	xhttp2.send();
 }
-
+if(!carregado){
+	document.getElementById('loadingCat').style.display='block';
+	document.getElementById("descriptionRoom").innerHTML = 'Algo deu errado :3';
+}
 function loadGame(xml){
 	var xmlDoc = xml.responseXML;
 	var statusXML = xmlDoc.getElementsByTagName("state")[0];
@@ -262,7 +264,9 @@ function tutorial(){
 }
 function tutorialAux(){
 	feedBackHistory("Lembre-se:");
-	feedBackHistory("inventory,go,look,pick/take,drop,use.");
+	feedBackHistory("inventory/i,go <where>,look <where/something>,pick/take <something>,drop <something>,use <something> on <something>.");
+	feedBackHistory("<where> é qualquer lugar, especificamente north/n,south/s,west/w e east/e.");
+	feedBackHistory("<what> é qualquer item, ou inimigo.");
 	feedBackHistory("Esses são os comandos do jogo!");
 }
 function endJanela(){
