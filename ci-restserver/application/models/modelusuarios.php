@@ -43,23 +43,18 @@ class Modelusuarios extends CI_Model {
     }
 	
 	public function criar($tableParam) { 
-		
+		        
         if (isset($tableParam)){
-		
-			$query_string = $this->db->insert_string('usuarios', $tableParam);
-			$query_string = str_replace('INSERT INTO','INSERT IGNORE INTO',$query_string);
-			$this->db->query($query_string);
-			 if(!($this->db->error())){
-				$insert_id = $this->db->insert_id();
-				return $insert_id;
-			 } else {
-				return false;
-			 }
+            $query_string = $this->db->insert_string('usuarios', $tableParam);
+            $query_string = str_replace('INSERT INTO','INSERT IGNORE INTO',$query_string);
+            $this->db->query($query_string);
+            $insert_id = $this->db->insert_id();
+            return $insert_id;
 		} else {
 			return false;
 		}
 	}
-	
+    
 	public function editar ($tableParam) {
 	
 		if (isset($tableParam)){

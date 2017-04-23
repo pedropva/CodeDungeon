@@ -57,11 +57,11 @@
             } else {
                 $usuario['user_senha'] = MD5($usuario['user_senha']);
                 $result = $this->user_model->criar($usuario);
-            
-                if($result == FALSE) {
-                    $this->response(0, REST_Controller::HTTP_OK);
-                } else {
+                
+                if($result > 0) {
                     $this->response(1, REST_Controller::HTTP_OK);
+                } else {
+                    $this->response(0, FALSE);
                 }
             }
         }

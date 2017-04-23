@@ -146,21 +146,22 @@
             usuario = $form.find( "input[name='user_usuario']" ).val(),
             senha = $form.find( "input[name='user_senha']" ).val(),
             url = $form.attr( "action" );
+            $( "#result" ).empty().append( "" );
             
             // Send the data using post
             var posting = $.post( 
                 url, { user_usuario: usuario, user_senha: senha } 
             ).done(function( data ) {
                 var content = "";
-                alert(data);
+                
                 if (data=="1") { content = ''+
-                                    '<div class="alert btn-warning alert-dismissible">'+
+                                    '<div class="alert btn-success alert-dismissible">'+
                                     '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>'+
                                     'Cadastro realizado com sucesso</div>';
                 } else { content = ''+
                                     '<div class="alert btn-warning alert-dismissible">'+
                                     '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>'+
-                                    'Problema ao cadastrar usuário. (Usuário deve ser único)</div>';
+                                    'Problema ao cadastrar usuário. (Já existe este nome de usuário)</div>';
                 }
                 $( "#result" ).empty().append( content );
             });
