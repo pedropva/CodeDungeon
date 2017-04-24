@@ -139,7 +139,7 @@ function carregaTudo(){
 			//feedBackHistory("Carregando...");  
 		}
 	};
-	xhttp.open("GET", "rooms.xml", true);//aqui determina o carregamento assincrono
+	xhttp.open("GET", "xmls/rooms.xml", true);//aqui determina o carregamento assincrono
 	xhttp.send();
 }
 
@@ -155,12 +155,12 @@ function carregaState(){
 			
 		}
 	};
-	xhttp2.open("GET", "state.xml", true);//aqui determina o carregamento assincrono
+	xhttp2.open("GET", "xmls/state.xml", true);//aqui determina o carregamento assincrono
 	xhttp2.send();
 }
 if(!carregado){
 	document.getElementById('loadingCat').style.display='block';
-	document.getElementById("descriptionRoom").innerHTML = 'Algo deu errado :3';
+	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado >:3';
 }
 function loadGame(xml){
 	var xmlDoc = xml.responseXML;
