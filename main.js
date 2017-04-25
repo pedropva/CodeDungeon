@@ -1,49 +1,51 @@
 ﻿/**
- * Created by LAWS on 08/07/2016.
+ * Created by Pedro Vinicius Almeida de Freitas-LAWS-UFMA on 08/07/2016.
  */
- //include room2.ts
-//um programa pra formatar o xml
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
 var roomsStates = [];//guarda os states das salas recebe como argumento salaAtual, assim roomsStates[salaAtual] = "2";
-var blocks = [];//guarda o index da posicao de um bloco no inventario
+var blocks = [];//guarda o index da posicao de um bloco no inventario,gerado automaticamente a partir dos dados do inventario
 var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
 var xhttp = new XMLHttpRequest();
-var xhttp2 = new XMLHttpRequest();
-var workspace=null;
-var myInterpreter = null;
-var highlightPause = false;
-var currentMonster='';//segura o monstro atual que esta em combate
-var finalRoom;//guarda o numero da ultima sala
-var carregado=false;//guarda se a pag foi carregada com sucesso
+var workspace=null;//variaveis importantes do blockly
+var myInterpreter = null;//variaveis importantes do blockly
+var highlightPause = false;//variaveis importantes do blockly
+var currentMonster='';//segura o monstro atual que esta em combate, só fica cheio enquanto em batalha, não é necessario salvar.
+var finalRoom;//guarda o numero da ultima sala, tbm n precisa salvar, é sempre carregado do xml
+var carregado=false; //guarda se a pagina e o jogo foram carregados com sucesso
+var novoJogador=true;//guarda se eh o primeiro jogo desse jogador
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repetir','enquanto','contar','break'];
 var catMath = ['matematica','number','arithmetic','single','trig','constant','change','round','list','modulo','constrain','randomInt','randomFloat'];
 var catText = ['alerta','imprimir','ler'];
-var blocksHad =[];
-var blocksTutorial =[];
+var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
+var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
+//tutorial
 criaJanela("tutorial");
 tutorial();
 tutorialAux();
 fadeJanela("fadebackground");
+//carrega TUDOMESMO
 carregaTudo();
-//connect();
 
-function atualizaState(id,where,active){
-	//http://stackoverflow.com/questions/14340894/create-xml-in-javascript
-	//http://www.w3schools.com/xml/dom_nodes_create.asp
-	xmlDoc = xhttp2.responseXML;
-	
-	newAtt = xmlDoc.createAttribute("where");
-	//newAtt.nodeValue = items[0].getWhere();
-	newAtt.nodeValue = "9999999";
-	xmlDoc.getElementsByTagName("item")[0].setAttributeNode(newAtt);
-	xmlDoc.getElementsByTagName("item")[0].setAttribute("where","11111111");
-	feedBackHistory("salvou em: " + xmlDoc.getElementsByTagName("item")[0].getAttribute('id'));
 
-	carregaTudo();
+
+//outras funcoes do jogo:
+function atualizaSaveFile(){
+	//salva items
+	//salva inventario
+	//salva monstros
+	//salva os states das salas
+	//salva blocksHad
+}
+function carregaSaveFile(){
+	//Tenta conectar com o servidor
+	//checa se o jogador já está lá
+	//carrega os dados
+	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
+	//novoJogador = false;
 }
 
 function item(id,where,active,state){//isso eh meio que uma classe...
@@ -90,8 +92,6 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 	this.active = active;
 	this.state = state;
 	
-
-	
 	this.getId= function(){
 		return this.id;
 	}
@@ -126,16 +126,17 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 }
 
 function carregaTudo(){
-	carregaState();
+	//carrega do save do jogo!
+	carregaSaveFile();
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
+			if(novoJogador)loadGame(xhttp);
 			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue)-1;	
 			carregaSala(xhttp);
 			carregado=true;
 			document.getElementById('loadingCat').style.display='none';
 			//cria o arquivo de save
 		}else{
-			//carregado=false;
 			//feedBackHistory("Carregando...");  
 		}
 	};
@@ -143,26 +144,12 @@ function carregaTudo(){
 	xhttp.send();
 }
 
-function carregaState(){
-	xhttp2.onreadystatechange = function() {
-		if (xhttp2.readyState == 4 && xhttp2.status == 200) {
-			loadGame(xhttp2);
-			//cria o arquivo de save
-			carregado=true;
-			document.getElementById('loadingCat').style.display='none';
-		}else{
-			//carregado=false;
-			
-		}
-	};
-	xhttp2.open("GET", "xmls/state.xml", true);//aqui determina o carregamento assincrono
-	xhttp2.send();
-}
+
 if(!carregado){
 	document.getElementById('loadingCat').style.display='block';
-	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado >:3';
+	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor >:3';
 }
-function loadGame(xml){
+function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var xmlDoc = xml.responseXML;
 	var statusXML = xmlDoc.getElementsByTagName("state")[0];
 	
@@ -404,7 +391,8 @@ function processInput(e){
 	CommandHistory(texto);
 	var res = texto.split(" ");
 	switch(res[0]){
-	case "go":    
+	case "go":
+		atualizaSaveFile();    
 		switch(res[1]){
 			case "n":
 				res[1]="north";
@@ -438,10 +426,12 @@ function processInput(e){
 		}	    	
 		look(res[1],xhttp);
 		break;
-	case "pick":    	
+	case "pick":
+		atualizaSaveFile();    	
 		pick(res[1]);
 		break;
-	case "take":    	
+	case "take":
+		atualizaSaveFile();   	
 		pick(res[1]);
 		break;
 	case "inventory":    	
@@ -453,7 +443,8 @@ function processInput(e){
 	case "ni":    	
 		seeNotInventory();
 		break;
-	case "drop":    	
+	case "drop":
+		atualizaSaveFile();    	
 		drop(res[1]);
 		break;
 	case "use":    	
@@ -600,7 +591,6 @@ function blocksManager(){//deve ser chamado sempre que se meche no inventario
 
 function toolboxManager(){
 	var xmlDoc = xhttp.responseXML;
-	var xmlDoc2 = xhttp2.responseXML;
 	var inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 	var itemm = inventoryXML.getElementsByTagName("item");
 	var blocksXML='';//guarda uma string grandona com a tag use de cada bloco

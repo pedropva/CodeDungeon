@@ -4,12 +4,10 @@
 			1
 		</curRoom>
 		<item id="chave" where="12" active="true">1</item>
-		<item id="cartao" where="5" active="false">1</item>
 		<item id="bau" where="5" active="alwaysTrue">1</item>
-		<item id="saida" where="12" active="alwaysTrue">1</item>
 
 		<item id="imprimir" where="1" active="true">1</item>
-		<item id="alerta" where="1" active="true">1</item>
+		<item id="alerta" where="1" active="false">1</item>
 		<item id="ler" where="3" active="true">1</item>
 		<item id="se" where="5" active="true">1</item>
 		<item id="matematica" where="7" active="true">1</item>
@@ -34,7 +32,6 @@
 		<room id="10">1</room>
 		<room id="11">1</room>
 		<room id="12">1</room>
-		<room id="13">1</room>
 	</state>
 	<finalRoom>13</finalRoom>
 	<bestiary>
