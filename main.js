@@ -1,6 +1,7 @@
-﻿/**
+/**
  * Created by Pedro Vinicius Almeida de Freitas-LAWS-UFMA on 08/07/2016.
  */
+ var playerID ='pedropva';
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
@@ -15,6 +16,7 @@ var currentMonster='';//segura o monstro atual que esta em combate, só fica che
 var finalRoom;//guarda o numero da ultima sala, tbm n precisa salvar, é sempre carregado do xml
 var carregado=false; //guarda se a pagina e o jogo foram carregados com sucesso
 var novoJogador=true;//guarda se eh o primeiro jogo desse jogador
+var lastMove=379;//guarda o index do final do ultimo movimento, inicio conta com o index do tutorial!
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repetir','enquanto','contar','break'];
@@ -34,12 +36,41 @@ carregaTudo();
 
 //outras funcoes do jogo:
 function atualizaSaveFile(){
-	//salva items
+	url='../ci-restserver/api/itens/pegar';
+	// Get some values 
+	/*
+	//put them all in one json variable
+	var status  = document.getElementsByName("status")[0];
+	var jsonArr = [];
+
+	for (var i = 0; i < status.options.length; i++) {
+	    jsonArr.push({
+	        id: status.options[i].text,
+	        optionValue: status.options[i].value
+	    });
+	}
+	alert(jsonArr);
+    
+    // Send the data using post
+    var posting = $.post( 
+        url, {user and stuff, pmk_useritem: , fok_usuario: , fok_item: ,useritem_caught: ,useritem_room_drop: } 
+    ).done(function( data ) {
+        var content = "";
+        
+        if (data=="1") { content =' Sucesso no SaveFile!';
+        } else { content = 'Falha ao salvar!'
+        }
+        feedBackHistory(content);
+    });
+    */
+	//salva itens
 	//salva inventario
 	//salva monstros
 	//salva os states das salas
 	//salva blocksHad
+	doLogGame();
 }
+
 function carregaSaveFile(){
 	//Tenta conectar com o servidor
 	//checa se o jogador já está lá
@@ -47,7 +78,42 @@ function carregaSaveFile(){
 	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
 	//novoJogador = false;
 }
+function pickedSomething(what){
 
+}
+function dropedSomething(what){
+
+}
+function doLogGame(){
+	var history = document.getElementById("scrollDiv").innerHTML;
+	//pega a ultima linha 
+	history=getLastMove(history);
+	//consumir as tags e retornar texto
+	history=consumeTags(history);
+}
+function getLastMove(text){
+	var aux;
+	aux = text.slice(lastMove,text.length);
+	lastMove = lastMove+text.length;
+	return aux.trim();
+}
+function consumeTags(text){
+	var inTag=0;
+	var newText="";
+	for(var i = 0;i<=text.length-1;i++){
+		if(text[i]=='<'){
+			inTag++;
+		}
+		else if(text[i]=='>'){
+			inTag--;
+		}
+		else if(inTag==0){
+			if(/[A-Z]/.test( text[i] ))newText+='/';
+			newText+=text[i];
+		}
+	}
+	return newText;
+}
 function item(id,where,active,state){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
@@ -172,7 +238,7 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 		monsters[i] = new monster(id,where,active,state);
 	}
 	
-	//carreaga os item
+	//carrega os itens
 	
 	for(var i=0;i<itemm.length;i++){
 		id=	itemm[i].getAttribute('id');
@@ -255,6 +321,7 @@ function tutorialAux(){
 	feedBackHistory("<where> é qualquer lugar, especificamente north/n,south/s,west/w e east/e.");
 	feedBackHistory("<what> é qualquer item, ou inimigo.");
 	feedBackHistory("Esses são os comandos do jogo!");
+	feedBackHistory("");
 }
 function endJanela(){
 	$('#overlay1').fadeOut(500,function(){		
@@ -390,9 +457,9 @@ function processInput(e){
 	document.getElementById("CommandInput").value = "";
 	CommandHistory(texto);
 	var res = texto.split(" ");
+	if(res[1]!=null)res[1]=res[1].trim();
 	switch(res[0]){
-	case "go":
-		atualizaSaveFile();    
+	case "go":    
 		switch(res[1]){
 			case "n":
 				res[1]="north";
@@ -407,7 +474,8 @@ function processInput(e){
 				res[1]="east";
 				break;
 		}	
-		go(res[1],xhttp);    
+		go(res[1],xhttp);
+		atualizaSaveFile();    
 		break;
 	case "look":
 		switch(res[1]){
@@ -426,13 +494,15 @@ function processInput(e){
 		}	    	
 		look(res[1],xhttp);
 		break;
-	case "pick":
-		atualizaSaveFile();    	
+	case "pick":    	
 		pick(res[1]);
+		atualizaSaveFile();
+		pickedSomething(res[1]);
 		break;
 	case "take":
-		atualizaSaveFile();   	
 		pick(res[1]);
+		atualizaSaveFile();   	
+		pickedSomething(res[1]);
 		break;
 	case "inventory":    	
 		seeInventory();
@@ -444,11 +514,13 @@ function processInput(e){
 		seeNotInventory();
 		break;
 	case "drop":
-		atualizaSaveFile();    	
 		drop(res[1]);
+		atualizaSaveFile();   	
+		dropedSomething(res[1]);
 		break;
 	case "use":    	
 		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
+		atualizaSaveFile();   	
 		break;
 	default:
 		feedBackHistory("Isso nao faz sentido!");
@@ -460,7 +532,7 @@ function processInput(e){
 }
 function pick(what){
 	for(var i = items.length - 1; i >= 0; i--){
-		if(what.trim() == items[i].getId()){
+		if(what == items[i].getId()){
 			if(items[i].getActive() == "true" && items[i].getWhere() == (salaAtual+1)){
 				inventory[inventory.length] = items[i];
 				items.splice(i, 1);
@@ -481,7 +553,7 @@ function pick(what){
 //&& inventory[i].getWhere() == (salaAtual+1)
 function drop(what){
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if((what.trim() ==inventory[i].getId()) && inventory[i].getActive() == "false"){
+		if((what ==inventory[i].getId()) && inventory[i].getActive() == "false"){
 			items[items.length] = inventory[i];
 			inventory.splice(i, 1);
 			feedBackHistory("Soltou "+ what + " na Sala "+ (salaAtual+1) +"!" );
@@ -497,7 +569,7 @@ function drop(what){
 /*
 	forzinho padrao pra consulta de items no inventario
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if((what.trim() ==inventory[i].getId()) && inventory[i].getActive() == "false" ){
+		if((what ==inventory[i].getId()) && inventory[i].getActive() == "false" ){
 			
 			return;	
 		}
@@ -760,7 +832,7 @@ function connect(xml,what){
 	if(!toolboxManager()){//atualiza os blocos que o cara tem
 		return;
 	}
-	currentMonster=what.trim();
+	currentMonster=what;
 	var xmlDoc = xml.responseXML;
     bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
@@ -1198,6 +1270,7 @@ function comentaRapidao(code,what){
 	//alert(aux);
 	return aux;
 }
+
 function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inventario
 	var xmlDoc = xml.responseXML;
 	//1-ve se as entradas do use sao validas:
@@ -1234,7 +1307,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 	inventoryXML = xmlDoc.getElementsByTagName("inventory")[0];
 
 	for(var i = inventory.length - 1; i >= 0; i--){
-		if(what.trim() ==inventory[i].getId() && inventory[i].getActive() == "false" ){//achando o assassino que eu vou usar o use
+		if(what ==inventory[i].getId() && inventory[i].getActive() == "false" ){//achando o assassino que eu vou usar o use
 			for(var j=0;j < inventoryXML.getElementsByTagName("item").length ;j++){
 				if(inventoryXML.getElementsByTagName("item")[j].getAttribute('id').trim() == inventory[i].getId()){//se i tem que eu uero usar eh o item no xml
 					if(inventoryXML.getElementsByTagName("use")[j].childNodes.length > 0){//se a tag use ta vazia
