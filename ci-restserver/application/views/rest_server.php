@@ -143,37 +143,6 @@
                     $( "#result" ).empty().append( content );
                 });
             });
-            $( "#formCriar" ).submit(function( event ) {
-                event.preventDefault(); // Stop form from submitting normally
-                
-                // Get some values from elements on the page:
-                var $form = $( this ),
-                usuario = $form.find( "input[name='fok_usuario']" ).val(),
-                item = $form.find( "input[name='fok_item']" ).val(),
-                caught = $form.find( "input[name='useritem_caught']" ).val(),
-                drop = $form.find( "input[name='useritem_room_drop']" ).val(),
-                url = $form.attr( "action" );
-                
-                $( "#result" ).empty().append( "" );
-                
-                // Send the data using post
-                var posting = $.post( 
-                url, { fok_usuario: usuario, fok_item: item, useritem_caught: caught, useritem_room_drop: drop } 
-                ).done(function( data ) {
-                    var content = "";
-                    
-                    if (data=="1") { content = ''+
-                        '<div class="alert btn-success alert-dismissible">'+
-                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>'+
-                        'Cadastro realizado com sucesso</div>';
-                        } else { content = ''+
-                        '<div class="alert btn-warning alert-dismissible">'+
-                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">X</button>'+
-                        'Problema ao cadastrar usu⳩o. (Jᡥxiste este nome de usu⳩o)</div>';
-                    }
-                    $( "#result" ).empty().append( content );
-                });
-            });
         </script>
         
         

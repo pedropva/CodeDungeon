@@ -14,7 +14,8 @@
         function index_get()
         {
             $id = (int) $this->uri->segment(3);
-        
+            $get = $_GET;
+            
             // Se tem ID carrega
             if($id > 0) {
                 
@@ -26,7 +27,8 @@
                     $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
                 }
             } else { // Senão, listar
-                $users = $this->item_model->listar();
+                $usuarioItemParam = $get;
+                $users = $this->item_model->listar($usuarioItemParam);
                 
                 if($users) {
                     $this->response($users, REST_Controller::HTTP_OK);

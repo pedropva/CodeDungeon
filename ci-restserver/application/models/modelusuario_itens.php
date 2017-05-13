@@ -46,6 +46,10 @@ class Modelusuario_itens extends CI_Model {
 		if(isset($tableParam['pmk_useritem'])){ 
             $where = array('tabela.pmk_useritem' => $tableParam['pmk_useritem']);
             $this->db->where($where);
+        } 
+		if(isset($tableParam['fok_usuario'])){ 
+            $where = array('tabela.fok_usuario' => $tableParam['fok_usuario']);
+            $this->db->where($where);
         }
 		$this->db->order_by("item.item_nome", "asc");
 		if (isset($like)) {
