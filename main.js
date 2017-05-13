@@ -1,6 +1,7 @@
 /**
  * Created by Pedro Vinicius Almeida de Freitas-LAWS-UFMA on 08/07/2016.
  */
+ //$idUsuario = $this->session->userdata('pmk_usuario');
  var playerID ='pedropva';
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
@@ -78,12 +79,37 @@ function carregaSaveFile(){
 	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
 	//novoJogador = false;
 }
-function pickedSomething(what){
-
+function updateItem(what){
+	url='../ci-restserver/api/usuario_itens';
+	var position=-1;
+	for(var i = inventory.length - 1; i >= 0; i--){//procura o item a se atualizar no inventario
+		if((what ==inventory[i].getId())){
+			position=i;
+			break;
+		}
+	}
+	if(position==-1){
+		for(i = items.length - 1; i >= 0; i--){// se nao achou no iventario deve estar no chao...
+			if((what ==items[i].getId())){
+				position=i;
+				break;
+			}
+		}
+	}
+	if(position==-1)return;// se nao achou em nenhum lugar então não é um item valido.retorna.
+    // Send the data using post
+	var posting = $.post( 
+        url, {fok_user:player.fok,fok_item:items[position].fok,pkm_usuario:player.pkm,pmk_item:what} 
+    ).done(function( data ) {
+        var content = "";
+        
+        if (data=="1") { content =' Sucesso no Save!';
+        } else { content = 'Falha ao salvar!'
+        }
+        feedBackHistory(content);
+    });
 }
-function dropedSomething(what){
 
-}
 function doLogGame(){
 	var history = document.getElementById("scrollDiv").innerHTML;
 	//pega a ultima linha 
@@ -114,12 +140,13 @@ function consumeTags(text){
 	}
 	return newText;
 }
+
 function item(id,where,active,state){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
 	this.state = state;
-
+	this.fok = fok;
 	this.getId= function(){
 		return this.id;
 	}
@@ -135,7 +162,10 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.getState= function(){
 		return this.state;
 	}
-
+	this.getFok= function(){
+		return this.fok;
+	}
+	
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -149,6 +179,9 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	}
 	this.setState= function(state){
 		this.state=state;
+	}
+	this.getFok= function(){
+		this.fok=fok;
 	}
 }
 
@@ -567,7 +600,7 @@ function drop(what){
 }
 
 /*
-	forzinho padrao pra consulta de items no inventario
+	//forzinho padrao pra consulta de items no inventario
 	for(var i = inventory.length - 1; i >= 0; i--){
 		if((what ==inventory[i].getId()) && inventory[i].getActive() == "false" ){
 			

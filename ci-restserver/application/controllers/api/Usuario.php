@@ -45,7 +45,7 @@
             
             // Se tem ID edita, senão, cria
             if ($usuario_id > 0) {
-                $usuario['pmk_usuario'] = $usuario_id;
+                $usuario['pmk_user'] = $usuario_id;
                 
                 $result = $this->user_model->editar($usuario);
             
@@ -55,7 +55,7 @@
                     $this->response(1, REST_Controller::HTTP_OK);
                 }
             } else {
-                $usuario['user_senha'] = MD5($usuario['user_senha']);
+                $usuario['user_pass'] = MD5($usuario['user_pass']);
                 $result = $this->user_model->criar($usuario);
                 
                 if($result > 0) {

@@ -60,7 +60,7 @@
                 }
             } else {
                 // Se vai criar, tenta carregar pra deletar se já existir
-                $fok_usuario = $item['fok_usuario'];
+                $fok_usuario = $item['fok_user'];
                 $fok_item = $item['fok_item'];
                 
                 if ($fok_usuario > 0 && $fok_item > 0) {
