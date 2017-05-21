@@ -60,7 +60,7 @@
                                     </div>
                                 </div>
 	                            <div class="form-bottom">
-				                    <form role="form" action="../ci-restserver/api/usuarios/login" method="post" class="registration-form">
+				                    <form role="form" id="formLogin" action="../ci-restserver/api/login" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
 				                        	<input type="text" name="user_usuario" placeholder="Username..." class="form-username form-control" id="form-username">
