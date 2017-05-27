@@ -1,12 +1,12 @@
 <?php
-/* Model that represents Sys_usuario_rooms at database */
+/* Model that represents Sys_user_rooms at database */
 
-class Modelusuario_rooms extends CI_Model {
+class Modeluser_rooms extends CI_Model {
 	
 	public function carregar ($idTable){
 		
 		$this->db->select('*');
-		$this->db->from('usuario_rooms tabela');
+		$this->db->from('user_rooms tabela');
 		$this->db->where('tabela.pmk_userroom', $idTable);
 		
 		$this->db->limit(1);
@@ -21,12 +21,12 @@ class Modelusuario_rooms extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_is_ativo' => 'Sim');
+		$where = array('tabela.userroom_is_active' => 'Sim');
 		if(isset($tableParam['pmk_userroom'])){ $where += array('tabela.pmk_userroom' => $tableParam['pmk_userroom']); }
-		if(isset($tableParam['newLimit'])){ $this->db->limit($tableParam['newLimit'],0); } else { $this->db->limit(100,0); }
+		if(isset($tableParam['fok_user'])){ $where += array('tabela.fok_user' => $tableParam['fok_user']); }
 		
 		$this->db->select('*');
-		$this->db->from('usuario_rooms tabela');
+		$this->db->from('user_rooms tabela');
 		$this->db->where($where); 
 		$this->db->order_by("tabela.user_usuario", "asc");
 		if (isset($like)) {
@@ -43,7 +43,7 @@ class Modelusuario_rooms extends CI_Model {
 	
 	public function criar($tableParam) { 
 		if (isset($tableParam)){
-			$this->db->insert('usuario_rooms',	$tableParam);
+			$this->db->insert('user_rooms',	$tableParam);
 			$insert_id = $this->db->insert_id();		
 			return $insert_id;
 		} else {
@@ -59,19 +59,19 @@ class Modelusuario_rooms extends CI_Model {
 			$this->db->where('pmk_userroom', $idTable);
 			$this->db->set($tableParam);
 			
-			return $this->db->update('usuario_rooms');
+			return $this->db->update('user_rooms');
 		} else {
 			return false;
 		}
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_is_ativo'] = 'Nao';
+		$tableParam['userroom_is_active'] = 'Nao';
 		$tableParam['pmk_userroom'] = $idTable;
 		
 		$this->db->where('pmk_userroom', $idTable);
 		$this->db->set($tableParam);
 		
-		return $this->db->update('usuario_rooms');
+		return $this->db->update('user_rooms');
 	}
 }

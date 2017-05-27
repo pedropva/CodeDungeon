@@ -63,11 +63,11 @@
 				                    <form role="form" id="formLogin" action="../ci-restserver/api/login" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-username">Username</label>
-				                        	<input type="text" name="user_usuario" placeholder="Username..." class="form-username form-control" id="form-username">
+				                        	<input type="text" name="user_name" placeholder="Username..." class="form-username form-control" id="form-username">
                                         </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-password">Password</label>
-				                        	<input type="password" name="user_senha" placeholder="Password..." class="form-password form-control" id="form-password">
+				                        	<input type="password" name="user_pass" placeholder="Password..." class="form-password form-control" id="form-password">
                                         </div>
 				                        <button type="submit" class="btn">Entrar</button>
                                     </form>
@@ -91,14 +91,14 @@
                                     </div>
                                 </div>
 	                            <div class="form-bottom">
-				                    <form role="form" id="formCriar" action="../ci-restserver/api/usuarios/" method="post" class="registration-form">
+				                    <form role="form" id="formCriar" action="../ci-restserver/api/users/" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-first-name">Nome</label>
-				                        	<input type="text" name="user_usuario" placeholder="First name..." class="form-first-name form-control" id="form-first-name">
+				                        	<input type="text" name="user_name" placeholder="First name..." class="form-first-name form-control" id="form-first-name">
                                         </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Senha</label>
-				                        	<input type="password" name="user_senha" placeholder="Senha..." class="form-email form-control" id="form-email">
+				                        	<input type="password" name="user_pass" placeholder="Senha..." class="form-email form-control" id="form-email">
                                         </div>
 				                        <button type="submit" class="btn">Cadastrar</button>
                                     </form>
@@ -143,14 +143,14 @@
             
             // Get some values from elements on the page:
             var $form = $( this ),
-            usuario = $form.find( "input[name='user_usuario']" ).val(),
-            senha = $form.find( "input[name='user_senha']" ).val(),
+            usuario = $form.find( "input[name='user_name']" ).val(),
+            senha = $form.find( "input[name='user_pass']" ).val(),
             url = $form.attr( "action" );
             $( "#result" ).empty().append( "" );
             
             // Send the data using post
             var posting = $.post( 
-                url, { user_usuario: usuario, user_senha: senha } 
+                url, { user_name: usuario, user_pass: senha } 
             ).done(function( data ) {
                 var content = "";
                 

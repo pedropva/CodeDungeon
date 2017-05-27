@@ -1,75 +1,82 @@
-CREATE TABLE IF NOT EXISTS `monsters` (
-  `pmk_monster` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_room` int(11) NOT NULL,
-  `monster_name` varchar(100) NOT NULL,
-  `monster_is_active` enum('N','Y') NOT NULL DEFAULT 'Y',
-  `monster_current_room` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pmk_monster`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE bosses RENAME monsters
 ---
-CREATE TABLE IF NOT EXISTS `itens` (
-  `pmk_item` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_room` int(11) NOT NULL,
-  `item_name` varchar(100) NOT NULL,
-  `item_state` int(11) NOT NULL,
-  `item_current_room` int(11) NOT NULL DEFAULT '0',
-  `item_is_active` enum('N','Y','YN') NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`pmk_item`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `monsters` CHANGE `pmk_boss` `pmk_monster` INT(11) NOT NULL AUTO_INCREMENT;
 ---
-CREATE TABLE IF NOT EXISTS `logs` (
-  `pmk_log` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_user` int(11) NOT NULL,
-  `log_table` varchar(100) NOT NULL,
-  `log_description` text NOT NULL,
-  PRIMARY KEY (`pmk_log`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `monsters` CHANGE `boss_nome` `monster_name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ---
-CREATE TABLE IF NOT EXISTS `rooms` (
-  `pmk_room` int(11) NOT NULL AUTO_INCREMENT,
-  `room_number` int(11) NOT NULL,
-  `room_state` int(11) NOT NULL,
-  `room_is_active` enum('N','Y') NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`pmk_room`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `monsters` CHANGE `boss_is_ativo` `monster_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
 ---
-CREATE TABLE IF NOT EXISTS `users` (
-  `pmk_user` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_current_room` int(11) NOT NULL DEFAULT '0',
-  `user_name` varchar(100) NOT NULL,
-  `user_pass` varchar(255) NOT NULL,
-  `user_dtCreated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_is_active` enum('N','Y') NOT NULL DEFAULT 'Y',
-  PRIMARY KEY (`pmk_user`),
-  UNIQUE KEY `user_name` (`user_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
+ALTER TABLE `monsters` CHANGE `boss_descricao` `monster_description` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ---
-CREATE TABLE IF NOT EXISTS `user_monsters` (
-  `pmk_user_monster` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_user` int(11) NOT NULL,
-  `fok_monster` int(11) NOT NULL,
-  `user_monster_defeat` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pmk_user_monster`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `user_monsters` ADD `user_monster_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `user_monster_defeat`;
 ---
-CREATE TABLE IF NOT EXISTS `user_itens` (
-  `pmk_useritem` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_user` int(11) NOT NULL,
-  `fok_item` int(11) NOT NULL,
-  `useritem_active` tinyint(1) NOT NULL DEFAULT '0',
-  `useritem_status` int(11) NOT NULL,
-  `useritem_current_room_` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`pmk_useritem`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `monsters` ADD `monster_current_room` INT NOT NULL AFTER `monster_description`;
 ---
-CREATE TABLE IF NOT EXISTS `user_rooms` (
-  `pmk_userroom` int(11) NOT NULL AUTO_INCREMENT,
-  `fok_user` int(11) NOT NULL,
-  `fok_room` int(11) NOT NULL,
-  `userroom_visited` tinyint(1) NOT NULL DEFAULT '0',
-  `userroom_status` int(11) NOT NULL,
-  PRIMARY KEY (`pmk_userroom`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+ALTER TABLE `itens` CHANGE `item_nome` `item_name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `itens` ADD `item_state` INT NOT NULL AFTER `item_name`;
+---
+ALTER TABLE `itens` ADD `item_current_room` INT NOT NULL AFTER `item_state`;
+---
+ALTER TABLE `itens` CHANGE `item_is_ativo` `item_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+---
+ALTER TABLE `logs` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
+---
+ALTER TABLE `logs` CHANGE `log_tabela` `log_table` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `logs` CHANGE `log_descricao` `log_description` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `rooms` CHANGE `room_numero` `room_number` INT(11) NOT NULL;
+---
+ALTER TABLE `rooms` CHANGE `room_descricao` `room_description` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `rooms` ADD `room_state` INT NOT NULL AFTER `room_description`;
+---
+ALTER TABLE `rooms` CHANGE `room_is_ativo` `room_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+---
+ALTER TABLE usuarios RENAME users
+---
+ALTER TABLE `users` CHANGE `pmk_usuario` `pmk_user` INT(11) NOT NULL AUTO_INCREMENT;
+---
+ALTER TABLE `users` CHANGE `fok_room_atual` `fok_current_room` INT(11) NOT NULL;
+---
+ALTER TABLE `users` CHANGE `user_usuario` `user_name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `users` CHANGE `user_senha` `user_pass` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+---
+ALTER TABLE `users` CHANGE `user_dtCriacao` `user_dtCreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+---
+ALTER TABLE `users` CHANGE `user_is_ativo` `user_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+---
+ALTER TABLE usuario_bosses RENAME user_monsters
+---
+ALTER TABLE `user_monsters` CHANGE `pmk_usuario_boss` `pmk_user_monster` INT(11) NOT NULL AUTO_INCREMENT;
+---
+ALTER TABLE `user_monsters` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
+---
+ALTER TABLE `user_monsters` CHANGE `fok_boss` `fok_monster` INT(11) NOT NULL;
+---
+ALTER TABLE `user_monsters` CHANGE `userboss_defeat` `user_monster_defeat` TINYINT(1) NOT NULL DEFAULT '0';
+---
+ALTER TABLE usuario_itens RENAME user_itens
+---
+ALTER TABLE `user_itens` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
+---
+ALTER TABLE `user_itens` CHANGE `useritem_caught` `useritem_active` TINYINT(1) NOT NULL DEFAULT '0';
+---
+ALTER TABLE `user_itens` ADD `useritem_status` INT NOT NULL AFTER `useritem_active`;
+---
+ALTER TABLE `user_itens` CHANGE `useritem_room_drop` `useritem_current_room` INT(11) NOT NULL DEFAULT '0';
+---
+ALTER TABLE `user_itens` ADD `user_itens_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `useritem_current_room`;
+---
+ALTER TABLE usuario_rooms RENAME user_rooms
+---
+ALTER TABLE `user_rooms` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
+---
+ALTER TABLE `user_rooms` ADD `userroom_status` INT NOT NULL AFTER `userroom_visited`;
+---
+ALTER TABLE `user_rooms` ADD `userroom_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `userroom_status`;
 ---
 INSERT INTO rooms (`room_number`,`room_state`) VALUES (1,1);
 ---
