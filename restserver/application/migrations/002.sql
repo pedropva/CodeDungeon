@@ -8,8 +8,6 @@ ALTER TABLE `monsters` CHANGE `boss_is_ativo` `monster_is_active` ENUM('Nao','Si
 ---
 ALTER TABLE `monsters` CHANGE `boss_descricao` `monster_description` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ---
-ALTER TABLE `user_monsters` ADD `user_monster_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `user_monster_defeat`;
----
 ALTER TABLE `monsters` ADD `monster_current_room` INT NOT NULL AFTER `monster_description`;
 ---
 ALTER TABLE `itens` CHANGE `item_nome` `item_name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
@@ -57,6 +55,8 @@ ALTER TABLE `user_monsters` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
 ALTER TABLE `user_monsters` CHANGE `fok_boss` `fok_monster` INT(11) NOT NULL;
 ---
 ALTER TABLE `user_monsters` CHANGE `userboss_defeat` `user_monster_defeat` TINYINT(1) NOT NULL DEFAULT '0';
+---
+ALTER TABLE `user_monsters` ADD `user_monster_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `user_monster_defeat`;
 ---
 ALTER TABLE usuario_itens RENAME user_itens
 ---
