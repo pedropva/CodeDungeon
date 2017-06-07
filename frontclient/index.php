@@ -92,11 +92,19 @@
 				                    <form role="form" id="formCriar" action="../ci-restserver/api/users/" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-first-name">Nome</label>
+<<<<<<< HEAD
 				                        	<input type="text" name="user_name" placeholder="Username..." class="form-first-name form-control" id="form-first-name">
                                         </div>
 				                        <div class="form-group">
 				                        	<label class="sr-only" for="form-email">Senha</label>
 				                        	<input type="password" name="user_pass" placeholder="Password..." class="form-email form-control" id="form-email">
+=======
+				                        	<input type="text" name="user_name" placeholder="First name..." class="form-first-name form-control" id="form-first-name">
+                                        </div>
+				                        <div class="form-group">
+				                        	<label class="sr-only" for="form-email">Senha</label>
+				                        	<input type="password" name="user_pass" placeholder="Senha..." class="form-email form-control" id="form-email">
+>>>>>>> e5a8be3722ebb49a8a610e6c0ffb964c1642bd02
                                         </div>
 				                        <button type="submit" class="btn">Cadastrar</button>
                                     </form>
