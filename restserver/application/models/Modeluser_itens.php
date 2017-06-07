@@ -1,12 +1,12 @@
 <?php
-/* Model that represents Sys_usuario_itens at database */
+/* Model that represents Sys_user_itens at database */
 
-class Modelusuario_itens extends CI_Model {
+class Modeluser_itens extends CI_Model {
 	
 	public function carregar ($idTable){
 		
 		$this->db->select('*');
-		$this->db->from('usuario_itens tabela');
+		$this->db->from('user_itens tabela');
 		$this->db->where('tabela.pmk_useritem', $idTable);
 		
 		$this->db->limit(1);
@@ -19,11 +19,11 @@ class Modelusuario_itens extends CI_Model {
 		}
 	}
 	
-	public function carregar_por_usuario_item ($fok_usuario, $fok_item){
+	public function carregar_por_usuario_item ($fok_user, $fok_item){
 		
 		$this->db->select('*');
-		$this->db->from('usuario_itens tabela');
-		$this->db->where('tabela.fok_usuario', $fok_usuario);
+		$this->db->from('user_itens tabela');
+		$this->db->where('tabela.fok_user', $fok_user);
 		$this->db->where('tabela.fok_item', $fok_item);
 		
 		$this->db->limit(1);
@@ -39,19 +39,19 @@ class Modelusuario_itens extends CI_Model {
 	public function listar($tableParam = ''){
         
 		$this->db->select('*');
-		$this->db->from('usuario_itens tabela');
+		$this->db->from('user_itens tabela');
 		$this->db->join('itens item', 'item.pmk_item = tabela.fok_item');
-		$this->db->join('usuarios usua', 'usua.pmk_usuario = tabela.fok_usuario');
+		$this->db->join('users usua', 'usua.pmk_usuario = tabela.fok_user');
 		 
 		if(isset($tableParam['pmk_useritem'])){ 
             $where = array('tabela.pmk_useritem' => $tableParam['pmk_useritem']);
             $this->db->where($where);
         } 
-		if(isset($tableParam['fok_usuario'])){ 
-            $where = array('tabela.fok_usuario' => $tableParam['fok_usuario']);
+		if(isset($tableParam['fok_user'])){ 
+            $where = array('tabela.fok_user' => $tableParam['fok_user']);
             $this->db->where($where);
         }
-		$this->db->order_by("item.item_nome", "asc");
+		$this->db->order_by("item.item_name", "asc");
 		if (isset($like)) {
 			$this->db->like($like);
 		}
@@ -66,7 +66,7 @@ class Modelusuario_itens extends CI_Model {
 	
     public function criar($tableParam) { 
 		if (isset($tableParam)){
-			$this->db->insert('usuario_itens',	$tableParam);
+			$this->db->insert('user_itens',	$tableParam);
 			$insert_id = $this->db->insert_id();		
 			return $insert_id;
 		} else {
@@ -82,7 +82,7 @@ class Modelusuario_itens extends CI_Model {
 			$this->db->where('pmk_useritem', $idTable);
 			$this->db->set($tableParam);
 			
-			return $this->db->update('usuario_itens');
+			return $this->db->update('user_itens');
 		} else {
 			return false;
 		}
@@ -94,6 +94,6 @@ class Modelusuario_itens extends CI_Model {
 		$this->db->where('pmk_useritem', $idTable);
 		$this->db->set($tableParam);
 		
-		return $this->db->delete('usuario_itens');
+		return $this->db->delete('user_itens');
 	}
 }

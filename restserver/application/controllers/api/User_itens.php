@@ -2,7 +2,7 @@
     require(APPPATH.'libraries/REST_Controller.php');
     use Restserver\Libraries\REST_Controller;
     
-    class Usuario_itens extends REST_Controller {
+    class User_itens extends REST_Controller {
         
         function __construct($config = 'rest'){
             parent::__construct($config);

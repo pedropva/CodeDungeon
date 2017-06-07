@@ -59,16 +59,13 @@ $route['translate_uri_dashes'] = FALSE;
 | -------------------------------------------------------------------------
 */
 // USUÁRIOS
-$route["api/usuarios"]["get"] = "api/usuarios"; // Listar
-$route["api/usuarios/(:num)"]["get"] = "api/usuarios/id/$1"; // Carregar
-
-$route["api/usuarios"]["post"] = "api/usuarios"; // Criar
-$route["api/usuarios/(:num)"]["post"] = "api/usuarios/id/$1"; // Editar
-
-$route["api/usuarios/(:num)"]["put"] = "api/usuarios/id/$1";
-$route["api/usuarios/(:num)"]["delete"] = "api/usuarios/id/$1";
-
-
-$route["api/usuarios/login"]["post"] = "api/usuarios/login";
+$route["api/users"]["get"] = "api/users"; // Listar
+$route["api/users/(:num)"]["get"] = "api/users/id/$1"; // Carregar
+$route["api/users"]["post"] = "api/users"; // Criar
+$route["api/users/(:num)"]["post"] = "api/users/id/$1"; // Editar
+$route["api/users/(:num)"]["put"] = "api/users/id/$1"; // Editar
+$route["api/users/(:num)"]["delete"] = "api/users/id/$1"; // Deletar
+// LOGIN
+$route["api/users/login"]["post"] = "api/users/login";
 
 

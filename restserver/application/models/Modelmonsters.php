@@ -1,14 +1,14 @@
 <?php
-/* Model that represents Sys_usuarios at database */
+/* Model that represents Sys_monsters at database */
 
-class Modelusuarios extends CI_Model {
+class Modelmonsters extends CI_Model {
 	
 	public function carregar ($idTable){
 		
 		$this->db->select('*');
-		$this->db->from('usuarios tabela');
-		$this->db->where('tabela.pmk_usuario', $idTable);
-		$this->db->where('tabela.user_is_ativo', 'Sim');
+		$this->db->from('monsters tabela');
+		$this->db->where('tabela.pmk_monster', $idTable);
+		$this->db->where('tabela.monster_is_active', 'Sim');
 		
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -22,14 +22,13 @@ class Modelusuarios extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_is_ativo' => 'Sim');
-		if(isset($tableParam['pmk_usuario'])){ $where += array('tabela.pmk_usuario' => $tableParam['pmk_usuario']); }
-		if(isset($tableParam['newLimit'])){ $this->db->limit($tableParam['newLimit'],0); } else { $this->db->limit(100,0); }
+		$where = array('tabela.monster_is_active' => 'Sim');
+		if(isset($tableParam['pmk_monster'])){ $where += array('tabela.pmk_monster' => $tableParam['pmk_monster']); }
 		
 		$this->db->select('*');
-		$this->db->from('usuarios tabela');
+		$this->db->from('monsters tabela');
 		$this->db->where($where); 
-		$this->db->order_by("tabela.user_usuario", "asc");
+		$this->db->order_by("tabela.monster_name", "asc");
 		if (isset($like)) {
 			$this->db->like($like);
 		}
@@ -45,7 +44,7 @@ class Modelusuarios extends CI_Model {
 	public function criar($tableParam) { 
 		        
         if (isset($tableParam)){
-            $query_string = $this->db->insert_string('usuarios', $tableParam);
+            $query_string = $this->db->insert_string('monsters', $tableParam);
             $query_string = str_replace('INSERT INTO','INSERT IGNORE INTO',$query_string);
             $this->db->query($query_string);
             $insert_id = $this->db->insert_id();
@@ -58,24 +57,24 @@ class Modelusuarios extends CI_Model {
 	public function editar ($tableParam) {
 	
 		if (isset($tableParam)){
-			$idTable = $tableParam['pmk_usuario'];
+			$idTable = $tableParam['pmk_monster'];
 			
-			$this->db->where('pmk_usuario', $idTable);
+			$this->db->where('pmk_monster', $idTable);
 			$this->db->set($tableParam);
 			
-			return $this->db->update('usuarios');
+			return $this->db->update('monsters');
 		} else {
 			return false;
 		}
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_is_ativo'] = 'Nao';
-		$tableParam['pmk_usuario'] = $idTable;
+		$tableParam['monster_is_active'] = 'Nao';
+		$tableParam['pmk_monster'] = $idTable;
 		
-		$this->db->where('pmk_usuario', $idTable);
+		$this->db->where('pmk_monster', $idTable);
 		$this->db->set($tableParam);
 		
-		return $this->db->update('usuarios');
+		return $this->db->update('monsters');
 	}
 }
