@@ -42,29 +42,23 @@
         function index_post()
         {
             // recupera os dados informados no formulário
-            $item = $this->post();
+            $monster = $this->post();
             $pmk_monster = 0;
-            if (isset($item['pmk_monster'])) {
-                $pmk_monster = $item['pmk_monster'];
+            if (isset($monster['pmk_monster'])) {
+                $pmk_monster = $monster['pmk_monster'];
             }
             
-            // Se tem ID edita, senão, cria
-            if ($pmk_monster > 0) {
-                
-                $result = $this->monsters->editar($item);
-            
-                if($result == FALSE) {
-                    $this->response(0, REST_Controller::HTTP_BAD_REQUEST);
-                } else {
-                    $this->response(1, REST_Controller::HTTP_OK);
-                }
-            } else {
+            if ($monster) {
+               
                 // Se vai criar, tem que informar a sala
-                $fok_room = $item['fok_room'];
+                $fok_room = $monster['fok_room'];
+                $monster_name = $monster['monster_name'];
+                $monster_description = $monster['monster_description'];
+                $monster_current_room = $monster['monster_current_room'];
                 
                 if ($fok_room) {
                     
-                    $result = $this->monsters->criar($item);
+                    $result = $this->monsters->criar($monster);
                     
                     if($result > 0) {
                         $this->response(1, REST_Controller::HTTP_OK);
@@ -76,20 +70,45 @@
                 }
             }
         }
+		
+		// Editar
+        function index_put()
+        {
+            // recupera os dados informados no formulário
+            $monster = $this->put();
+            
+            $monster_id = 0;
+            if (isset($monster['pmk_monster'])) {
+				$monster_id = $monster['pmk_monster'];
+            }
+			
+            // Se tem ID edita, senão bad
+            if ($monster_id > 0) {
+                $result = $this->monsters->editar($monster);
+            
+                if($result == FALSE) {
+                    $this->response(0, REST_Controller::HTTP_BAD_REQUEST);
+                } else {
+                    $this->response(1, REST_Controller::HTTP_OK);
+                }
+            } else {
+                $this->response(0, REST_Controller::HTTP_BAD_REQUEST);
+            }
+        }
         
         public function index_delete()
         {
-            // Recupera o ID diretamente da URL
-            $id = (int) $this->uri->segment(3);
+            // recupera os dados informados no formulário
+            $monster = $this->delete();
+            $monster_id = $monster['pmk_monster'];
             
             // Valida o ID
-            if ($id <= 0)
+            if ($monster_id <= 0)
             {
-                // Define a mensagem de retorno
                 $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400)
             }
             // Executa a remoção do registro no banco de dados
-            $delete = $this->monsters->deletar($id);
+            $delete = $this->monsters->deletar($monster_id);
 
             if($delete === FALSE) {
                 $this->response(0, REST_Controller::HTTP_OK);
