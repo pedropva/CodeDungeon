@@ -118,10 +118,16 @@
                     <li>Edit | PUT: pmk_monster ; fok_room ; monster_name ; monster_description ; monster_current_room</li>
                     <li>Delete | DELETE: pmk_monster </li>
                 </ol>
-				
+				Parameters User Itens: (restserver/api/user_itens/)
+                <ol>
+                    <li>List | GET </li>
+                    <li>Load | GET: pmk_useritem </li>
+                    <li>Create (Inserir item no inventário do usuário) | POST: fok_user ; fok_item ; useritem_active ; useritem_status ; useritem_current_room</li>
+                    <li>Edit | PUT: pmk_useritem ; fok_user ; fok_item ; useritem_active ; useritem_status; useritem_current_room</li>
+                    <li>Delete (Remover item do inventário do usuário) | DELETE: pmk_useritem </li>
+                </ol>
 				
             </div>
-            
             <p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>'.CI_VERSION.'</strong>' : '' ?></p>
         </div>
         
