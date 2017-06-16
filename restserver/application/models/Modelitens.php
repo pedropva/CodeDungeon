@@ -23,7 +23,8 @@ class Modelitens extends CI_Model {
 
 		$where = array('tabela.item_is_active' => 'Sim');
 		if(isset($tableParam['pmk_item'])){ $where += array('tabela.pmk_item' => $tableParam['pmk_item']); }
-		if(isset($tableParam['newLimit'])){ $this->db->limit($tableParam['newLimit'],0); } else { $this->db->limit(100,0); }
+		if(isset($tableParam['item_current_room'])){ $where += array('tabela.item_current_room' => $tableParam['item_current_room']); }
+		if(isset($tableParam['item_state'])){ $where += array('tabela.item_state' => $tableParam['item_state']); }
 		
 		$this->db->select('*');
 		$this->db->from('itens tabela');
