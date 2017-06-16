@@ -62,11 +62,27 @@
                 </ol>
 				Parameters User Itens: (restserver/api/user_itens/)
                 <ol>
-                    <li>List | GET: fok_user </li>
+                    <li>List | GET: 0 | fok_user </li>
                     <li>Load | GET: pmk_useritem </li>
-                    <li>Create (Inserir item no inventário do usuário) | POST: fok_user ; fok_item ; useritem_active ; useritem_status ; useritem_current_room</li>
+                    <li>Create (Inserir item no inventario do usuario) | POST: fok_user ; fok_item ; useritem_active ; useritem_status ; useritem_current_room</li>
                     <li>Edit | PUT: pmk_useritem ; fok_user ; fok_item ; useritem_active ; useritem_status; useritem_current_room</li>
                     <li>Delete (Remover item do inventário do usuário) | DELETE: pmk_useritem </li>
+                </ol>
+				Parameters User Monsters: (restserver/api/user_monsters/)
+                <ol>
+                    <li>List | GET: 0 | fok_user </li>
+                    <li>Load | GET: pmk_user_monster </li>
+                    <li>Create (Informa que o usuario está enfrentando este monstro) | POST: fok_user ; fok_monster ; user_monster_defeat</li>
+                    <li>Edit (Marca que o monstro foi derrotado ou não, mudando o status) | PUT: pmk_user_monster ; fok_user ; fok_monster ; user_monster_defeat</li>
+                    <li>Delete (Remover item do inventário do usuário) | DELETE: pmk_user_monster </li>
+                </ol>
+				Parameters User Rooms: (restserver/api/user_rooms/)
+                <ol>
+                    <li>List | GET: 0 | fok_user </li>
+                    <li>Load | GET: pmk_userroom </li>
+                    <li>Create (Informa que o usuario visitou esta sala) | POST: fok_user ; fok_room ; userroom_visited ; userroom_status</li>
+                    <li>Edit (Marca que o usuário visitou esta sala ou está nela atualmente) | PUT: pmk_userroom ; fok_user ; fok_room ; userroom_visited ; userroom_status</li>
+                    <li>Delete | DELETE: pmk_userroom </li>
                 </ol>
 				
             </div>

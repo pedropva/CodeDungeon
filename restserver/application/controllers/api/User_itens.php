@@ -14,6 +14,7 @@
         function index_get()
         {
             $id = (int) $this->uri->segment(3);
+            $id_user = (int) $this->uri->segment(4);
             $get = $_GET;
             
             // Se tem ID carrega
@@ -27,12 +28,16 @@
                     $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
                 }
             } else { // Senão, listar
-                $usuarioItemParam = $get;
-                $users = $this->user_itens->listar($usuarioItemParam);
-                
-                if($users) {
-                    $this->response($users, REST_Controller::HTTP_OK);
-                } else {
+				if ($id_user > 0) {
+					$usuarioItemParam = $get;
+					$users = $this->user_itens->listar($usuarioItemParam);
+					
+					if($users) {
+						$this->response($users, REST_Controller::HTTP_OK);
+					} else {
+						$this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
+					}
+				} else {
                     $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
                 }
             }

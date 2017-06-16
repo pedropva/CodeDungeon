@@ -2,12 +2,12 @@
     require(APPPATH.'libraries/REST_Controller.php');
     use Restserver\Libraries\REST_Controller;
     
-    class User_rooms extends REST_Controller {
+    class User_monsters extends REST_Controller {
         
         function __construct($config = 'rest'){
             parent::__construct($config);
             
-            $this->load->model('../models/Modelusers_rooms', 'user_rooms');
+            $this->load->model('../models/Modelusers_monsters', 'user_monsters');
         }
         
         // Essa função vai responder pela rota /api/itens sob o método GET
@@ -20,7 +20,7 @@
             // Se tem ID carrega
             if($id > 0) {
                 
-                $user = $this->user_rooms->carregar( $id );
+                $user = $this->user_monsters->carregar( $id );
                     
                 if($user) {
                     $this->response($user, REST_Controller::HTTP_OK); // 200 being the HTTP response code
@@ -30,7 +30,7 @@
             } else { // Senão, listar
 				if ($id_user > 0) {
 					$usuarioItemParam = $get;
-					$users = $this->user_rooms->listar($usuarioItemParam);
+					$users = $this->user_monsters->listar($usuarioItemParam);
 					
 					if($users) {
 						$this->response($users, REST_Controller::HTTP_OK);
@@ -51,7 +51,7 @@
 			
             // Se tem ID edita, senão, cria
             if ($usuario) {
-                $result = $this->user_rooms->criar($usuario_item);
+                $result = $this->user_monsters->criar($usuario_item);
                 
                 if($result > 0) {
                     $this->response(1, REST_Controller::HTTP_OK);
@@ -68,13 +68,13 @@
             // recupera os dados informados no formulário
             $usuario = $this->put();
             $usuario_id = 0;
-            if (isset($usuario['pmk_userroom'])) {
-				$usuario_id = $usuario['pmk_userroom'];
+            if (isset($usuario['pmk_user_monster'])) {
+				$usuario_id = $usuario['pmk_user_monster'];
             }
 			
             // Se tem ID edita, senão bad
             if ($usuario_id > 0) {
-                $result = $this->user_rooms->editar($usuario);
+                $result = $this->user_monsters->editar($usuario);
             
                 if($result == FALSE) {
                     $this->response(0, REST_Controller::HTTP_BAD_REQUEST);
@@ -90,7 +90,7 @@
         {
 			// recupera os dados informados no formulário
             $usuario = $this->delete();
-            $usuario_id = $usuario['pmk_userroom'];
+            $usuario_id = $usuario['pmk_user_monster'];
             
             // Valida o ID
             if ($usuario_id <= 0)
@@ -98,7 +98,7 @@
                 $this->response(NULL, REST_Controller::HTTP_BAD_REQUEST); // BAD_REQUEST (400)
             }
             // Executa a remoção do registro no banco de dados
-            $delete = $this->user_rooms->deletar($usuario_id);
+            $delete = $this->user_monsters->deletar($usuario_id);
 
             if($delete === FALSE) {
                 $this->response(0, REST_Controller::HTTP_OK);
