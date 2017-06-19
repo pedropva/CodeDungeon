@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
 	                            <div class="form-bottom">
-				                    <form role="form" id="formCriar" action="../ci-restserver/api/users/" method="post" class="registration-form">
+				                    <form role="form" id="formCriar" action="../restserver/api/users/" method="post" class="registration-form">
 				                    	<div class="form-group">
 				                    		<label class="sr-only" for="form-first-name">Nome</label>
 				                        	<input type="text" name="user_name" placeholder="Username..." class="form-first-name form-control" id="form-first-name">

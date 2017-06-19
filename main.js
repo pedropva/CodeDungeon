@@ -37,7 +37,7 @@ carregaTudo();
 
 //outras funcoes do jogo:
 function atualizaSaveFile(){
-	url='../ci-restserver/api/itens/pegar';
+	url='../restserver/api/itens/pegar';
 	// Get some values 
 	/*
 	//put them all in one json variable
@@ -72,15 +72,19 @@ function atualizaSaveFile(){
 	doLogGame();
 }
 
-function carregaSaveFile(){
+function carregaBD(){
+	url='../restserver/api/login/';
 	//Tenta conectar com o servidor
+	$.get(url, function(data, status){
+        alert("Data: " + data + "\nStatus: " + status);
+    });
 	//checa se o jogador já está lá
 	//carrega os dados
 	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
 	//novoJogador = false;
 }
 function updateItem(what){
-	url='../ci-restserver/api/usuario_itens';
+	url='../restserver/api/usuario_itens';
 	var position=-1;
 	for(var i = inventory.length - 1; i >= 0; i--){//procura o item a se atualizar no inventario
 		if((what ==inventory[i].getId())){
@@ -146,7 +150,6 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.where = where;
 	this.active = active;
 	this.state = state;
-	this.fok = fok;
 	this.getId= function(){
 		return this.id;
 	}
@@ -162,10 +165,6 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.getState= function(){
 		return this.state;
 	}
-	this.getFok= function(){
-		return this.fok;
-	}
-	
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -179,9 +178,6 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	}
 	this.setState= function(state){
 		this.state=state;
-	}
-	this.getFok= function(){
-		this.fok=fok;
 	}
 }
 
@@ -226,7 +222,7 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 
 function carregaTudo(){
 	//carrega do save do jogo!
-	carregaSaveFile();
+	carregaBD();
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			if(novoJogador)loadGame(xhttp);
@@ -530,12 +526,12 @@ function processInput(e){
 	case "pick":    	
 		pick(res[1]);
 		atualizaSaveFile();
-		pickedSomething(res[1]);
+		updateItem(res[1]);
 		break;
 	case "take":
 		pick(res[1]);
 		atualizaSaveFile();   	
-		pickedSomething(res[1]);
+		updateItem(res[1]);
 		break;
 	case "inventory":    	
 		seeInventory();
@@ -549,11 +545,13 @@ function processInput(e){
 	case "drop":
 		drop(res[1]);
 		atualizaSaveFile();   	
-		dropedSomething(res[1]);
+		updateItem(res[1]);
 		break;
 	case "use":    	
 		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
 		atualizaSaveFile();   	
+		updateItem(res[1]);
+		updateItem(res[3]);
 		break;
 	default:
 		feedBackHistory("Isso nao faz sentido!");
