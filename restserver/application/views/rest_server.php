@@ -30,6 +30,11 @@
                     <li><a href="<?php echo base_url('api/logs'); ?>">List Logs</a> - JSON</li>
                 </ol>
 				<hr>
+				Parameters Logs: (restserver/api/logs/)
+				<ol>
+                    <li>Create | POST: fok_user ; log_table ; log_description </li>
+				</ol>
+				<hr>
 				Parameters Login: (restserver/api/login/)
 				<ol>
                     <li>Create Session  | POST: user_name ; user_pass </li>

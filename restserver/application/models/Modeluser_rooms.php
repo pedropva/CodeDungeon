@@ -28,7 +28,7 @@ class Modeluser_rooms extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('user_rooms tabela');
 		$this->db->where($where); 
-		$this->db->order_by("tabela.user_usuario", "asc");
+		$this->db->order_by("tabela.room_number", "asc");
 		if (isset($like)) {
 			$this->db->like($like);
 		}

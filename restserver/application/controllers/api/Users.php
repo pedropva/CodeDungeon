@@ -8,6 +8,14 @@
             parent::__construct($config);
             
             $this->load->model('../models/Modelusers', 'user_model');
+			// Tabelas base
+            $this->load->model('../models/Modelitens', 'itens_model');
+            $this->load->model('../models/Modelmonsters', 'monsters_model');
+            $this->load->model('../models/Modelrooms', 'rooms_model');
+			// Tabelas adicionais do usuário
+            $this->load->model('../models/Modeluser_itens', 'user_itens_model');
+            $this->load->model('../models/Modeluser_monsters', 'user_monsters_model');
+            $this->load->model('../models/Modeluser_rooms', 'user_rooms_model');
 			
         }
       
@@ -38,7 +46,6 @@
         }
 
         // Criar
-		
         function index_post()
         {
             // recupera os dados informados no formulário
@@ -48,8 +55,38 @@
             if ($usuario) {
                 $usuario['user_pass'] = MD5($usuario['user_pass']);
                 $result = $this->user_model->criar($usuario);
-                
+				
+				// Se criou o novo usuário
                 if($result > 0) {
+					
+					// ---------------------------------------------------------
+					// Para cada iten, cria uma entrada para este usuário atual
+					$itensArr = $this->itens_model->listar();
+					foreach ($itensArr as $iten) {
+						$param['fok_user'] = $result;
+						$param['fok_item'] = $iten['pmk_item'];
+						$param['useritem_current_room'] = $iten['item_current_room'];
+						$user_itens_model = $this->user_itens_model->criar($param);
+					}
+					// ---------------------------------------------------------
+					// Para cada monster, cria uma entrada para este usuário atual
+					$monstersArr = $this->monsters_model->listar();
+					foreach ($monstersArr as $monster) {
+						$paramM['fok_user'] = $result;
+						$paramM['fok_monster'] = $monster['pmk_monster'];
+						$user_monsters_model = $this->user_monsters_model->criar($paramM);
+					}
+					// ---------------------------------------------------------
+					// Para cada room, cria uma entrada para este usuário atual
+					$roomnsArr = $this->rooms_model->listar();
+					foreach ($roomnsArr as $room) {
+						$paramR['fok_user'] = $result;
+						$paramR['fok_room'] = $room['pmk_room'];
+						$user_rooms_model = $this->user_rooms_model->criar($paramR);
+					}
+					// ---------------------------------------------------------
+				
+                
                     $this->response(1, REST_Controller::HTTP_OK);
                 } else {
                     $this->response(0, FALSE);
