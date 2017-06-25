@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS `bosses` (
   `fok_room` int(11) NOT NULL,
   `boss_nome` varchar(100) NOT NULL,
   `boss_descricao` varchar(255) NOT NULL,
-  `boss_is_ativo` enum('Nao','Sim') NOT NULL DEFAULT 'Sim',
+  `boss_is_ativo` enum('N','Y') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`pmk_boss`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 ---
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `itens` (
   `fok_room` int(11) NOT NULL,
   `item_nome` varchar(100) NOT NULL,
   `item_descricao` varchar(255) NOT NULL,
-  `item_is_ativo` enum('Nao','Sim') NOT NULL DEFAULT 'Sim',
+  `item_is_ativo` enum('N','Y','YY') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`pmk_item`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 ---
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `pmk_room` int(11) NOT NULL AUTO_INCREMENT,
   `room_numero` int(11) NOT NULL,
   `room_descricao` varchar(255) NOT NULL,
-  `room_is_ativo` enum('Nao','Sim') NOT NULL DEFAULT 'Sim',
+  `room_is_ativo` enum('N','Y') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`pmk_room`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 ---
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `user_usuario` varchar(100) NOT NULL,
   `user_senha` varchar(255) NOT NULL,
   `user_dtCriacao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `user_is_ativo` enum('Nao','Sim') NOT NULL DEFAULT 'Sim',
+  `user_is_ativo` enum('N','Y') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`pmk_usuario`),
   UNIQUE KEY `user_usuario` (`user_usuario`)
 ) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;

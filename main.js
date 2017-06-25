@@ -77,7 +77,7 @@ function loadUser(){
 		    });
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
-			console.log(dbstatus);
+			console.log('Motivo: '+dbstatus);
 		}
     });
 	

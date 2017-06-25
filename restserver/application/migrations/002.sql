@@ -4,7 +4,7 @@ ALTER TABLE `monsters` CHANGE `pmk_boss` `pmk_monster` INT(11) NOT NULL AUTO_INC
 ---
 ALTER TABLE `monsters` CHANGE `boss_nome` `monster_name` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ---
-ALTER TABLE `monsters` CHANGE `boss_is_ativo` `monster_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+ALTER TABLE `monsters` CHANGE `boss_is_ativo` `monster_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE `monsters` CHANGE `boss_descricao` `monster_description` VARCHAR(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
 ---
@@ -16,7 +16,7 @@ ALTER TABLE `itens` ADD `item_state` INT NOT NULL AFTER `item_name`;
 ---
 ALTER TABLE `itens` ADD `item_current_room` INT NOT NULL AFTER `item_state`;
 ---
-ALTER TABLE `itens` CHANGE `item_is_ativo` `item_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+ALTER TABLE `itens` CHANGE `item_is_ativo` `item_is_active` ENUM('N','Y','YY') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE `logs` CHANGE `fok_usuario` `fok_user` INT(11) NOT NULL;
 ---
@@ -30,7 +30,7 @@ ALTER TABLE `rooms` CHANGE `room_descricao` `room_description` VARCHAR(255) CHAR
 ---
 ALTER TABLE `rooms` ADD `room_state` INT NOT NULL AFTER `room_description`;
 ---
-ALTER TABLE `rooms` CHANGE `room_is_ativo` `room_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+ALTER TABLE `rooms` CHANGE `room_is_ativo` `room_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE usuarios RENAME users
 ---
@@ -44,7 +44,7 @@ ALTER TABLE `users` CHANGE `user_senha` `user_pass` VARCHAR(255) CHARACTER SET l
 ---
 ALTER TABLE `users` CHANGE `user_dtCriacao` `user_dtCreated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
 ---
-ALTER TABLE `users` CHANGE `user_is_ativo` `user_is_active` ENUM('Nao','Sim') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Sim';
+ALTER TABLE `users` CHANGE `user_is_ativo` `user_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE usuario_bosses RENAME user_monsters
 ---
@@ -68,7 +68,7 @@ ALTER TABLE `user_itens` ADD `useritem_status` INT NOT NULL AFTER `useritem_acti
 ---
 ALTER TABLE `user_itens` CHANGE `useritem_room_drop` `useritem_current_room` INT(11) NOT NULL DEFAULT '0';
 ---
-ALTER TABLE `user_itens` ADD `user_itens_is_active` ENUM('N','Y') NOT NULL DEFAULT 'Y' AFTER `useritem_current_room`;
+ALTER TABLE `user_itens` ADD `user_itens_is_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `useritem_current_room`;
 ---
 ALTER TABLE usuario_rooms RENAME user_rooms
 ---
@@ -104,7 +104,7 @@ INSERT INTO rooms (`room_number`,`room_state`) VALUES (12,1);
 ---
 INSERT INTO itens (`item_name`,`item_is_active`,`item_current_room`,`item_state`) VALUES ('chave','Y',12,1);
 ---
-INSERT INTO itens (`item_name`,`item_is_active`,`item_current_room`,`item_state`) VALUES ('bau','YN',5,1);
+INSERT INTO itens (`item_name`,`item_is_active`,`item_current_room`,`item_state`) VALUES ('bau','YY',5,1);
 ---
 INSERT INTO itens (`item_name`,`item_is_active`,`item_current_room`,`item_state`) VALUES ('imprimir','Y',1,1);
 ---
