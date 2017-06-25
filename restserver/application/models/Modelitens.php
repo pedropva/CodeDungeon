@@ -21,7 +21,7 @@ class Modelitens extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.item_is_active' => 'Sim');
+		$where = array('tabela.item_is_active' => 'Y');
 		if(isset($tableParam['pmk_item'])){ $where += array('tabela.pmk_item' => $tableParam['pmk_item']); }
 		if(isset($tableParam['item_current_room'])){ $where += array('tabela.item_current_room' => $tableParam['item_current_room']); }
 		if(isset($tableParam['item_state'])){ $where += array('tabela.item_state' => $tableParam['item_state']); }
@@ -67,7 +67,7 @@ class Modelitens extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['item_is_active'] = 'Nao';
+		$tableParam['item_is_active'] = 'N';
 		$tableParam['pmk_item'] = $idTable;
 		
 		$this->db->where('pmk_item', $idTable);

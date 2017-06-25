@@ -8,7 +8,7 @@ class Modelloginsecure extends CI_Model {
 		$this->db->from('users tabela');
 		$this->db->where('tabela.user_name', $user_name);
 		$this->db->where('tabela.user_pass', MD5($dsPassword) );
-		$this->db->where('tabela.user_is_active', 'Sim');
+		$this->db->where('tabela.user_is_active', 'Y');
 		$this->db->limit(1);
 
 		$query = $this->db->get();

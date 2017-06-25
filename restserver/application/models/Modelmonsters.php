@@ -8,7 +8,7 @@ class Modelmonsters extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('monsters tabela');
 		$this->db->where('tabela.pmk_monster', $idTable);
-		$this->db->where('tabela.monster_is_active', 'Sim');
+		$this->db->where('tabela.monster_is_active', 'Y');
 		
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -22,7 +22,7 @@ class Modelmonsters extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.monster_is_active' => 'Sim');
+		$where = array('tabela.monster_is_active' => 'Y');
 		if(isset($tableParam['pmk_monster'])){ $where += array('tabela.pmk_monster' => $tableParam['pmk_monster']); }
 		
 		$this->db->select('*');
@@ -69,7 +69,7 @@ class Modelmonsters extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['monster_is_active'] = 'Nao';
+		$tableParam['monster_is_active'] = 'N';
 		$tableParam['pmk_monster'] = $idTable;
 		
 		$this->db->where('pmk_monster', $idTable);

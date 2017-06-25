@@ -8,7 +8,7 @@ class Modelusers extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('users tabela');
 		$this->db->where('tabela.pmk_user', $idTable);
-		$this->db->where('tabela.user_is_active', 'Sim');
+		$this->db->where('tabela.user_is_active', 'Y');
 		
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -22,7 +22,7 @@ class Modelusers extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_is_active' => 'Sim');
+		$where = array('tabela.user_is_active' => 'Y');
 		if(isset($tableParam['pmk_user'])){ $where += array('tabela.pmk_user' => $tableParam['pmk_user']); }
 		
 		$this->db->select('*');
@@ -69,7 +69,7 @@ class Modelusers extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_is_active'] = 'Nao';
+		$tableParam['user_is_active'] = 'N';
 		$tableParam['pmk_user'] = $idTable;
 		
 		$this->db->where('pmk_user', $idTable);

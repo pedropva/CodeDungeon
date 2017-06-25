@@ -21,7 +21,7 @@ class Modeluser_rooms extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.userroom_is_active' => 'Sim');
+		$where = array('tabela.userroom_is_active' => 'Y');
 		if(isset($tableParam['pmk_userroom'])){ $where += array('tabela.pmk_userroom' => $tableParam['pmk_userroom']); }
 		if(isset($tableParam['fok_user'])){ $where += array('tabela.fok_user' => $tableParam['fok_user']); }
 		
@@ -66,7 +66,7 @@ class Modeluser_rooms extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['userroom_is_active'] = 'Nao';
+		$tableParam['userroom_is_active'] = 'N';
 		$tableParam['pmk_userroom'] = $idTable;
 		
 		$this->db->where('pmk_userroom', $idTable);

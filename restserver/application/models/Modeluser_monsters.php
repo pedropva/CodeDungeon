@@ -21,7 +21,7 @@ class Modeluser_monsters extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_monster_is_active' => 'Sim');
+		$where = array('tabela.user_monster_is_active' => 'Y');
 		if(isset($tableParam['pmk_user_monster'])){ $where += array('tabela.pmk_user_monster' => $tableParam['pmk_user_monster']); }
 		if(isset($tableParam['fok_user'])){ $where += array('tabela.fok_user' => $tableParam['fok_user']); }
 		
@@ -66,7 +66,7 @@ class Modeluser_monsters extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_monster_is_active'] = 'Nao';
+		$tableParam['user_monster_is_active'] = 'N';
 		$tableParam['pmk_user_monster'] = $idTable;
 		
 		$this->db->where('pmk_user_monster', $idTable);

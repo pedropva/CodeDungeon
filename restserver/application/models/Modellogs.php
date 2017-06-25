@@ -21,7 +21,7 @@ class Modellogs extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_is_ativo' => 'Sim');
+		$where = array('tabela.user_is_ativo' => 'Y');
 		if(isset($tableParam['pmk_log'])){ $where += array('tabela.pmk_log' => $tableParam['pmk_log']); }
 		if(isset($tableParam['newLimit'])){ $this->db->limit($tableParam['newLimit'],0); } else { $this->db->limit(100,0); }
 		
@@ -66,7 +66,7 @@ class Modellogs extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_is_ativo'] = 'Nao';
+		$tableParam['user_is_ativo'] = 'N';
 		$tableParam['pmk_log'] = $idTable;
 		
 		$this->db->where('pmk_log', $idTable);

@@ -8,7 +8,7 @@ class Modelrooms extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('rooms tabela');
 		$this->db->where('tabela.pmk_room', $idTable);
-		$this->db->where('tabela.room_is_active', 'Sim');
+		$this->db->where('tabela.room_is_active', 'Y');
 		
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -22,7 +22,7 @@ class Modelrooms extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.room_is_active' => 'Sim');
+		$where = array('tabela.room_is_active' => 'Y');
 		if(isset($tableParam['pmk_room'])){ $where += array('tabela.pmk_room' => $tableParam['pmk_room']); }
 		
 		$this->db->select('*');
@@ -69,7 +69,7 @@ class Modelrooms extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['room_is_active'] = 'Nao';
+		$tableParam['room_is_active'] = 'N';
 		$tableParam['pmk_room'] = $idTable;
 		
 		$this->db->where('pmk_room', $idTable);
