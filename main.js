@@ -1,14 +1,16 @@
 /**
  * Created by Pedro Vinicius Almeida de Freitas-LAWS-UFMA on 08/07/2016.
  */
- //$idUsuario = $this->session->userdata('pmk_usuario');
- var playerID ='pedropva';
+ 
+var ppmk ='0';//player primey key
+var playerID = '';
+var dbstatus='';// status do bd
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
 var roomsStates = [];//guarda os states das salas recebe como argumento salaAtual, assim roomsStates[salaAtual] = "2";
 var blocks = [];//guarda o index da posicao de um bloco no inventario,gerado automaticamente a partir dos dados do inventario
-var salaAtual = 0;//va guadar o index da sala em que o player ta ,nao o id o id começa de 1
+var salaAtual = 0;//va guadar o index da sala em que o player ta 
 var xhttp = new XMLHttpRequest();
 var workspace=null;//variaveis importantes do blockly
 var myInterpreter = null;//variaveis importantes do blockly
@@ -16,7 +18,6 @@ var highlightPause = false;//variaveis importantes do blockly
 var currentMonster='';//segura o monstro atual que esta em combate, só fica cheio enquanto em batalha, não é necessario salvar.
 var finalRoom;//guarda o numero da ultima sala, tbm n precisa salvar, é sempre carregado do xml
 var carregado=false; //guarda se a pagina e o jogo foram carregados com sucesso
-var novoJogador=true;//guarda se eh o primeiro jogo desse jogador
 var lastMove=379;//guarda o index do final do ultimo movimento, inicio conta com o index do tutorial!
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
@@ -25,66 +26,69 @@ var catMath = ['matematica','number','arithmetic','single','trig','constant','ch
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
 var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
+rest='../restserver/api/'
+login='login/';
+user='users/';
+user_itens='user_itens/';
+user_rooms='user_rooms/';
+user_monsters='user_monsters/';
 //tutorial
-criaJanela("tutorial");
-tutorial();
 tutorialAux();
-fadeJanela("fadebackground");
+function showTutorial(){
+	criaJanela("tutorial");
+	tutorial();
+	fadeJanela("fadebackground");
+}
 //carrega TUDOMESMO
 carregaTudo();
 
 
 
 //outras funcoes do jogo:
-function atualizaSaveFile(){
-	url='../restserver/api/itens/pegar';
-	// Get some values 
-	/*
-	//put them all in one json variable
-	var status  = document.getElementsByName("status")[0];
-	var jsonArr = [];
-
-	for (var i = 0; i < status.options.length; i++) {
-	    jsonArr.push({
-	        id: status.options[i].text,
-	        optionValue: status.options[i].value
-	    });
-	}
-	alert(jsonArr);
-    
-    // Send the data using post
-    var posting = $.post( 
-        url, {user and stuff, pmk_useritem: , fok_usuario: , fok_item: ,useritem_caught: ,useritem_room_drop: } 
-    ).done(function( data ) {
-        var content = "";
-        
-        if (data=="1") { content =' Sucesso no SaveFile!';
-        } else { content = 'Falha ao salvar!'
-        }
-        feedBackHistory(content);
-    });
-    */
-	//salva itens
-	//salva inventario
-	//salva monstros
-	//salva os states das salas
-	//salva blocksHad
+function saveUser(){
+	//user data:
+	$.ajax({
+	  url: rest+user,
+	  type: 'PUT',
+	  data: "fok_current_room="+salaAtual+"&pmk_user="+ppmk,
+	  success: function(data) {
+	  	  //console.log("salvou o maluco!");
+	  }
+	});	
+	//itens data
+	//monster data
+	//rooms data
+	//blocksHad data
+	//log data
 	doLogGame();
 }
 
-function carregaBD(){
-	url='../restserver/api/login/';
+function loadUser(){
+	//user data:
 	//Tenta conectar com o servidor
-	$.get(url, function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
+	$.get(rest+login, function(pk, dbstatus){
+		ppmk=pk;
+        if(dbstatus == 'success'){
+			$.get(rest+user+ppmk, function(data, dbstatus){
+				salaAtual = parseInt(data[0].fok_current_room);
+				playerID = data[0].user_name;
+				if(salaAtual==0)showTutorial();
+				carregaSala(xhttp);
+		    });
+		}else{
+			console.log('ue,não conseguiu conectar ao servidor!');
+			console.log(dbstatus);
+		}
     });
-	//checa se o jogador já está lá
-	//carrega os dados
+	
 	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
-	//novoJogador = false;
+	//itens data
+	//monster data
+	//rooms data
+	//blocksHad data
+
 }
-function updateItem(what){
-	url='../restserver/api/usuario_itens';
+function saveIten(what){
 	var position=-1;
 	for(var i = inventory.length - 1; i >= 0; i--){//procura o item a se atualizar no inventario
 		if((what ==inventory[i].getId())){
@@ -99,8 +103,27 @@ function updateItem(what){
 				break;
 			}
 		}
+	}else{
+		$.ajax({
+		  url: rest+user_itens,
+		  type: 'PUT',
+		  data: "pmk_user="+ppmk+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where,
+		  success: function(data) {
+		  	  console.log("salvei"+inventory[position].id + " no inventario!");
+		  }
+		});
+		return;
 	}
 	if(position==-1)return;// se nao achou em nenhum lugar então não é um item valido.retorna.
+    $.ajax({
+	  url: rest+user_itens,
+	  type: 'PUT',
+	  data: "pmk_user="+ppmk+"&fok_user="+ppmk+"&fok_item="+items[position].key+"&useritem_active="+items[position].active+"&useritem_current_room="+items[position].where,
+	  success: function(data) {
+	  	  console.log("salvei"+items[position].id + " no chao!");
+	  }
+	});
+    /*
     // Send the data using post
 	var posting = $.post( 
         url, {fok_user:player.fok,fok_item:items[position].fok,pkm_usuario:player.pkm,pmk_item:what} 
@@ -112,14 +135,18 @@ function updateItem(what){
         }
         feedBackHistory(content);
     });
+    */
 }
+function loadItens(what){
 
+}
 function doLogGame(){
 	var history = document.getElementById("scrollDiv").innerHTML;
 	//pega a ultima linha 
 	history=getLastMove(history);
 	//consumir as tags e retornar texto
 	history=consumeTags(history);
+	return history;
 }
 function getLastMove(text){
 	var aux;
@@ -145,11 +172,13 @@ function consumeTags(text){
 	return newText;
 }
 
-function item(id,where,active,state){//isso eh meio que uma classe...
+function item(id,where,active,state,key){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
 	this.state = state;
+	this.key = key;
+
 	this.getId= function(){
 		return this.id;
 	}
@@ -165,6 +194,10 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.getState= function(){
 		return this.state;
 	}
+
+	this.getKey= function(){
+		return this.key;
+	}
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -176,17 +209,23 @@ function item(id,where,active,state){//isso eh meio que uma classe...
 	this.setActive= function(active){
 		this.active=active;
 	}
+	
 	this.setState= function(state){
 		this.state=state;
+	}
+	
+	this.setKey= function(key){
+		this.key=key;
 	}
 }
 
-function monster(id,where,active,state){//isso eh meio que uma classe...
+function monster(id,where,active,state,key){//isso eh meio que uma classe...
 	this.id = id;
 	this.where = where;
 	this.active = active;
 	this.state = state;
-	
+	this.key = key;
+
 	this.getId= function(){
 		return this.id;
 	}
@@ -203,6 +242,10 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 		return this.state;
 	}
 
+	this.getKey= function(){
+		return this.key;
+	}
+
 	this.setId= function(id){
 		this.id=id;
 	}
@@ -217,15 +260,19 @@ function monster(id,where,active,state){//isso eh meio que uma classe...
 
 	this.setState= function(state){
 		this.state=state;
+	}
+	
+	this.setKey= function(key){
+		this.key=key;
 	}
 }
 
 function carregaTudo(){
 	//carrega do save do jogo!
-	carregaBD();
+	loadUser();
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			if(novoJogador)loadGame(xhttp);
+			loadGame(xhttp);
 			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue)-1;	
 			carregaSala(xhttp);
 			carregado=true;
@@ -240,9 +287,9 @@ function carregaTudo(){
 }
 
 
-if(!carregado){
+if(!carregado || dbstatus!='success'){
 	document.getElementById('loadingCat').style.display='block';
-	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor >:3';
+	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor D:';
 }
 function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var xmlDoc = xml.responseXML;
@@ -252,29 +299,33 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var where = "";
 	var active ="";
 	var state ="";
-
+	var key = "";
+	//carrega a sala do usuario
 	salaAtual = parseInt(statusXML.getElementsByTagName("curRoom")[0].childNodes[0].nodeValue)-1;	
 	
-	//carrega os monstru
 	var monsterr = statusXML.getElementsByTagName("monster");
 	var itemm = statusXML.getElementsByTagName("item");
 	var roomss = statusXML.getElementsByTagName("room");
+
+	//carrega os monstros
 	for(var i=0;i<monsterr.length;i++){
 		id=	monsterr[i].getAttribute('id');
 		where= monsterr[i].getAttribute('where');
 		active= monsterr[i].getAttribute('active');
 		state = monsterr[i].childNodes[0].nodeValue;
-		monsters[i] = new monster(id,where,active,state);
+		key = i+1;
+		monsters[i] = new monster(id,where,active,state,key);
 	}
+
 	
 	//carrega os itens
-	
 	for(var i=0;i<itemm.length;i++){
 		id=	itemm[i].getAttribute('id');
 		where= itemm[i].getAttribute('where');
 		active= itemm[i].getAttribute('active');
 		state = itemm[i].childNodes[0].nodeValue;
-		items[i] = new item(id,where,active,state);
+		key = i+1;
+		items[i] = new item(id,where,active,state,key);
 	}
 	// carrega as salas
 	for(var i=0;i<roomss.length;i++){
@@ -350,6 +401,7 @@ function tutorialAux(){
 	feedBackHistory("<where> é qualquer lugar, especificamente north/n,south/s,west/w e east/e.");
 	feedBackHistory("<what> é qualquer item, ou inimigo.");
 	feedBackHistory("Esses são os comandos do jogo!");
+	feedBackHistory("Para ver o tutorial completo use o comando: tutorial");
 	feedBackHistory("");
 }
 function endJanela(){
@@ -504,7 +556,7 @@ function processInput(e){
 				break;
 		}	
 		go(res[1],xhttp);
-		atualizaSaveFile();    
+		saveUser();    
 		break;
 	case "look":
 		switch(res[1]){
@@ -525,16 +577,17 @@ function processInput(e){
 		break;
 	case "pick":    	
 		pick(res[1]);
-		atualizaSaveFile();
-		updateItem(res[1]);
+		saveIten(res[1]);
 		break;
 	case "take":
-		pick(res[1]);
-		atualizaSaveFile();   	
-		updateItem(res[1]);
+		pick(res[1]); 	
+		saveIten(res[1]);
 		break;
 	case "inventory":    	
 		seeInventory();
+		break;
+	case "tutorial":    	
+		showTutorial();
 		break;
 	case "i":    	
 		seeInventory();
@@ -543,15 +596,13 @@ function processInput(e){
 		seeNotInventory();
 		break;
 	case "drop":
-		drop(res[1]);
-		atualizaSaveFile();   	
-		updateItem(res[1]);
+		drop(res[1]); 	
+		saveIten(res[1]);
 		break;
 	case "use":    	
-		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>) 
-		atualizaSaveFile();   	
-		updateItem(res[1]);
-		updateItem(res[3]);
+		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>)   	
+		saveIten(res[1]);
+		saveIten(res[3]);
 		break;
 	default:
 		feedBackHistory("Isso nao faz sentido!");
@@ -564,13 +615,19 @@ function processInput(e){
 function pick(what){
 	for(var i = items.length - 1; i >= 0; i--){
 		if(what == items[i].getId()){
-			if(items[i].getActive() == "true" && items[i].getWhere() == (salaAtual+1)){
-				inventory[inventory.length] = items[i];
-				items.splice(i, 1);
-				feedBackHistory("Pegou "+ what + "!");
-				inventory[inventory.length-1].setActive("false");
-				descriptionRoom(xhttp);
-				return;
+			if(items[i].getActive() == "true"){
+				//console.log("O item que vc quer pegar ta aqui: "+items[i].getWhere()+" e vc tá aqui: "+ (salaAtual+1));
+				if(items[i].getWhere() == (salaAtual+1)){
+					inventory[inventory.length] = items[i];
+					items.splice(i, 1);
+					feedBackHistory("Pegou "+ what + "!");
+					inventory[inventory.length-1].setActive("false");
+					descriptionRoom(xhttp);
+					return;
+				}else{
+					feedBackHistory("Nao consigo pegar isso, não está nessa sala!");//tem no jogo mas n tem no inventario
+				return;	
+				}
 			}else{
 				feedBackHistory("Nao consigo pegar isso!");//tem no jogo mas n tem no inventario
 				return;
