@@ -48,14 +48,14 @@
                         );
                         $this->session->set_userdata($dadossessao);
                     }
-                    redirect("../../../../");
+                    redirect("../game.html");
                 } else {
                     $this->session->set_flashdata('login_flash', 'Login/Senha incorreto');
-                    redirect("../../../../frontclient");
+                    redirect("../frontclient");
                 }
             // Consulta se existe essa sessão/login
             } else {
-                redirect("../../../../frontclient");
+				redirect("../frontclient");
             }
         }
         
