@@ -26,7 +26,7 @@ var catMath = ['matematica','number','arithmetic','single','trig','constant','ch
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
 var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
-rest='../restserver/api/'
+rest='../CodeDungeon/restserver/api/'
 login='login/';
 user='users/';
 user_itens='user_itens/';
@@ -104,10 +104,11 @@ function saveIten(what){
 			}
 		}
 	}else{
+		console.log("pmk_useritem="+inventory[position].key+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where);
 		$.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "pmk_user="+ppmk+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where,
+		  data: "pmk_useritem="+inventory[position].key+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where,
 		  success: function(data) {
 		  	  console.log("salvei"+inventory[position].id + " no inventario!");
 		  }
