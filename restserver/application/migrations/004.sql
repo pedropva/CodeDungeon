@@ -1,9 +1,5 @@
 ALTER TABLE `monsters` CHANGE `monster_is_active` `monster_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
-ALTER TABLE `monsters` ADD `monster_state` INT NOT NULL AFTER `monster_name`;
----
-ALTER TABLE `monsters` ADD `monster_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `monster_state`;
----
 ALTER TABLE `itens` CHANGE `item_is_active` `item_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE `itens` ADD `item_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `item_state`;
@@ -64,14 +60,14 @@ INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) V
 ---
 INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) VALUES ('contar','Y',11,1);
 ---
-INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`) VALUES ('esqueleto 0','Y',2);
+INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`,`monster_state`) VALUES ('esqueleto 0','Y',2,1);
 ---
-INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`) VALUES ('esqueleto 1','Y',4);
+INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`,`monster_state`) VALUES ('esqueleto 1','Y',4,1);
 ---
-INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`) VALUES ('esqueleto 2','Y',6);
+INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`,`monster_state`) VALUES ('esqueleto 2','Y',6,1);
 ---
-INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`) VALUES ('esqueleto 3','Y',8);
+INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`,`monster_state`) VALUES ('esqueleto 3','Y',8,1);
 ---
-INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`) VALUES ('esqueleto 1','Y',10);
+INSERT INTO monsters (`monster_name`,`monster_active`,`monster_current_room`,`monster_state`) VALUES ('esqueleto 4','Y',10,1);
 
 								
