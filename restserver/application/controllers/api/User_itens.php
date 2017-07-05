@@ -7,7 +7,7 @@
         function __construct($config = 'rest'){
             parent::__construct($config);
             
-            $this->load->model('../models/Modelusers_itens', 'user_itens');
+            $this->load->model('../models/Modeluser_itens', 'user_itens');
         }
         
         // Essa função vai responder pela rota /api/itens sob o método GET
@@ -27,9 +27,9 @@
                 } else {
                     $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
                 }
-            } else { // Senão, listar
+            } else { // Senão, listar por usuario
 				if ($id_user > 0) {
-					$usuarioItemParam = $get;
+					$usuarioItemParam['fok_user'] = $id_user;
 					$users = $this->user_itens->listar($usuarioItemParam);
 					
 					if($users) {

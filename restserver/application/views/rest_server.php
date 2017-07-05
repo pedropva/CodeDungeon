@@ -68,7 +68,7 @@
 				Parameters User Itens: (restserver/api/user_itens/)
                 <ol>
                     <li>List | GET: 0 | fok_user </li>
-                    <li>Load | GET: pmk_useritem </li>
+                    <li>Load | GET: pmk_useritem > 0 </li>
                     <li>Create (Inserir item no inventario do usuario) | POST: fok_user ; fok_item ; useritem_active ; useritem_status ; useritem_current_room</li>
                     <li>Edit | PUT: pmk_useritem ; fok_user ; fok_item ; useritem_active ; useritem_status; useritem_current_room</li>
                     <li>Delete (Remover item do inventário do usuário) | DELETE: pmk_useritem </li>

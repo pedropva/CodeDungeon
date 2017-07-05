@@ -41,7 +41,7 @@ class Modeluser_itens extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('user_itens tabela');
 		$this->db->join('itens item', 'item.pmk_item = tabela.fok_item');
-		$this->db->join('users usua', 'usua.pmk_usuario = tabela.fok_user');
+		$this->db->join('users usua', 'usua.pmk_user = tabela.fok_user');
 		 
 		if(isset($tableParam['pmk_useritem'])){ 
             $where = array('tabela.pmk_useritem' => $tableParam['pmk_useritem']);
