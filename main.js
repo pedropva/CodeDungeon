@@ -90,6 +90,7 @@ function loadUser(){
 }
 function saveIten(what){
 	var position=-1;
+	var active=0;//guarda a traducao false=0 true=1
 	for(var i = inventory.length - 1; i >= 0; i--){//procura o item a se atualizar no inventario
 		if((what ==inventory[i].getId())){
 			position=i;
@@ -104,11 +105,16 @@ function saveIten(what){
 			}
 		}
 	}else{
-		console.log("pmk_useritem="+inventory[position].key+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where);
+		if(inventory[position].active =="false"){
+			active=0;
+		}else{
+			active=1;
+		}
+		console.log("fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+active+"&useritem_current_room="+inventory[position].where);
 		$.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "pmk_useritem="+inventory[position].key+"&fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+inventory[position].active+"&useritem_current_room="+inventory[position].where,
+		  data: "fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+active+"&useritem_current_room="+inventory[position].where,
 		  success: function(data) {
 		  	  console.log("salvei"+inventory[position].id + " no inventario!");
 		  }
@@ -116,10 +122,15 @@ function saveIten(what){
 		return;
 	}
 	if(position==-1)return;// se nao achou em nenhum lugar então não é um item valido.retorna.
+    if(items[position].active =="false"){
+		active=0;
+	}else{
+		active=1;
+	}
     $.ajax({
 	  url: rest+user_itens,
 	  type: 'PUT',
-	  data: "pmk_user="+ppmk+"&fok_user="+ppmk+"&fok_item="+items[position].key+"&useritem_active="+items[position].active+"&useritem_current_room="+items[position].where,
+	  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&useritem_active="+active+"&useritem_current_room="+items[position].where,
 	  success: function(data) {
 	  	  console.log("salvei"+items[position].id + " no chao!");
 	  }
@@ -291,6 +302,7 @@ function carregaTudo(){
 if(!carregado || dbstatus!='success'){
 	document.getElementById('loadingCat').style.display='block';
 	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor D:';
+	window.location.replace('http://localhost/CodeDungeon/frontclient');
 }
 function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var xmlDoc = xml.responseXML;

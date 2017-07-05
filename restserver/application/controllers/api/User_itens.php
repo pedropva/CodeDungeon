@@ -7,7 +7,7 @@
         function __construct($config = 'rest'){
             parent::__construct($config);
             
-            $this->load->model('../models/Modelusers_itens', 'user_itens');
+            $this->load->model('../models/Modeluser_itens', 'user_itens');
         }
         
         // Essa função vai responder pela rota /api/itens sob o método GET
