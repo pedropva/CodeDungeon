@@ -50,7 +50,7 @@
             $usuario_item = $this->post();
 			
             // Se tem ID edita, senão, cria
-            if ($usuario) {
+            if ($usuario_item) {
                 $result = $this->user_itens->criar($usuario_item);
                 
                 if($result > 0) {
