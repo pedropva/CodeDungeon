@@ -77,9 +77,11 @@ class Modeluser_itens extends CI_Model {
 	public function editar ($tableParam) {
 	
 		if (isset($tableParam)){
-			$idTable = $tableParam['pmk_useritem'];
+			$idItem = $tableParam['fok_item'];
+			$idUser = $tableParam['fok_user'];
 			
-			$this->db->where('pmk_useritem', $idTable);
+			$this->db->where('fok_item', $idItem);
+			$this->db->where('fok_user', $idUser);
 			$this->db->set($tableParam);
 			
 			return $this->db->update('user_itens');

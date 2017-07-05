@@ -68,12 +68,16 @@
             // recupera os dados informados no formulário
             $usuario = $this->put();
             $usuario_id = 0;
-            if (isset($usuario['pmk_useritem'])) {
-				$usuario_id = $usuario['pmk_useritem'];
+			$item_id = 0;
+            if (isset($usuario['fok_user'])) {
+				$usuario_id = $usuario['fok_user'];
+            }
+            if (isset($usuario['fok_item'])) {
+				$item_id = $usuario['fok_item'];
             }
 			
             // Se tem ID edita, senão bad
-            if ($usuario_id > 0) {
+            if ( ($usuario_id > 0) && ($item_id > 0) ) {
                 $result = $this->user_itens->editar($usuario);
             
                 if($result == FALSE) {
