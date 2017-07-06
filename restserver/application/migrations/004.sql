@@ -1,5 +1,9 @@
 ALTER TABLE `monsters` CHANGE `monster_is_active` `monster_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
+ALTER TABLE `monsters` ADD `monster_state` INT NOT NULL AFTER `monster_name`;
+---
+ALTER TABLE `monsters` ADD `monster_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `monster_state`;
+---
 ALTER TABLE `itens` CHANGE `item_is_active` `item_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE `itens` ADD `item_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `item_state`;
@@ -8,9 +12,9 @@ ALTER TABLE `user_monsters` CHANGE `user_monster_defeat` `user_monster_state` TI
 ---
 ALTER TABLE `user_monsters` ADD `user_monster_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `user_monster_state`;
 ---
-ALTER TABLE `user_itens` CHANGE `useritem_status` `useritem_state` INT NOT NULL AFTER `useritem_active`;
+ALTER TABLE `user_itens` CHANGE `useritem_status` `user_item_state` INT NOT NULL AFTER `useritem_active`;
 ---
-ALTER TABLE `user_itens` CHANGE `user_item_is_active` `user_item_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
+ALTER TABLE `user_itens` CHANGE `user_itens_is_active` `user_item_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
 ALTER TABLE `user_itens` ADD `user_item_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `user_item_state`;
 ---
