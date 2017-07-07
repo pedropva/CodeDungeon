@@ -65,7 +65,10 @@
 					foreach ($itensArr as $iten) {
 						$param['fok_user'] = $result;
 						$param['fok_item'] = $iten['pmk_item'];
-						$param['useritem_current_room'] = $iten['item_current_room'];
+                        $param['user_item_state'] = $iten['item_state'];
+                        $param['user_item_active'] = $iten['item_active'];
+                        $param['useritem_current_room'] = $iten['item_current_room'];
+                        $param['user_item_is_active'] = $iten['item_is_active'];
 						$user_itens_model = $this->user_itens_model->criar($param);
 					}
 					// ---------------------------------------------------------
@@ -74,6 +77,10 @@
 					foreach ($monstersArr as $monster) {
 						$paramM['fok_user'] = $result;
 						$paramM['fok_monster'] = $monster['pmk_monster'];
+                        $paramM['user_monster_state'] = $monster['monster_state'];
+                        $paramM['user_monster_active'] = $monster['monster_active'];
+                        $paramM['user_monster_current_room'] = $monster['monster_current_room'];
+                        $paramM['user_monster_is_active'] = $monster['monster_is_active'];
 						$user_monsters_model = $this->user_monsters_model->criar($paramM);
 					}
 					// ---------------------------------------------------------
@@ -82,6 +89,8 @@
 					foreach ($roomnsArr as $room) {
 						$paramR['fok_user'] = $result;
 						$paramR['fok_room'] = $room['pmk_room'];
+                        $paramR['userroom_state'] = $room['room_state'];
+                        $paramR['userroom_is_active'] = $room['room_is_active'];
 						$user_rooms_model = $this->user_rooms_model->criar($paramR);
 					}
 					// ---------------------------------------------------------

@@ -12,11 +12,13 @@ ALTER TABLE `user_monsters` CHANGE `user_monster_defeat` `user_monster_state` TI
 ---
 ALTER TABLE `user_monsters` ADD `user_monster_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `user_monster_state`;
 ---
+ALTER TABLE `user_monsters` ADD `user_monster_current_room`  INT NOT NULL AFTER `user_monster_active`;
+---
 ALTER TABLE `user_itens` CHANGE `useritem_status` `user_item_state` INT NOT NULL AFTER `useritem_active`;
 ---
 ALTER TABLE `user_itens` CHANGE `user_itens_is_active` `user_item_is_active` ENUM('N','Y') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT 'Y';
 ---
-ALTER TABLE `user_itens` ADD `user_item_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `user_item_state`;
+ALTER TABLE `user_itens` CHANGE `useritem_active` `user_item_active` ENUM('N','Y','YY') NOT NULL DEFAULT 'Y' AFTER `user_item_state`;
 ---
 ALTER TABLE `user_rooms` CHANGE `userroom_status` `userroom_state` INT NOT NULL AFTER `userroom_visited`;
 ---

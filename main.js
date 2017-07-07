@@ -45,6 +45,19 @@ carregaTudo();
 
 
 //outras funcoes do jogo:
+/*
+// Send the data using post
+var posting = $.post( 
+    url, {fok_user:player.fok,fok_item:items[position].fok,pkm_usuario:player.pkm,pmk_item:what} 
+).done(function( data ) {
+    var content = "";
+    
+    if (data=="1") { content =' Sucesso no Save!';
+    } else { content = 'Falha ao salvar!'
+    }
+    feedBackHistory(content);
+});
+*/
 function saveUser(){
 	//user data:
 	$.ajax({
@@ -74,83 +87,128 @@ function loadUser(){
 				playerID = data[0].user_name;
 				if(salaAtual==0)showTutorial();
 				carregaSala(xhttp);
+				//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
+				//itens data
+				loadItens();
+				//monster data
+				//rooms data
+				//blocksHad data
 		    });
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
 			console.log('Motivo: '+dbstatus);
 		}
     });
-	
-	//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
-	//itens data
-	//monster data
-	//rooms data
-	//blocksHad data
-
 }
-function saveIten(what){
+function saveIten(what,action){
 	var position=-1;
-	var active=0;//guarda a traducao false=0 true=1
+	var active=0;//guarda a traducao false=N true=Y
+	var where;
 	for(var i = inventory.length - 1; i >= 0; i--){//procura o item a se atualizar no inventario
 		if((what ==inventory[i].getId())){
 			position=i;
 			break;
 		}
 	}
-	if(position==-1){
-		for(i = items.length - 1; i >= 0; i--){// se nao achou no iventario deve estar no chao...
+	if(position!=-1){//se achou no inventario entao de boa
+		if(inventory[position].active =="false"){
+			active='N';
+		}else if(inventory[position].active =="alwaysTrue"){
+			active='YY';
+		}else{
+			active='Y';
+		}
+		if(action=='pick'){
+			where = -1;
+		}else{
+			where = inventory[position].where;
+		}
+		$.ajax({
+		  url: rest+user_itens,
+		  type: 'PUT',
+		  data: "fok_user="+ppmk+"&fok_item="+inventory[position].key+"&user_item_active="+active+"&useritem_current_room="+where,
+		  success: function(data) {
+		  	  //console.log("\nsalvei o "+inventory[position].id + " no inventario!");
+		  }
+		});
+		return;
+	}else{// se nao achou no iventario deve estar no chao...
+		for(i = items.length - 1; i >= 0; i--){//procura no chao...
 			if((what ==items[i].getId())){
 				position=i;
 				break;
 			}
 		}
-	}else{
-		if(inventory[position].active =="false"){
-			active=0;
+		if(position==-1)return;// se nao achou em nenhum lugar então não é um item valido.
+	    if(items[position].active =="false"){
+			active='N';
+		}else if(items[position].active =="alwaysTrue"){
+			active='YY';
 		}else{
-			active=1;
+			active='Y';
 		}
-		console.log("fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+active+"&useritem_current_room="+inventory[position].where);
-		$.ajax({
+		if(action=='pick'){
+			where = -1;
+		}else{
+			where = items[position].where;
+		}
+	    $.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+active+"&useritem_current_room="+inventory[position].where,
+		  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&user_item_active="+active+"&useritem_current_room="+where,
 		  success: function(data) {
-		  	  console.log("salvei"+inventory[position].id + " no inventario!");
+		  	  //console.log("salvei o "+items[position].id + " no chao!");
 		  }
 		});
-		return;
 	}
-	if(position==-1)return;// se nao achou em nenhum lugar então não é um item valido.retorna.
-    if(items[position].active =="false"){
-		active=0;
-	}else{
-		active=1;
-	}
-    $.ajax({
-	  url: rest+user_itens,
-	  type: 'PUT',
-	  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&useritem_active="+active+"&useritem_current_room="+items[position].where,
-	  success: function(data) {
-	  	  console.log("salvei"+items[position].id + " no chao!");
-	  }
-	});
-    /*
-    // Send the data using post
-	var posting = $.post( 
-        url, {fok_user:player.fok,fok_item:items[position].fok,pkm_usuario:player.pkm,pmk_item:what} 
-    ).done(function( data ) {
-        var content = "";
-        
-        if (data=="1") { content =' Sucesso no Save!';
-        } else { content = 'Falha ao salvar!'
-        }
-        feedBackHistory(content);
-    });
-    */
 }
-function loadItens(what){
+function loadItens(){
+	//carrega os itens
+	/*faz assim com o xml:
+	for(var i=0;i<itemm.length;i++){
+		id=	itemm[i].getAttribute('id');
+		where= itemm[i].getAttribute('where');
+		active= itemm[i].getAttribute('active');
+		state = itemm[i].childNodes[0].nodeValue;
+		key = i+1;
+		items[i] = new item(id,where,active,state,key);
+	}
+	*/
+	var where='';
+	var state='';
+	var active='';
+	$.get(rest+user_itens+'0/'+ppmk, function(data,status){
+        if(status == 'success'){
+			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
+				for(var j = items.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
+					if((data[i].fok_item ==items[j].getKey())){
+						state = parseInt(data[i].user_item_state);
+						where= parseInt(data[i].useritem_current_room);
+						if(data[i].user_item_active =="N"){
+							active='false';
+						}else if(data[i].user_item_active =="YY"){
+							active='alwaysTrue';
+						}else{
+							active='true';
+						}
+						items[j].setActive(active);
+						items[j].setWhere(where);
+						items[j].setState(state);
+						if(where == -1){//se estiver no inventario entao move ele pro array de inventario
+							inventory[inventory.length] = items[j];
+							items.splice(j, 1);
+							inventory[inventory.length-1].setActive('false');
+						}
+						break;
+					}
+				}
 
+			}
+		}else{
+			console.log('ue,não conseguiu conectar ao servidor!');
+			console.log('Motivo: '+status+' o caminho que tentei foi esse: '+rest+user_itens+'0/'+ppmk);
+		}
+    });
 }
 function doLogGame(){
 	var history = document.getElementById("scrollDiv").innerHTML;
@@ -299,10 +357,10 @@ function carregaTudo(){
 }
 
 
-if(!carregado || dbstatus!='success'){
+if(!carregado||dbstatus!='success'){
 	document.getElementById('loadingCat').style.display='block';
 	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor D:';
-	window.location.replace('http://localhost/CodeDungeon/frontclient');
+	//if(dbstatus!='success')window.location.replace('http://localhost/CodeDungeon/frontclient');
 }
 function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var xmlDoc = xml.responseXML;
@@ -330,7 +388,7 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 		monsters[i] = new monster(id,where,active,state,key);
 	}
 
-	
+	/*
 	//carrega os itens
 	for(var i=0;i<itemm.length;i++){
 		id=	itemm[i].getAttribute('id');
@@ -340,6 +398,7 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 		key = i+1;
 		items[i] = new item(id,where,active,state,key);
 	}
+	*/
 	// carrega as salas
 	for(var i=0;i<roomss.length;i++){
 		roomsStates[parseInt(roomss[i].getAttribute('id')-1)] =  roomss[i].childNodes[0].nodeValue;
@@ -590,11 +649,11 @@ function processInput(e){
 		break;
 	case "pick":    	
 		pick(res[1]);
-		saveIten(res[1]);
+		saveIten(res[1],'pick');
 		break;
 	case "take":
 		pick(res[1]); 	
-		saveIten(res[1]);
+		saveIten(res[1],'pick');
 		break;
 	case "inventory":    	
 		seeInventory();
