@@ -68,9 +68,6 @@ function saveUser(){
 	  	  //console.log("salvou o maluco!");
 	  }
 	});	
-	//itens data
-	//monster data
-	//rooms data
 	//blocksHad data
 	//log data
 	doLogGame();
@@ -86,13 +83,15 @@ function loadUser(){
 				salaAtual = parseInt(data[0].fok_current_room);
 				playerID = data[0].user_name;
 				if(salaAtual==0)showTutorial();
-				carregaSala(xhttp);
 				//blocksManager();//atualiza o numero de blocos no vetor blocks pra saber quantos blocos o cara tem
 				//itens data
 				loadItens();
 				//monster data
+				loadMonsters();
 				//rooms data
+				loadRooms();
 				//blocksHad data
+				//carregaSala(xhttp);
 		    });
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
@@ -155,25 +154,15 @@ function saveIten(what,action){
 	    $.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&user_item_active="+active+"&useritem_current_room="+where,
+		  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&user_item_active="+active+"&useritem_current_room="+where+'&user_item_state='+items[position].state,
 		  success: function(data) {
 		  	  //console.log("salvei o "+items[position].id + " no chao!");
 		  }
 		});
 	}
 }
+
 function loadItens(){
-	//carrega os itens
-	/*faz assim com o xml:
-	for(var i=0;i<itemm.length;i++){
-		id=	itemm[i].getAttribute('id');
-		where= itemm[i].getAttribute('where');
-		active= itemm[i].getAttribute('active');
-		state = itemm[i].childNodes[0].nodeValue;
-		key = i+1;
-		items[i] = new item(id,where,active,state,key);
-	}
-	*/
 	var where='';
 	var state='';
 	var active='';
@@ -184,12 +173,12 @@ function loadItens(){
 					if((data[i].fok_item ==items[j].getKey())){
 						state = parseInt(data[i].user_item_state);
 						where= parseInt(data[i].useritem_current_room);
-						if(data[i].user_item_active =="N"){
-							active='false';
+						if(data[i].user_item_active =="Y"){
+							active='true';
 						}else if(data[i].user_item_active =="YY"){
 							active='alwaysTrue';
 						}else{
-							active='true';
+							active='false';
 						}
 						items[j].setActive(active);
 						items[j].setWhere(where);
@@ -202,11 +191,99 @@ function loadItens(){
 						break;
 					}
 				}
-
 			}
+			carregaSala(xhttp);
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
-			console.log('Motivo: '+status+' o caminho que tentei foi esse: '+rest+user_itens+'0/'+ppmk);
+			console.log('Motivo: '+status);
+		}
+    });
+}
+function saveMonster(who){
+	var position=-1;
+	var active=0;//guarda a traducao false=N true=Y
+	var where;
+	for(var i = monsters.length - 1; i >= 0; i--){//procura o monstro
+		if((who ==monsters[i].getId())){
+			position=i;
+			break;
+		}
+	}
+	if(position==-1)return;// se nao achou em nenhum lugar então não é um monstro valido.
+    if(monsters[position].active =="false"){
+		active='N';
+	}else if(monsters[position].active =="alwaysTrue"){
+		active='YY';
+	}else{
+		active='Y';
+	}
+	where = monsters[position].where;
+    $.ajax({
+	  url: rest+user_monsters,
+	  type: 'PUT',
+	  data: "fok_user="+ppmk+"&fok_monster="+monsters[position].key+"&user_monster_active="+active+"&user_monster_current_room="+where+'&user_monster_state='+monsters[position].state,
+	  success: function(data) {
+	  	  //console.log("salvei o "+monsters[position].id);
+	  }
+	});
+}
+function loadMonsters(){
+	var where='';
+	var state='';
+	var active='';
+	$.get(rest+user_monsters+'0/'+ppmk, function(data,status){
+        if(status == 'success'){
+			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
+				for(var j = monsters.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
+					if((data[i].fok_monster ==monsters[j].getKey())){
+						state = parseInt(data[i].user_monster_state);
+						where= parseInt(data[i].user_monster_current_room);
+						if(data[i].user_monster_active =="Y"){
+							active='true';
+						}else if(data[i].user_monster_active =="YY"){
+							active='alwaysTrue';
+						}else{
+							active='false';
+						}
+						monsters[j].setActive(active);
+						monsters[j].setWhere(where);
+						monsters[j].setState(state);
+						break;
+					}
+				}
+			}
+			carregaSala(xhttp);
+		}else{
+			console.log('ue,não conseguiu conectar ao servidor!');
+			console.log('Motivo: '+status);
+		}
+    });
+}
+function saveRoom(what){
+    $.ajax({
+	  url: rest+user_rooms,
+	  type: 'PUT',
+	  data: "fok_user="+ppmk+"&fok_room="+what+1+'&userroom_state='+roomsStates[what]+'&useroomvisited=1',
+	  success: function(data) {
+	  	  //console.log("salvei o room "+what);
+	  }
+	});
+}
+function loadRooms(){
+	var state='';
+	$.get(rest+user_rooms+'0/'+ppmk, function(data,status){
+        if(status == 'success'){
+			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o room equivalente a esse dado
+				for (var j = roomsStates.length - 1; j >= 0; j--) {
+					if(j==(parseInt(data[i].fok_room)-1)){
+						roomsStates[j]=parseInt(data[i].userroom_state);
+					}
+				}
+			}
+			carregaSala(xhttp);
+		}else{
+			console.log('ue,não conseguiu conectar ao servidor!');
+			console.log('Motivo: '+status);
 		}
     });
 }
@@ -388,7 +465,6 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 		monsters[i] = new monster(id,where,active,state,key);
 	}
 
-	/*
 	//carrega os itens
 	for(var i=0;i<itemm.length;i++){
 		id=	itemm[i].getAttribute('id');
@@ -398,7 +474,6 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 		key = i+1;
 		items[i] = new item(id,where,active,state,key);
 	}
-	*/
 	// carrega as salas
 	for(var i=0;i<roomss.length;i++){
 		roomsStates[parseInt(roomss[i].getAttribute('id')-1)] =  roomss[i].childNodes[0].nodeValue;
@@ -628,7 +703,8 @@ function processInput(e){
 				break;
 		}	
 		go(res[1],xhttp);
-		saveUser();    
+		saveUser();
+		saveRoom(parseInt(salaAtual));
 		break;
 	case "look":
 		switch(res[1]){
@@ -675,6 +751,7 @@ function processInput(e){
 		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>)   	
 		saveIten(res[1]);
 		saveIten(res[3]);
+		saveRoom(parseInt(salaAtual));
 		break;
 	default:
 		feedBackHistory("Isso nao faz sentido!");
@@ -986,13 +1063,15 @@ function disconnect(){
 		updateScroll();
     });
     if(workspace!=null)workspace.clear();
+    saveMonster(currentMonster);
+    currentMonster='';
 }
 
-function connect(xml,what){
+function connect(xml,who){
 	if(!toolboxManager()){//atualiza os blocos que o cara tem
 		return;
 	}
-	currentMonster=what;
+	currentMonster=who.trim();
 	var xmlDoc = xml.responseXML;
     bestiaryXML = xmlDoc.getElementsByTagName("bestiary")[0];
     var monsterr = bestiaryXML.getElementsByTagName("monster");
@@ -1000,7 +1079,7 @@ function connect(xml,what){
     chalenge = "";
     //carregando o desafio do xml
     for (var i = monsters.length - 1; i >= 0; i--) {
-  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && (monsters[i].getId().trim() == what.trim()))){			
+  		if(((monsters[i].getActive().trim() == "true") || (monsters[i].getActive() == ("alwaysTrue"))) && (monsters[i].getWhere() == (salaAtual+1) && (monsters[i].getId().trim() == currentMonster))){			
   			for (var j = monsterr.length - 1; j >= 0; j--){	  		
   				if(monsterr[j].getAttribute("id") == monsters[i].getId()){
   					chalenge ="\t"+monsterr[j].getElementsByTagName("problem")[0].childNodes[0].nodeValue;
@@ -1251,7 +1330,6 @@ function testaResultado(){
 						if(document.getElementById('resultPre').innerHTML == chalenge){
 						criaJanela("alerta","Resposta Certa!");
 						fadeJanela("disconnect");
-						currentMonster='';
 						//setar o monstro atual como derrotado
 						monsters[i].setState(2);
 						//setar o novo estado da sala

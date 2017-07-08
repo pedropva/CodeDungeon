@@ -28,7 +28,7 @@ class Modeluser_monsters extends CI_Model {
 		$this->db->select('*');
 		$this->db->from('user_monsters tabela');
 		$this->db->where($where); 
-		$this->db->order_by("tabela.user_usuario", "asc");
+		$this->db->order_by("tabela.fok_user", "asc");
 		if (isset($like)) {
 			$this->db->like($like);
 		}
