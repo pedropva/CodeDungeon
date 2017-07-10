@@ -54,9 +54,11 @@ class Modeluser_rooms extends CI_Model {
 	public function editar ($tableParam) {
 	
 		if (isset($tableParam)){
-			$idTable = $tableParam['pmk_userroom'];
+			$idRoom = $tableParam['fok_room'];
+			$idUser = $tableParam['fok_user'];
 			
-			$this->db->where('pmk_userroom', $idTable);
+			$this->db->where('fok_room', $idRoom);
+			$this->db->where('fok_user', $idUser);
 			$this->db->set($tableParam);
 			
 			return $this->db->update('user_rooms');

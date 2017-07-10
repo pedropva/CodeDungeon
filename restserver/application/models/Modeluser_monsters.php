@@ -54,9 +54,11 @@ class Modeluser_monsters extends CI_Model {
 	public function editar ($tableParam) {
 	
 		if (isset($tableParam)){
-			$idTable = $tableParam['pmk_user_monster'];
+			$idMonster = $tableParam['fok_monster'];
+			$idUser = $tableParam['fok_user'];
 			
-			$this->db->where('pmk_user_monster', $idTable);
+			$this->db->where('fok_monster', $idMonster);
+			$this->db->where('fok_user', $idUser);
 			$this->db->set($tableParam);
 			
 			return $this->db->update('user_monsters');

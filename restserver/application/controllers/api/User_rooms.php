@@ -67,13 +67,17 @@
         {
             // recupera os dados informados no formulário
             $usuario = $this->put();
-            $usuario_id = 0;
-            if (isset($usuario['pmk_userroom'])) {
-				$usuario_id = $usuario['pmk_userroom'];
+			$usuario_id = 0;
+			$room_id = 0;
+            if (isset($usuario['fok_user'])) {
+				$usuario_id = $usuario['fok_user'];
+            }
+            if (isset($usuario['fok_room'])) {
+				$room_id = $usuario['fok_room'];
             }
 			
             // Se tem ID edita, senão bad
-            if ($usuario_id > 0) {
+            if ( ($usuario_id > 0) && ($room_id > 0) ) {
                 $result = $this->user_rooms->editar($usuario);
             
                 if($result == FALSE) {
