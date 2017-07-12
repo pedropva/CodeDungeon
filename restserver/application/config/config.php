@@ -24,9 +24,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 if ( ($_SERVER['SERVER_NAME'] == 'www.kassiosousa.com.br') || ($_SERVER['SERVER_NAME'] == 'kassiosousa.com.br') ){
-    $config['base_url'] = 'http://www.kassiosousa.com.br/codedungeon/restserver';
+    $config['base_url'] = 'http://www.kassiosousa.com.br/codedungeon/restserver/';
 } else {
-	$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/codedungeon/restserver';
+	$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/codedungeon/restserver/';
 }
 //$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/codedungeon/restserver';
 

@@ -21,14 +21,15 @@ class Modellogs extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_is_ativo' => 'Y');
+		$where = array('user.user_is_active' => 'Y');
 		if(isset($tableParam['pmk_log'])){ $where += array('tabela.pmk_log' => $tableParam['pmk_log']); }
 		if(isset($tableParam['newLimit'])){ $this->db->limit($tableParam['newLimit'],0); } else { $this->db->limit(100,0); }
 		
 		$this->db->select('*');
 		$this->db->from('logs tabela');
+		$this->db->join("users user", "user.pmk_user = tabela.fok_user");
 		$this->db->where($where); 
-		$this->db->order_by("tabela.user_usuario", "asc");
+		$this->db->order_by("user.user_name", "asc");
 		if (isset($like)) {
 			$this->db->like($like);
 		}

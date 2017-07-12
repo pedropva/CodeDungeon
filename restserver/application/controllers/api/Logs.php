@@ -20,6 +20,35 @@
 			
         }
       
+      
+        // Listar
+        function index_get()
+        {
+            $id = (int) $this->uri->segment(3);
+			
+			//$id é do usuário
+            // Se tem ID carrega
+            if($id > 0) {
+                
+                $paramLog['fok_user'] = $id;
+                $logsArr = $this->user_model->listar($paramLog);
+                    
+                if($logsArr) {
+                    $this->response($logsArr, REST_Controller::HTTP_OK); // 200 being the HTTP response code
+                } else {
+                    $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
+                }
+            } else { // Senão, listar
+                $logsArr = $this->user_model->listar();
+                
+                if($logsArr) {
+                    $this->response($logsArr, REST_Controller::HTTP_OK);
+                } else {
+                    $this->response(NULL, REST_Controller::HTTP_NO_CONTENT);
+                }
+            }
+        }
+		
         // Criar
         function index_post()
         {

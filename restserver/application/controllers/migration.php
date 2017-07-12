@@ -10,7 +10,7 @@ class Migration extends CI_Controller{
 
     public function index()
     {
-        $this->load->library("migration");
+        $this->load->library("Migration");
 
         if(!$this->migration->latest())
         //if(!$this->migration->version(0))
