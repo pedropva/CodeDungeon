@@ -29,7 +29,7 @@ var catMath = ['matematica','number','arithmetic','single','trig','constant','ch
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
 var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
-rest='../CodeDungeon/restserver/api/';
+rest='../codedungeon/restserver/api/';
 login='login/';
 user='users/';
 user_itens='user_itens/';
@@ -449,7 +449,7 @@ function areYouReady(){
 	}else{
 		document.getElementById('loadingCat').style.display='block';
 		document.getElementById("descriptionRoom").innerHTML = 'Carregando...';
-		//if(dbstatus!='success')window.location.replace('http://localhost/CodeDungeon/frontclient');
+		//if(dbstatus!='success')window.location.replace('http://localhost/codedungeon/frontclient');
 	}
 }
 
