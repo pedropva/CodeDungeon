@@ -1932,7 +1932,6 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 	}
 }
 function fimDeJogo(){
-	alert(finalRoom);
 	if((salaAtual+1) == finalRoom){
 		criaJanela("alerta","Fim do jogo!");
 		fadeJanela("fadebackground");
