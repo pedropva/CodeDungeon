@@ -128,7 +128,7 @@
 			</status>
 			<problem>Dê me o Fatorial da entrada!</problem>
 			<test>3628800</test>
-			<read>10</read>
+			<read>10.</read>
 		</monster>
 	</bestiary>
 	<inventory>
