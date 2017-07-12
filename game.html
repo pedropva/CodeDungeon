@@ -63,21 +63,42 @@
 		
 		<script src="interpreter/acorn_interpreter.js"></script>
 		
+		<!-- Estilos Bootstrap -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<style>
+			.roomNumber {
+				margin-top: 10px;
+				font-size: 20px;
+			}
+			.cabecalho{
+				font-size: 20px;
+			}
+			.divPrincipal {
+			    background-image: url("img/wall.png");
+				background-repeat: repeat;
+			}
+			.divScrollMaior {
+				padding-bottom: 15px;
+			}
+			.inputText {
+				    width: 100%;
+					padding: 6px 10px;
+			}
+		</style>
 	</head>
 	<body>
 			<h1 class="title" id="gameTitle" align="center">
-				Code Dungeon!
+				<img src="img/logo-mini.png" />
 			</h1>
 			<img id="loadingCat" src="resources/loadcat.gif" alt="Loading" class="loadingCat">
 			<div id="divPrincipal" class="divPrincipal">
 				<div class="divSecond">
 					<p class="roomNumber" id="roomNumber">
 					</p>
-					<br><br>
+					<br>
 					<p id="descriptionRoom"></p>
 					<br><br>
-					O que fazer?
-					<br>
+					<div class="cabecalho">O que fazer?</div>
 					<br>
 					<br>
 					<div class="divScrollMaior">
