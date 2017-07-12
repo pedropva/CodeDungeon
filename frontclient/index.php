@@ -36,7 +36,7 @@
                 	
                     <div class="row">
                         <div class="col-sm-8 col-sm-offset-2 text">
-                            <h1><strong>CodeDungeon</strong></h1>
+                            <h1><img src="../img/logo-mini.png" /></h1>
                             <div class="description" style="height: 100px">
                             	<p>
 	                            	Cadastro e login <strong>simplificado</strong> 
