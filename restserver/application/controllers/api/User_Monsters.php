@@ -29,8 +29,8 @@
                 }
             } else { // Senão, listar
 				if ($id_user > 0) {
-					$usuarioItemParam = $get;
-					$users = $this->user_monsters->listar($usuarioItemParam);
+					$usuarioMonsterParam['fok_user'] = $id_user;
+					$users = $this->user_monsters->listar($usuarioMonsterParam);
 					
 					if($users) {
 						$this->response($users, REST_Controller::HTTP_OK);
