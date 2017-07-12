@@ -23,7 +23,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/CodeDungeon/restserver';
+if ( ($_SERVER['SERVER_NAME'] == 'www.kassiosousa.com.br') || ($_SERVER['SERVER_NAME'] == 'kassiosousa.com.br') ){
+    $config['base_url'] = 'http://www.kassiosousa.com.br/codedungeon/restserver';
+} else {
+	$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/codedungeon/restserver';
+}
+//$config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/codedungeon/restserver';
 
 /*
 |--------------------------------------------------------------------------
