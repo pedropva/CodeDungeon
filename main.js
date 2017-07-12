@@ -4,7 +4,10 @@
  
 var ppmk ='0';//player primey key
 var playerID = '';
-var dbstatus='';// status do bd
+var dbplayerStatus='';// status do bd
+var dbitensStatus='';// status dos itens
+var dbmonstersStatus='';// status dos mosnters
+var dbroomsStatus='';// status dos rooms
 var items = [];//itens no chao
 var inventory = [];// itens no inventario
 var monsters = [];
@@ -18,7 +21,7 @@ var highlightPause = false;//variaveis importantes do blockly
 var currentMonster='';//segura o monstro atual que esta em combate, só fica cheio enquanto em batalha, não é necessario salvar.
 var finalRoom;//guarda o numero da ultima sala, tbm n precisa salvar, é sempre carregado do xml
 var carregado=false; //guarda se a pagina e o jogo foram carregados com sucesso
-var lastMove=379;//guarda o index do final do ultimo movimento, inicio conta com o index do tutorial!
+var lastMove=0;//guarda o index do final do ultimo movimento, inicio conta com o index do tutorial!
 //lista de blocos que o jogo aceita
 var catLogic = ['se','compare','operation','negate','boolean','null','ternary'];
 var catLoops = ['repetir','enquanto','contar','break'];
@@ -26,12 +29,13 @@ var catMath = ['matematica','number','arithmetic','single','trig','constant','ch
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
 var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
-rest='../CodeDungeon/restserver/api/'
+rest='../CodeDungeon/restserver/api/';
 login='login/';
 user='users/';
 user_itens='user_itens/';
 user_rooms='user_rooms/';
 user_monsters='user_monsters/';
+user_logs='logs/';
 //tutorial
 tutorialAux();
 function showTutorial(){
@@ -44,20 +48,7 @@ carregaTudo();
 
 
 
-//outras funcoes do jogo:
-/*
-// Send the data using post
-var posting = $.post( 
-    url, {fok_user:player.fok,fok_item:items[position].fok,pkm_usuario:player.pkm,pmk_item:what} 
-).done(function( data ) {
-    var content = "";
-    
-    if (data=="1") { content =' Sucesso no Save!';
-    } else { content = 'Falha ao salvar!'
-    }
-    feedBackHistory(content);
-});
-*/
+//outras funcoes do jogo(BD):
 function saveUser(){
 	//user data:
 	$.ajax({
@@ -67,10 +58,8 @@ function saveUser(){
 	  success: function(data) {
 	  	  //console.log("salvou o maluco!");
 	  }
-	});	
-	//blocksHad data
-	//log data
-	doLogGame();
+	});
+	//blocksHad data	
 }
 
 function loadUser(){
@@ -80,6 +69,7 @@ function loadUser(){
 		ppmk=pk;
         if(dbstatus == 'success'){
 			$.get(rest+user+ppmk, function(data, dbstatus){
+				dbplayerStatus = dbstatus;
 				salaAtual = parseInt(data[0].fok_current_room);
 				playerID = data[0].user_name;
 				if(salaAtual==0)showTutorial();
@@ -167,7 +157,8 @@ function loadItens(){
 	var state='';
 	var active='';
 	$.get(rest+user_itens+'0/'+ppmk, function(data,status){
-        if(status == 'success'){
+		dbitensStatus = status;
+        if(dbitensStatus == 'success'){
 			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
 				for(var j = items.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
 					if((data[i].fok_item ==items[j].getKey())){
@@ -192,10 +183,10 @@ function loadItens(){
 					}
 				}
 			}
-			carregaSala(xhttp);
+			areYouReady();
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
-			console.log('Motivo: '+status);
+			console.log('Motivo: '+dbitensStatus);
 		}
     });
 }
@@ -232,7 +223,8 @@ function loadMonsters(){
 	var state='';
 	var active='';
 	$.get(rest+user_monsters+'0/'+ppmk, function(data,status){
-        if(status == 'success'){
+		dbmonstersStatus = status;
+        if(dbmonstersStatus == 'success'){
 			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
 				for(var j = monsters.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
 					if((data[i].fok_monster ==monsters[j].getKey())){
@@ -252,10 +244,10 @@ function loadMonsters(){
 					}
 				}
 			}
-			carregaSala(xhttp);
+			areYouReady();
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
-			console.log('Motivo: '+status);
+			console.log('Motivo: '+dbmonstersStatus);
 		}
     });
 }
@@ -263,7 +255,7 @@ function saveRoom(what){
     $.ajax({
 	  url: rest+user_rooms,
 	  type: 'PUT',
-	  data: "fok_user="+ppmk+"&fok_room="+what+1+'&userroom_state='+roomsStates[what]+'&useroomvisited=1',
+	  data: "fok_user="+ppmk+"&fok_room="+(parseInt(what)+1)+'&userroom_state='+roomsStates[what]+'&userroom_visited=1',
 	  success: function(data) {
 	  	  //console.log("salvei o room "+what);
 	  }
@@ -271,8 +263,10 @@ function saveRoom(what){
 }
 function loadRooms(){
 	var state='';
+	var aux='';
 	$.get(rest+user_rooms+'0/'+ppmk, function(data,status){
-        if(status == 'success'){
+		dbroomsStatus = status;
+        if(dbroomsStatus == 'success'){
 			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o room equivalente a esse dado
 				for (var j = roomsStates.length - 1; j >= 0; j--) {
 					if(j==(parseInt(data[i].fok_room)-1)){
@@ -280,26 +274,40 @@ function loadRooms(){
 					}
 				}
 			}
-			carregaSala(xhttp);
+		areYouReady();
 		}else{
 			console.log('ue,não conseguiu conectar ao servidor!');
-			console.log('Motivo: '+status);
+			console.log('Motivo: '+dbroomsStatus);
 		}
     });
 }
-function doLogGame(){
+function doLogGame(type){
 	var history = document.getElementById("scrollDiv").innerHTML;
 	//pega a ultima linha 
 	history=getLastMove(history);
 	//consumir as tags e retornar texto
 	history=consumeTags(history);
-	return history;
+	// Send the data using post
+	$.post( 
+	    rest+user_logs, {fok_user:ppmk,log_table:type,log_description:history} 
+	).done(function( data ) {
+	    var content = "";
+	    
+	    if (data=="1") { //console.log('sucesso ao salvar o log :)');
+	    } else { console.log('falha ao salvar o log :(');
+	    }   
+	});
 }
 function getLastMove(text){
 	var aux;
 	aux = text.slice(lastMove,text.length);
-	lastMove = lastMove+text.length;
-	return aux.trim();
+	lastMove = lastMove+aux.length;
+	aux=aux.split("!");
+	return aux[aux.length-1].trim();
+}
+function initLog(){
+	var history = document.getElementById("scrollDiv").innerHTML;
+	lastMove= history.length;
 }
 function consumeTags(text){
 	var inTag=0;
@@ -312,7 +320,9 @@ function consumeTags(text){
 			inTag--;
 		}
 		else if(inTag==0){
-			if(/[A-Z]/.test( text[i] ))newText+='/';
+			if(/[A-Z]/.test( text[i] )){
+				newText+='/';
+			}
 			newText+=text[i];
 		}
 	}
@@ -420,11 +430,9 @@ function carregaTudo(){
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
 			loadGame(xhttp);
-			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue)-1;	
-			carregaSala(xhttp);
+			finalRoom = parseInt(xhttp.responseXML.getElementsByTagName("finalRoom")[0].childNodes[0].nodeValue);	
 			carregado=true;
-			document.getElementById('loadingCat').style.display='none';
-			//cria o arquivo de save
+			areYouReady();
 		}else{
 			//feedBackHistory("Carregando...");  
 		}
@@ -433,12 +441,18 @@ function carregaTudo(){
 	xhttp.send();
 }
 
-
-if(!carregado||dbstatus!='success'){
-	document.getElementById('loadingCat').style.display='block';
-	document.getElementById("descriptionRoom").innerHTML = 'Algo deu terrivelmente errado durante a conexão com o servidor D:';
-	//if(dbstatus!='success')window.location.replace('http://localhost/CodeDungeon/frontclient');
+function areYouReady(){
+	if(carregado && dbplayerStatus=='success' && dbitensStatus=='success' && dbmonstersStatus=='success' && dbroomsStatus=='success'){
+		carregaSala(xhttp);
+		document.getElementById('loadingCat').style.display='none';
+		initLog();//isso é super importante, visto que o log se orienta o começo do log por aqui
+	}else{
+		document.getElementById('loadingCat').style.display='block';
+		document.getElementById("descriptionRoom").innerHTML = 'Carregando...';
+		//if(dbstatus!='success')window.location.replace('http://localhost/CodeDungeon/frontclient');
+	}
 }
+
 function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 	var xmlDoc = xml.responseXML;
 	var statusXML = xmlDoc.getElementsByTagName("state")[0];
@@ -483,7 +497,7 @@ function loadGame(xml){//carrega o jogo a partir do xml (prmeiro jogo)
 function carregaSala(xhttp){
 	nSala(xhttp);
 	descriptionRoom(xhttp);	
-	fimDeJogo();
+	fimDeJogo();//testa se ta na ultima sala
 }
 
 function nSala(){//bota no numero da sala no canto da div :)
@@ -662,7 +676,7 @@ function feedBackHistory(text) {
 	b.appendChild(t);
 	document.getElementById("scrollDiv").appendChild(b);
 	document.getElementById("scrollDiv").appendChild(br);
-	updateScroll();
+	updateScroll();	
 }
 
 function updateScroll(){
@@ -702,9 +716,9 @@ function processInput(e){
 				res[1]="east";
 				break;
 		}	
-		go(res[1],xhttp);
-		saveUser();
 		saveRoom(parseInt(salaAtual));
+		saveUser();
+		go(res[1],xhttp);
 		break;
 	case "look":
 		switch(res[1]){
@@ -757,7 +771,7 @@ function processInput(e){
 		feedBackHistory("Isso nao faz sentido!");
 	break;
 	}
-
+	//log data
 	return false;
 
 }
@@ -772,6 +786,7 @@ function pick(what){
 					feedBackHistory("Pegou "+ what + "!");
 					inventory[inventory.length-1].setActive("false");
 					descriptionRoom(xhttp);
+					doLogGame('itens');
 					return;
 				}else{
 					feedBackHistory("Nao consigo pegar isso, não está nessa sala!");//tem no jogo mas n tem no inventario
@@ -794,6 +809,7 @@ function drop(what){
 			items[items.length] = inventory[i];
 			inventory.splice(i, 1);
 			feedBackHistory("Soltou "+ what + " na Sala "+ (salaAtual+1) +"!" );
+			doLogGame('itens');
 			items[items.length-1].setActive("true");
 			items[items.length-1].setWhere(salaAtual+1);
 			descriptionRoom(xhttp);
@@ -826,13 +842,17 @@ function seeInventory(){
 	feedBackHistory("Inventario: ");
 	for (var i = inventory.length - 1; i >= 0; i--) {
 		feedBackHistory(inventory[i].getId());
+		doLogGame('itens');
 	}
 }
 function seeNotInventory(){
+	var aux='';
 	feedBackHistory("Chao: ");
 	for (var i = items.length - 1; i >= 0; i--) {
-		feedBackHistory(items[i].getId());
+		aux+=items[i].getId()+';'
 	}
+	feedBackHistory(aux);
+	doLogGame('itens');
 }
 
 
@@ -866,6 +886,7 @@ function extract(what){
 			inventory.splice(i, 1);
 			items[items.length-1].setWhere(salaAtual+1);
 			feedBackHistory("Perdeu "+ what + "!");
+			doLogGame('itens');
 			return;
 		}
 	}
@@ -876,6 +897,7 @@ function give(what){
 			inventory[inventory.length] = items[i];
 			items.splice(i, 1);
 			feedBackHistory("Pegou "+ what + "!");
+			doLogGame('itens');
 			inventory[inventory.length-1].setActive("false");
 			descriptionRoom(xhttp);
 			return;
@@ -1000,10 +1022,10 @@ function toolboxManager(){
 		blocksXML +=texto+logica+loops+matematica;
 		blocksXML=replaceBrakets(blocksXML);
 		if(loops!=''){
-			blocksXML+='<sep></sep><category id="catVariables" colour="330" custom="VARIABLE" name="Variables"></category>'; 
+			blocksXML+='<sep></sep><category id="catVariables" colour="330" custom="VARIABLE" name="Variaveis"></category>'; 
 		}
 		if(loops!='' && matematica !='' && logica!='' && texto!=''){
-			blocksXML+='<category id="catFunctions" colour="290" custom="PROCEDURE" name="Functions"></category>'; 
+			//blocksXML+='<category id="catFunctions" colour="290" custom="PROCEDURE" name="Funções"></category>'; 
 		}
 		//cria a toolbox se ela ainda nao existir e sobreescreve ela se ja existir
 		if(document.getElementById("toolbox") != null){
@@ -1583,6 +1605,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 							//carrega e faz o print
 							for (var k = actions.getElementsByTagName("print").length - 1; k >= 0; k--) {
 								feedBackHistory(actions.getElementsByTagName("print")[k].childNodes[0].nodeValue);
+								doLogGame('itens');
 							}
 							
 							//carrega e faz o give
@@ -1717,7 +1740,8 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 		case "north":
 			if(nextRoom.getElementsByTagName("north")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("north")[0].childNodes[0].nodeValue;
-				feedBackHistory("Entrando na sala "+numberNext);				
+				feedBackHistory("Entrando na sala "+numberNext);
+				doLogGame('rooms');				
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
@@ -1728,6 +1752,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 			if(nextRoom.getElementsByTagName("south")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("south")[0].childNodes[0].nodeValue;
 				feedBackHistory("Entrando na sala "+numberNext);
+				doLogGame('rooms');
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
@@ -1738,6 +1763,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 			if(nextRoom.getElementsByTagName("west")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("west")[0].childNodes[0].nodeValue;
 				feedBackHistory("Entrando na sala "+numberNext);
+				doLogGame('rooms');
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
@@ -1749,6 +1775,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 			if(nextRoom.getElementsByTagName("east")[0].childNodes.length > 0){
 				numberNext = nextRoom.getElementsByTagName("east")[0].childNodes[0].nodeValue;
 				feedBackHistory("Entrando na sala "+numberNext);
+				doLogGame('rooms');
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
@@ -1787,6 +1814,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
 						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						doLogGame('rooms');
 					}
 				}
 			}else{
@@ -1802,6 +1830,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
 						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						doLogGame('rooms');
 					}
 				}
 			}else{
@@ -1817,6 +1846,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
 						feedBackHistory('Ha uma outra porta com "Sala ' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						doLogGame('rooms');
 					}
 				}
 			}else{
@@ -1832,6 +1862,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 				for (var i = shortDescription.length - 1; i >= 0; i--) {
 					if(shortDescription[i].getAttribute('id') == roomStatus){
 						feedBackHistory('Ha uma outra porta com "Sala' + numberNext + '" escrito sobre ela.' + shortDescription[i].childNodes[0].nodeValue);
+						doLogGame('rooms');
 					}
 				}
 			}else{
@@ -1852,6 +1883,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 							for (var k = descriptions.length - 1; k >= 0; k--) {
 								if(descriptions[k].getAttribute('id') == itemStatus){
 									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									doLogGame('itens');
 									return;
 								}
 							}		
@@ -1869,6 +1901,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 							for (var k = descriptions.length - 1; k >= 0; k--) {
 								if(descriptions[k].getAttribute('id') == itemStatus){
 									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									doLogGame('itens');
 									return;
 								}
 							}	
@@ -1886,6 +1919,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 							for (var k = descriptions.length - 1; k >= 0; k--) {
 								if(descriptions[k].getAttribute('id') == itemStatus){
 									feedBackHistory(descriptions[k].childNodes[0].nodeValue); 
+									doLogGame('monsters');
 									return;
 								}
 							}	
@@ -1898,6 +1932,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 	}
 }
 function fimDeJogo(){
+	alert(finalRoom);
 	if((salaAtual+1) == finalRoom){
 		criaJanela("alerta","Fim do jogo!");
 		fadeJanela("fadebackground");

@@ -50,7 +50,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Dê me "123456789".</problem>
+			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Sequencia designada: "123456789".</problem>
 			<test>123456789</test>
 			<read>1,2,3,4,5,6,7,8,9.</read>
 		</monster>
@@ -88,7 +88,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Me diga se o primeiro é igual a 23, responda 'true' para sim e 'false' para não.</problem>
+			<problem>Me diga se o numero é igual a 23, responda 'true' para sim ou 'false' para não.</problem>
 			<test>true</test>
 			<read>23,23.</read>
 		</monster>
@@ -107,7 +107,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Use matemática para duplicar a entrada.</problem>
+			<problem>Use matemática para dobrar a entrada.</problem>
 			<test>912</test>
 			<read>456.</read>
 		</monster>
@@ -126,7 +126,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Fatorial!</problem>
+			<problem>Dê me o Fatorial da entrada!</problem>
 			<test>3628800</test>
 			<read>10</read>
 		</monster>
@@ -287,7 +287,7 @@
 					Parece um tipo de cartão de metal roxo com varias palavras escritas como PLUS,MINUS,RANDOM e ROUND nele.
 				</description>
 				<descriptionDroped id="1">
-					Tem um cartão de metal roxo no chão com várias palavras escritas nele, mas a palavra MATATEMATICA se destaca no meio.
+					Tem um cartão de metal roxo no chão com várias palavras escritas nele, mas a palavra MATEMATICA se destaca no meio.
 				</descriptionDroped>
 			</status>
 			<tutorial>O bloco Matemática é na verdade um conjunto de blocos como o bloco de operação aritmética e o bloco de divisão.</tutorial>
