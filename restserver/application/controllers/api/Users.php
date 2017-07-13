@@ -68,7 +68,7 @@
                         $param['useritem_state'] = $iten['item_state'];
                         $param['useritem_active'] = $iten['item_active'];
                         $param['useritem_current_room'] = $iten['item_current_room'];
-                        $param['useritem_current_room'] = $iten['item_is_active'];
+                        $param['useritem_is_active'] = $iten['item_is_active'];
 						$user_itens_model = $this->user_itens_model->criar($param);
 					}
 					// ---------------------------------------------------------

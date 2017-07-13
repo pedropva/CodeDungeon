@@ -7,7 +7,7 @@ class Modeluser_monsters extends CI_Model {
 		
 		$this->db->select('*');
 		$this->db->from('user_monsters tabela');
-		$this->db->where('tabela.pmk_user_monster', $idTable);
+		$this->db->where('tabela.pmk_usermonster', $idTable);
 		
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -21,8 +21,8 @@ class Modeluser_monsters extends CI_Model {
 	
 	public function listar($tableParam = ''){
 
-		$where = array('tabela.user_monster_is_active' => 'Y');
-		if(isset($tableParam['pmk_user_monster'])){ $where += array('tabela.pmk_user_monster' => $tableParam['pmk_user_monster']); }
+		$where = array('tabela.usermonster_is_active' => 'Y');
+		if(isset($tableParam['pmk_usermonster'])){ $where += array('tabela.pmk_usermonster' => $tableParam['pmk_usermonster']); }
 		if(isset($tableParam['fok_user'])){ $where += array('tabela.fok_user' => $tableParam['fok_user']); }
 		
 		$this->db->select('*');
@@ -68,10 +68,10 @@ class Modeluser_monsters extends CI_Model {
 	}
 	
 	public function deletar ($idTable) {
-		$tableParam['user_monster_is_active'] = 'N';
-		$tableParam['pmk_user_monster'] = $idTable;
+		$tableParam['usermonster_is_active'] = 'N';
+		$tableParam['pmk_usermonster'] = $idTable;
 		
-		$this->db->where('pmk_user_monster', $idTable);
+		$this->db->where('pmk_usermonster', $idTable);
 		$this->db->set($tableParam);
 		
 		return $this->db->update('user_monsters');

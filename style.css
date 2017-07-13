@@ -234,7 +234,25 @@ div.total{
     padding:8px 17px;
     text-decoration:none;
     position: absolute;
-    right: 0%;
+    right: 56%;
+    bottom: -3%;
+}
+#btnRunAway{
+    background-color:#a6a6a6;
+    -moz-border-radius:28px;
+    -webkit-border-radius:28px;
+    border-radius:20px 20px 20px 20px;
+    border-style: transparent;
+    display:inline-block;
+    cursor:pointer;
+    color:#333333;
+    font-family:Arial;
+    font-size:17px;
+    font-weight:bold;
+    padding:8px 17px;
+    text-decoration:none;
+    position: absolute;
+    right: 0%;    
     bottom: -3%;
 }
 

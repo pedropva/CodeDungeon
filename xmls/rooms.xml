@@ -4,6 +4,8 @@
 			1
 		</curRoom>
 		<item id="chave" where="12" active="true">1</item>
+		<item id="cartao" where="5" active="false">1</item>
+		<item id="saida" where="12" active="alwaysTrue">1</item>
 		<item id="bau" where="5" active="alwaysTrue">1</item>
 
 		<item id="imprimir" where="1" active="true">1</item>
@@ -32,6 +34,7 @@
 		<room id="10">1</room>
 		<room id="11">1</room>
 		<room id="12">1</room>
+		<room id="13">1</room>
 	</state>
 	<finalRoom>13</finalRoom>
 	<bestiary>
@@ -135,10 +138,10 @@
 		<item id="chave">
 			<status>
 				<description id="1">
-					Um chip velho de metal, polido pelo uso.
+					Um mero chip velho de metal,imagino que antes havia a palavra gravada "chave" antes de quase desaparecer por desgaste também há em pequenas palavras escritas nele, como "marvin" e "depression".
 				</description>
 				<descriptionDroped id="1">
-					Um chip estranho está jogado no chão entre os tijolos.
+					Um chip estranho está jogado no chão entre os tijolos, a palavra "chave" parece um dia ter sido gravada nele, mas isso deve ter sido há muito tempo.
 				</descriptionDroped>
 			</status>			
 			<use>
@@ -163,10 +166,10 @@
 		<item id="cartao">
 			<status>
 				<description id="1">
-					Uma cartão velho de metal, deve ser minha chave para a liberdade.
+					Uma cartão de acesso, deve ser para a porta na sala 12.
 				</description>
 				<descriptionDroped id="1">
-					Um cartão estranho está jogado no chão entre os tijolos.
+					Um cartão de acesso está jogado no chão entre os tijolos.
 				</descriptionDroped>
 			</status>			
 			<use>
@@ -178,11 +181,6 @@
 					<action>
 						<print>A porta se abre!</print>
 						<extract>cartao</extract>
-						<do>
-							<victim>saida</victim>
-							<property>state</property>
-							<value>2</value>
-						</do>
 						<do>
 							<victim>12</victim>
 							<property>state</property>
@@ -679,12 +677,6 @@
 					Uma sala mal iluminada.
 				</shortDescription>
 				<description id="2">
-					Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes.. oh nao! as paredes! elas continuam brancas!.
-				</description>
-				<shortDescription id="3">
-					Uma sala mal iluminada.
-				</shortDescription>
-				<description id="3">
 					A ultima sala agora está iluminada com a luz suave que entra pela porta de saida.
 				</description>
 			</status>
@@ -695,12 +687,6 @@
 				<south></south>
 			</NextRoom>
 			<NextRoom id = "2">
-				<north></north>
-				<west></west>
-				<east>11</east>
-				<south>1</south>
-			</NextRoom>
-			<NextRoom id = "3">
 				<north>13</north>
 				<west></west>
 				<east>11</east>

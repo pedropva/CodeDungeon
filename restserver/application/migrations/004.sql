@@ -46,7 +46,13 @@ INSERT INTO rooms (`room_number`,`room_state`) VALUES (11,1);
 ---
 INSERT INTO rooms (`room_number`,`room_state`) VALUES (12,1);
 ---
+INSERT INTO rooms (`room_number`,`room_state`) VALUES (13,1);
+---
 INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) VALUES ('chave','Y',12,1);
+---
+INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) VALUES ('cartao','N',5,1);
+---
+INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) VALUES ('saida','YY',12,1);
 ---
 INSERT INTO itens (`item_name`,`item_active`,`item_current_room`,`item_state`) VALUES ('bau','YY',5,1);
 ---

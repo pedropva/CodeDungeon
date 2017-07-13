@@ -115,7 +115,7 @@ function saveIten(what,action){
 		$.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "fok_user="+ppmk+"&fok_item="+inventory[position].key+"&user_item_active="+active+"&useritem_current_room="+where,
+		  data: "fok_user="+ppmk+"&fok_item="+inventory[position].key+"&useritem_active="+active+"&useritem_current_room="+where,
 		  success: function(data) {
 		  	  //console.log("\nsalvei o "+inventory[position].id + " no inventario!");
 		  }
@@ -144,7 +144,7 @@ function saveIten(what,action){
 	    $.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
-		  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&user_item_active="+active+"&useritem_current_room="+where+'&user_item_state='+items[position].state,
+		  data: "fok_user="+ppmk+"&fok_item="+items[position].key+"&useritem_active="+active+"&useritem_current_room="+where+'&useritem_state='+items[position].state,
 		  success: function(data) {
 		  	  //console.log("salvei o "+items[position].id + " no chao!");
 		  }
@@ -162,11 +162,11 @@ function loadItens(){
 			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
 				for(var j = items.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
 					if((data[i].fok_item ==items[j].getKey())){
-						state = parseInt(data[i].user_item_state);
+						state = parseInt(data[i].useritem_state);
 						where= parseInt(data[i].useritem_current_room);
-						if(data[i].user_item_active =="Y"){
+						if(data[i].useritem_active =="Y"){
 							active='true';
-						}else if(data[i].user_item_active =="YY"){
+						}else if(data[i].useritem_active =="YY"){
 							active='alwaysTrue';
 						}else{
 							active='false';
@@ -175,6 +175,7 @@ function loadItens(){
 						items[j].setWhere(where);
 						items[j].setState(state);
 						if(where == -1){//se estiver no inventario entao move ele pro array de inventario
+							//console.log('carregado do bd e adicionado ao inventario: '+items[j].getId());
 							inventory[inventory.length] = items[j];
 							items.splice(j, 1);
 							inventory[inventory.length-1].setActive('false');
@@ -212,7 +213,7 @@ function saveMonster(who){
     $.ajax({
 	  url: rest+user_monsters,
 	  type: 'PUT',
-	  data: "fok_user="+ppmk+"&fok_monster="+monsters[position].key+"&user_monster_active="+active+"&user_monster_current_room="+where+'&user_monster_state='+monsters[position].state,
+	  data: "fok_user="+ppmk+"&fok_monster="+monsters[position].key+"&usermonster_active="+active+"&usermonster_current_room="+where+'&usermonster_state='+monsters[position].state,
 	  success: function(data) {
 	  	  //console.log("salvei o "+monsters[position].id);
 	  }
@@ -228,11 +229,11 @@ function loadMonsters(){
 			for(var i=0;i<data.length;i++){//por todos os dados percorre procurando o iten equivalente a esse dado
 				for(var j = monsters.length - 1; j >= 0; j--){//presume que todos os itens estão no chão no começo.
 					if((data[i].fok_monster ==monsters[j].getKey())){
-						state = parseInt(data[i].user_monster_state);
-						where= parseInt(data[i].user_monster_current_room);
-						if(data[i].user_monster_active =="Y"){
+						state = parseInt(data[i].usermonster_state);
+						where= parseInt(data[i].usermonster_current_room);
+						if(data[i].usermonster_active =="Y"){
 							active='true';
-						}else if(data[i].user_monster_active =="YY"){
+						}else if(data[i].usermonster_active =="YY"){
 							active='alwaysTrue';
 						}else{
 							active='false';
@@ -252,10 +253,11 @@ function loadMonsters(){
     });
 }
 function saveRoom(what){
+	//recebe o numero da Sala Atual (salaAtual+1)
     $.ajax({
 	  url: rest+user_rooms,
 	  type: 'PUT',
-	  data: "fok_user="+ppmk+"&fok_room="+(parseInt(what)+1)+'&userroom_state='+roomsStates[what]+'&userroom_visited=1',
+	  data: "fok_user="+ppmk+"&fok_room="+what+'&userroom_state='+roomsStates[(parseInt(what)-1)]+'&userroom_visited=1',
 	  success: function(data) {
 	  	  //console.log("salvei o room "+what);
 	  }
@@ -587,10 +589,8 @@ function endJanelaDisconnect(){
 		$(".divTutorial").remove();
 		$(".overlayTutorial").remove();
 		$(".overlayAlerta").remove();
-		carregaSala(xhttp);
-		document.getElementById('CommandInput').focus();
-		updateScroll();
 		disconnect();
+		carregaSala(xhttp);
     });
 }
 function endJanelaHook(){
@@ -716,9 +716,9 @@ function processInput(e){
 				res[1]="east";
 				break;
 		}	
-		saveRoom(parseInt(salaAtual));
-		saveUser();
+		saveRoom(parseInt(salaAtual)+1);
 		go(res[1],xhttp);
+		saveUser();
 		break;
 	case "look":
 		switch(res[1]){
@@ -739,11 +739,9 @@ function processInput(e){
 		break;
 	case "pick":    	
 		pick(res[1]);
-		saveIten(res[1],'pick');
 		break;
 	case "take":
 		pick(res[1]); 	
-		saveIten(res[1],'pick');
 		break;
 	case "inventory":    	
 		seeInventory();
@@ -759,13 +757,10 @@ function processInput(e){
 		break;
 	case "drop":
 		drop(res[1]); 	
-		saveIten(res[1]);
 		break;
 	case "use":    	
 		use(res[1],res[3],xhttp);//eu uso os indices 1 e 3 pq a sintaxe do cmoando é (use<what> on <what>)   	
-		saveIten(res[1]);
-		saveIten(res[3]);
-		saveRoom(parseInt(salaAtual));
+		saveRoom(parseInt(salaAtual)+1);
 		break;
 	default:
 		feedBackHistory("Isso nao faz sentido!");
@@ -787,6 +782,7 @@ function pick(what){
 					inventory[inventory.length-1].setActive("false");
 					descriptionRoom(xhttp);
 					doLogGame('itens');
+					saveIten(what,'pick');
 					return;
 				}else{
 					feedBackHistory("Nao consigo pegar isso, não está nessa sala!");//tem no jogo mas n tem no inventario
@@ -809,10 +805,11 @@ function drop(what){
 			items[items.length] = inventory[i];
 			inventory.splice(i, 1);
 			feedBackHistory("Soltou "+ what + " na Sala "+ (salaAtual+1) +"!" );
-			doLogGame('itens');
 			items[items.length-1].setActive("true");
 			items[items.length-1].setWhere(salaAtual+1);
 			descriptionRoom(xhttp);
+			saveIten(what);
+			doLogGame('itens');
 			return;	
 		}
 	}
@@ -1086,7 +1083,10 @@ function disconnect(){
     });
     if(workspace!=null)workspace.clear();
     saveMonster(currentMonster);
+    saveRoom(parseInt(salaAtual)+1);
     currentMonster='';
+	document.getElementById('CommandInput').focus();
+	updateScroll();
 }
 
 function connect(xml,who){
@@ -1148,11 +1148,9 @@ function connect(xml,who){
 		    document.getElementById("caixaResposta").appendChild(codeDiv);
 		  	
 		  	document.getElementById('result').innerHTML='Resultado:';
-		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnStep\" value=\"Step\" onclick=\"stepCode();\">"
-		  	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnParse\" value=\"Parse\" onclick=\"parseCode();\">"
-		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run\" onclick=\"runCode();\">"
-		   	document.getElementById('btnStep').disabled = 'disabled';
-		   	document.getElementById("btnStep").style.backgroundColor = "#4d4d4d";
+		  	
+		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run Code\" onclick=\"runCode();\">"
+		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRunAway\" value=\"Run Away\" onclick=\"disconnect();\">"
 
 		   	workspace = Blockly.inject('blocklyDiv',
 		    {toolbox: document.getElementById('toolbox'),
@@ -1230,64 +1228,8 @@ function highlightBlock(id) {
   highlightPause = true;
 }
 
-function parseCode() {
-  // Generate JavaScript code and parse it.
-  Blockly.JavaScript.STATEMENT_PREFIX = 'highlightBlock(%1);\n';
-  Blockly.JavaScript.addReservedWords('highlightBlock');
-  var code = Blockly.JavaScript.workspaceToCode(workspace);
-
-
-	code=comentaRapidao(code,'imprimir');
-    code = comentaRapidao(code,'highlight');
-    code= replaceCommand(code,'ler');
-  
-  myInterpreter = new Interpreter(code, initApi);
-
-  document.getElementById('btnStep').disabled = '';
-  document.getElementById("btnStep").style.backgroundColor = "#a6a6a6";
-  document.getElementById('btnRun').disabled = 'disabled';
-  document.getElementById("btnRun").style.backgroundColor = "#4d4d4d";
-  highlightPause = false;
-  workspace.traceOn(true);
-  workspace.highlightBlock(null);
-}
-
-function stepCode() {
-	var code2 = Blockly.JavaScript.workspaceToCode(workspace); 
-	try {
-		var ok = myInterpreter.step();
-    	}finally {
-    	if (!ok) {
-    		// Program complete, no more code to execute.
-	    	document.getElementById('resultPre').innerHTML='';
-	    	var para = document.createElement('script');
-	    	code2 = replaceCommand(code2,'imprimir');
-			code2 = comentaRapidao(code2,'alert');
-			code2 = comentaRapidao(code2,'highlight');
-			var t = document.createTextNode(code2);      // Create a text node
-			para.appendChild(t);   
-			document.head.appendChild(para);
-			testaResultado();
-      
-        	document.getElementById('btnStep').disabled = 'disabled';
-        	document.getElementById("btnStep").style.backgroundColor = "#4d4d4d";
-        	document.getElementById('btnRun').disabled = '';
-        	document.getElementById("btnRun").style.backgroundColor = "#a6a6a6";
-        	return;
-        }
-  	}
-	if (highlightPause) {
-    	// A block has been highlighted.  Pause execution here.
- 		highlightPause = false;
-	} else {
-    	// Keep executing until a highlight statement is reached.
-    	stepCode();
-	}
-}
-
 function runCode() {
-	document.getElementById('btnStep').disabled = 'disabled';
-	document.getElementById('btnParse').disabled = 'disabled';
+	document.getElementById('btnRunAway').disabled = 'disabled';
 	document.getElementById('btnRun').disabled = 'disabled';
     var code2 = Blockly.JavaScript.workspaceToCode(workspace);
     var code=comentaRapidao(code2,'imprimir');
@@ -1315,7 +1257,6 @@ function runCode() {
     if (!stepsAllowed) {
        	criaJanela("alerta","Loop Infinito!");
 		fadeJanela();
-       
        //return;
     }else{
     	//colocando o codigo no html
@@ -1334,9 +1275,8 @@ function runCode() {
 		
 		testaResultado();
     }
-    document.getElementById('btnStep').disabled = '';
-	document.getElementById('btnParse').disabled = '';
 	document.getElementById('btnRun').disabled = '';
+	document.getElementById('btnRunAway').disabled = '';
 }
 function testaResultado(){
 	var xmlDoc = xhttp.responseXML;
@@ -1597,10 +1537,10 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								return;
 							}
 							if(testaAt(at) != 1){
-								feedBackHistory("Acredito que eu tenha que usar esses items em outro lugar");
+								feedBackHistory("Acredito que eu tenha que usar esses items em outro lugar!");
 								return;
 							}
-
+							
 							//AS ACOES SE O USE FOR APROVADO
 							//carrega e faz o print
 							for (var k = actions.getElementsByTagName("print").length - 1; k >= 0; k--) {
@@ -1710,18 +1650,20 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 									}
 								}
 							}
-							//alert("fim do DO");
-							carregaSala(xhttp)
+							//alert("fim do DO"); feito com sucesso
+							carregaSala(xhttp);
+							saveIten(what);
+							saveIten(onWhat);
 							return;
 						}
 					}
 				}
 			}
-			feedBackHistory("Nao consigo usar esse item nisso");
+			feedBackHistory("Nao consigo usar esse item nisso!");
 			return;// o use so vai servir pra um unico item por vez,sendo que um item pode ter varios use(na vdd so um ,mas ele tem varios <in>), mas so vai executar um de cada vez
 		}
 	}
-	feedBackHistory("Nao tenho nenhum item assim");//n tem no inventario ou n jogo
+	feedBackHistory("Nao tenho nenhum item assim!");//n tem no inventario ou n jogo
 }
 
 function go(where,xml){//tem q por as siglas w,e,s,n
@@ -1745,7 +1687,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("não consigo ir pra frente");
+				feedBackHistory("não consigo ir pra frente!");
 			}
 			break;
 		case "south":
@@ -1756,7 +1698,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("não consigo ir pra tras");
+				feedBackHistory("não consigo ir pra tras!");
 			}
 			break;
 		case "west":
@@ -1767,7 +1709,7 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("não consigo ir pra direita");
+				feedBackHistory("não consigo ir pra direita!");
 			}
 			break;
 
@@ -1779,11 +1721,11 @@ function go(where,xml){//tem q por as siglas w,e,s,n
 				salaAtual = parseInt(numberNext)-1;
 				carregaSala(xhttp);
 			}else{
-				feedBackHistory("não consigo ir pra esquerda");
+				feedBackHistory("não consigo ir pra esquerda!");
 			}
 			break;
 		default:
-			feedBackHistory("nao tem nada que valha a pena ir nessa direção");
+			feedBackHistory("nao tem nada que valha a pena ir nessa direção!");
 	}
 }
 
@@ -1818,7 +1760,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada para o norte");
+				feedBackHistory("nao tem nada para o norte!");
 			}
 			break;
 		case "south":
@@ -1834,7 +1776,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada para o sul");
+				feedBackHistory("nao tem nada para o sul!");
 			}
 			break;
 		case "west":
@@ -1850,7 +1792,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada para o oeste");
+				feedBackHistory("nao tem nada para o oeste!");
 			}
 			break;
 		case "east":
@@ -1866,7 +1808,7 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}else{
-				feedBackHistory("nao tem nada pra leste");
+				feedBackHistory("nao tem nada pra leste!");
 			}
 			break;
 		default://tratamento de items,tem que ter tratamento pra quem ta fora do inventario tbm e tbm dos monstros!
@@ -1927,13 +1869,13 @@ function look(where,xml){//o where tbm pode ser o nome do item, ver o dafault pr
 					}
 				}
 			}
-			feedBackHistory("nao consigo observar nada assim.");
+			feedBackHistory("nao consigo observar nada assim!");
 			break;
 	}
 }
 function fimDeJogo(){
 	if((salaAtual+1) == finalRoom){
-		criaJanela("alerta","Fim do jogo!");
+		criaJanela("alerta","Fim do jogo!Obrigado por jogar!");
 		fadeJanela("fadebackground");
 	}
 }
