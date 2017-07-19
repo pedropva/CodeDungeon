@@ -218,7 +218,63 @@ div.total{
     font-family:Arial;
     color:#ffffff;
 }
+.menuQuestion {
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 70px;
+  height: 70px;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  font: normal normal bold 16px/normal Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background-color: #416d7f;
+}
 
+.menuQuestion:disabled {
+  display: inline-block;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 70px;
+  height: 70px;
+  position: relative;
+  cursor: pointer;
+  padding: 10px;
+  border: none;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+  font: normal normal bold 16px/normal Arial, Helvetica, sans-serif;
+  color: rgba(255,255,255,0.9);
+  text-align: center;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  
+  background-color: #cddee5;
+  background-image: url("resources/locked.png"); 
+  background-size: 30% 30%;
+  background-repeat: no-repeat;
+  background-position: left top;
+  pointer-events: none;
+}
+.menu{
+    width: 80%;
+    height: 85%;
+    float: center;
+    margin: 0 auto;
+}
+.tableMenu{
+    width: 100%;
+    height: 100%;
+}
 #btnRun{
     background-color:#a6a6a6;
     -moz-border-radius:28px;

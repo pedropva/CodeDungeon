@@ -1,0 +1,714 @@
+<xml>
+	<state>
+		<curRoom>
+			1
+		</curRoom>
+		<item id="chave" where="12" active="true">1</item>
+		<item id="cartao" where="5" active="false">1</item>
+		<item id="saida" where="12" active="alwaysTrue">1</item>
+		<item id="bau" where="5" active="alwaysTrue">1</item>
+
+		<item id="imprimir" where="1" active="true">1</item>
+		<item id="alerta" where="1" active="false">1</item>
+		<item id="ler" where="3" active="true">1</item>
+		<item id="se" where="5" active="true">1</item>
+		<item id="matematica" where="7" active="true">1</item>
+		<item id="repetir" where="9" active="true">1</item>
+		<item id="enquanto" where="11" active="true">1</item>
+		<item id="contar" where="11" active="true">1</item>
+		
+		<monster id="esqueleto 0" where="2" active="true">1</monster>
+		<monster id="esqueleto 1" where="4" active="true">1</monster>
+		<monster id="esqueleto 2" where="6" active="true">1</monster>
+		<monster id="esqueleto 3" where="8" active="true">1</monster>
+		<monster id="esqueleto 4" where="10" active="true">1</monster>
+		<room id="1">1</room>
+		<room id="2">1</room>
+		<room id="3">1</room>
+		<room id="4">1</room>
+		<room id="5">1</room>
+		<room id="6">1</room>
+		<room id="7">1</room>
+		<room id="8">1</room>
+		<room id="9">1</room>
+		<room id="10">1</room>
+		<room id="11">1</room>
+		<room id="12">1</room>
+		<room id="13">1</room>
+	</state>
+	<finalRoom>13</finalRoom>
+	<bestiary>
+		<monster id="esqueleto 0">
+			<status>
+				<shortDescription id="1">
+					Tem um console na parede estalando no canto.
+				</shortDescription>
+				<description id="1">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele estala e pisca, e conectar-me parece ser a unica maneira prosseguir.
+				</description>
+				<shortDescription id="2">
+					Tem um console na parede agora pisca com uma luz verde mas ainda ouço um leve estalar.
+				</shortDescription>
+				<description id="2">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
+				</description>
+			</status>
+			<problem>Inicialmente minhas cameras oculares desligam e então vejo a seguinte frase: Sequencia designada: "123456789".</problem>
+			<test>123456789</test>
+			<read>1,2,3,4,5,6,7,8,9.</read>
+		</monster>
+		<monster id="esqueleto 1">
+			<status>
+				<shortDescription id="1">
+					Tem um console na parede estalando no canto.
+				</shortDescription>
+				<description id="1">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele estala e pisca, e conectar-me parece ser a unica maneira prosseguir.
+				</description>
+				<shortDescription id="2">
+					Tem um console na parede agora pisca com uma luz verde mas ainda ouço um leve estalar.
+				</shortDescription>
+				<description id="2">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
+				</description>
+			</status>
+			<problem>Dê me o que você lê.</problem>
+			<test>456654</test>
+			<read>456654.</read>
+		</monster>
+		<monster id="esqueleto 2">
+			<status>
+				<shortDescription id="1">
+					Tem um console na parede estalando no canto.
+				</shortDescription>
+				<description id="1">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele estala e pisca, e conectar-me parece ser a unica maneira prosseguir.
+				</description>
+				<shortDescription id="2">
+					Tem um console na parede agora pisca com uma luz verde mas ainda ouço um leve estalar.
+				</shortDescription>
+				<description id="2">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
+				</description>
+			</status>
+			<problem>Me diga se o numero é igual a 23, responda 'true' para sim ou 'false' para não.</problem>
+			<test>true</test>
+			<read>23,23.</read>
+		</monster>
+		<monster id="esqueleto 3">
+			<status>
+				<shortDescription id="1">
+					Tem um console na parede estalando no canto.
+				</shortDescription>
+				<description id="1">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele estala e pisca, e conectar-me parece ser a unica maneira prosseguir.
+				</description>
+				<shortDescription id="2">
+					Tem um console na parede agora pisca com uma luz verde mas ainda ouço um leve estalar.
+				</shortDescription>
+				<description id="2">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
+				</description>
+			</status>
+			<problem>Use matemática para dobrar a entrada.</problem>
+			<test>912</test>
+			<read>456.</read>
+		</monster>
+		<monster id="esqueleto 4">
+			<status>
+				<shortDescription id="1">
+					Tem um console na parede estalando no canto.
+				</shortDescription>
+				<description id="1">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele estala e pisca, e conectar-me parece ser a unica maneira prosseguir.
+				</description>
+				<shortDescription id="2">
+					Tem um console na parede agora pisca com uma luz verde mas ainda ouço um leve estalar.
+				</shortDescription>
+				<description id="2">
+					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
+				</description>
+			</status>
+			<problem>Dê me o Fatorial da entrada!</problem>
+			<test>3628800</test>
+			<read>10.</read>
+		</monster>
+	</bestiary>
+	<inventory>
+		<item id="chave">
+			<status>
+				<description id="1">
+					Um mero chip velho de metal,imagino que antes havia a palavra gravada "chave" antes de quase desaparecer por desgaste também há em pequenas palavras escritas nele, como "marvin" e "depression".
+				</description>
+				<descriptionDroped id="1">
+					Um chip estranho está jogado no chão entre os tijolos, a palavra "chave" parece um dia ter sido gravada nele, mas isso deve ter sido há muito tempo.
+				</descriptionDroped>
+			</status>			
+			<use>
+				<in what="bau">
+					<conditions>
+						<has>chave</has>	
+						<at>5</at>
+					</conditions>
+					<action>
+						<print>Voce abre o bau!Acho um cartão estranho no fundo do bau velho!</print>
+						<give>cartao</give>
+						<extract>chave</extract>
+						<do>
+							<victim>bau</victim>
+							<property>state</property>
+							<value>2</value>
+						</do>
+					</action>
+				</in>
+			</use>
+		</item>
+		<item id="cartao">
+			<status>
+				<description id="1">
+					Uma cartão de acesso, deve ser para a porta na sala 12.
+				</description>
+				<descriptionDroped id="1">
+					Um cartão de acesso está jogado no chão entre os tijolos.
+				</descriptionDroped>
+			</status>			
+			<use>
+				<in what="saida">
+					<conditions>
+						<has>cartao</has>	
+						<at>12</at>
+					</conditions>
+					<action>
+						<print>A porta se abre!</print>
+						<extract>cartao</extract>
+						<do>
+							<victim>12</victim>
+							<property>state</property>
+							<value>2</value>
+						</do>
+					</action>
+				</in>
+			</use>
+		</item>
+		<item id="bau">
+			<status>
+				<description id="1">
+					Um bau velho e grande.
+				</description>
+				<descriptionDroped id="1">
+					Um bau jaz num canto da sala.
+				</descriptionDroped>
+				<description id="2">
+					O bau velho e grande,está aberto.
+				</description>
+				<descriptionDroped id="2">
+					O bau jaz aberto num canto da sala.
+				</descriptionDroped>
+			</status>	
+			<use></use>
+		</item>
+		<item id="saida">
+			<status>
+				<description id="1">
+					Uma porta enorme e enferrujada, mas com a fechadura eletronica ainda em funcionamento.
+				</description>
+				<descriptionDroped id="1">
+					Uma grande porta com a palavra SAIDA em letras garrafais se estende em toda a parede norte.
+				</descriptionDroped>
+				<description id="2">
+					A grande porta está aberta.
+				</description>
+				<descriptionDroped id="2">
+					A porta se abriu lentamente, travando em certos pontos, agora estou livre novamente. 
+				</descriptionDroped>
+			</status>	
+			<use></use>
+		</item>
+		<item id="se">
+			<status>
+				<description id="1">
+					É de cartão de metal azul com as letras S e E escritas nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um cartão de metal azul no chão com a palavra SE escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco SE representa um bloco de condição, se a condição que ele recebe for verdadeira,então os blocos que estão dentro dele serão executados, no caso de a condiçao ser falsa o jogador pode escolher entre não fazer nada ou executar outro conjunto de blocos, clicando na engrenagem do bloco e selecionando a formação if/else ,pois assim o bloco if terá um conjunto de blocos para executar caso a condicao seja falsa e outro caso seja verdadeira,junto ao bloco SE há também outros blocos lógicos como comparação binária e ternária;</tutorial>
+			<use>[block type="controls_if"][/block]
+				 [block type="logic_compare"][/block]
+			     [block type="logic_operation"][/block]
+			     [block type="logic_negate"][/block]
+			     [block type="logic_boolean"][/block]
+			     [block type="logic_null"][/block]
+			     [block type="logic_ternary"][/block]
+			</use>
+		</item>
+		<item id="imprimir">
+			<status>
+				<description id="1">
+					Parece um tipo de cartão de metal verde com a palavra IMPRIMIR escrito nele.Eu encaixo ele em dos meus inumeros slots de cartão, mas nada acontece de imediato.
+				</description>
+				<descriptionDroped id="1">
+					Tem um cartão reluzente verde escuro no chão com a palavra IMPRIMIR escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco imprimir recebe os dados do bloco conectado a ele e imprime-os no local de resposta, se o dado impresso no local de resposta satisfazer as condições do terminal então esta janela de combate será fechada e você retornará para o jogo de texto, caso a resposta não satisfaça as condições o jogador também será notificado.</tutorial>
+			<use>[block type="text"][/block][block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
+		</item>
+		<item id="alerta">
+			<status>
+				<description id="1">
+					Parece um tipo de cartão de metal verde com a palavra ALERTA escrita nele.Coloco ele em um dos slots de cartão que tenho mas nada acontece de novo.
+				</description>
+				<descriptionDroped id="1">
+					Tem um cartão de metal verde escuro no chão com a palavra ALERTA escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco de Alerta imprime na tela o valor imediato de entrada.</tutorial>
+			<use>[block type="text_print"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
+		</item>
+		<item id="ler">
+			<status>
+				<description id="1">
+					Parece um tipo de cartão de metal verde com a palavra LER escrita nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um cartão de metal verde escuro no chão com a palavra LER escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco Ler retorna um valor lido de um vetor dado pelo console, cabe ao jogador identificar o que tem nesse vetor e decidir como ou quando usa-lo.</tutorial>
+			<use>[block type="text_read"][/block]</use>
+		</item>
+		<item id="matematica">
+			<status>
+				<description id="1">
+					Parece um tipo de cartão de metal roxo com varias palavras escritas como PLUS,MINUS,RANDOM e ROUND nele.
+				</description>
+				<descriptionDroped id="1">
+					Tem um cartão de metal roxo no chão com várias palavras escritas nele, mas a palavra MATEMATICA se destaca no meio.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco Matemática é na verdade um conjunto de blocos como o bloco de operação aritmética e o bloco de divisão.</tutorial>
+			<use>
+					[block type="math_number"][/block]
+			      [block type="math_arithmetic"]
+			        [value name="A"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="B"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_single"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]9[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_trig"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]45[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_constant"][/block]
+			      [block type="math_number_property"]
+			        [value name="NUMBER_TO_CHECK"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]0[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_change"]
+			        [value name="DELTA"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_round"]
+			        [value name="NUM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]3.1[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_modulo"]
+			        [value name="DIVIDEND"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]64[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="DIVISOR"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]10[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_constrain"]
+			        [value name="VALUE"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]50[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="LOW"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="HIGH"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]100[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_random_int"]
+			        [value name="FROM"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]1[/field]
+			          [/shadow]
+			        [/value]
+			        [value name="TO"]
+			          [shadow type="math_number"]
+			            [field name="NUM"]100[/field]
+			          [/shadow]
+			        [/value]
+			      [/block]
+			      [block type="math_random_float"][/block]
+			</use>
+		</item>
+		<item id="contar">
+			<status>
+				<description id="1">
+					Um cartão de metal verde claro com a palavra CONTAR escrita nele.
+				</description>
+				<descriptionDroped id="1">
+					Há também um cartão de metal verde claro no chão com a palavra CONTAR escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco contar serve para executar os blocos que estão contidos dentro dele um determinado numero de vezes útil para não ter que por varios blocos repetidos.</tutorial>
+			<use>[block type="controls_for"][value name="FROM"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][value name="TO"][shadow type="math_number"][field name="NUM"]10[/field][/shadow][/value][value name="BY"][shadow type="math_number"][field name="NUM"]1[/field][/shadow][/value][/block]</use>
+		</item>
+		<item id="repetir">
+			<status>
+				<description id="1">
+					Parece um tipo de cartão de metal roxo com a palavra REPETIR escrita nele.
+				</description>
+				<descriptionDroped id="1">
+					Um cartão de metal roxo está jogado no chão com a palavra REPETIR escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco repetir executa os blocos contidos dentro dele um determinado numero de vezes.</tutorial>
+			<use>[block type="controls_repeat_ext"]
+	        [value name="TIMES"]
+	          [shadow type="math_number"]
+	            [field name="NUM"]10[/field]
+	          [/shadow]
+	        [/value]
+	      [/block]</use>
+		</item>
+		<item id="enquanto">
+			<status>
+				<description id="1">
+					É um cartão de metal com a palavra ENQUANTO escrita nele.
+				</description>
+				<descriptionDroped id="1">
+					Um cartão de metal roxo descansa no chão com a palavra ENQUANTO escrita nele.
+				</descriptionDroped>
+			</status>
+			<tutorial>O bloco Repetir executa os blocos contidos dentro dele ENQUANTO a condição de entrada for verdadeira, opcionalmente há também a opção de repetir ATÉ a condição for verdadeira.</tutorial>
+			<use>[block type="controls_whileUntil"][/block]
+	      [/block][block type="controls_flow_statements"][/block]</use>
+		</item>
+	</inventory>
+	<rooms>
+		<room id="1">
+			<status>
+				<shortDescription id="1">
+				Uma sala bem iluminada.
+				</shortDescription>
+				<description id="1">
+				Acabo de entrar numa sala do porão, estranhamente ela parece bem nova e bem iluminada.Quase como se alguem passasse por ali diariamente, na parede oposta à porta pela qual eu vim há um corredor estreito, há uma curva que não me deixa ver o fim desse corredor.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north>2</north>
+				<west></west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="2">
+			<status>
+				<shortDescription id="1">
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+				Ao entrar na sala, vejo o chão de tijolos mais claramente, são tijolos de cimento desgastados, parece que esse lugar já foi bastante movimentado mas devido às infiltracões e recentes terremotos está abandonado agora.
+				A sala tem suas paredes brancas e frias como costumam ser as parede de um local no subsolo.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal e sinto que não tenho opção a não ser seguir em frente.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south>1</south>
+			</NextRoom>
+			<NextRoom id="2">
+				<north></north>
+				<west></west>
+				<east>3</east>
+				<south>1</south>
+			</NextRoom>
+		</room>
+		<room id="3">
+			<status>
+				<shortDescription id="1">
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description id="1">
+				Parece uma sala padrao de reabastecimento, geralmente salas assim sao seguidas de longos corredores de transporte, mas esse parece ter sido abandonada.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west>2</west>
+				<east>4</east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="4">
+			<status>
+				<shortDescription id="1">
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+				A sala tem suas paredes brancas e frias a luz vermelha de emergencia e a luz do terminal sao as unicas fontes de luz.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal e sinto que não tenho opção a não ser seguir em frente.
+				</description>
+			</status>
+			<NextRoom id = "1">
+				<north></north>
+				<west>3</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
+				<north></north>
+				<west>3</west>
+				<east></east>
+				<south>5</south>
+			</NextRoom>
+		</room>
+		<room id="5">
+			<status>
+				<shortDescription id="1">
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description id="1">
+				Mais uma sala de reabastecimento padrao, sinto que devo continuar. 
+				</description>
+			</status>
+			<NextRoom id = "1">
+				<north>4</north>
+				<west></west>
+				<east></east>
+				<south>6</south>
+			</NextRoom>
+		</room>
+		<room id="6">
+			<status>
+				<shortDescription id="1">
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
+				</description>
+			</status>
+			<NextRoom id = "1">
+				<north>5</north>
+				<west></west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
+				<north>5</north>
+				<west></west>
+				<east>7</east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="7">
+			<status>
+				<shortDescription id="1">
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description id="1">
+				Mais uma sala vazia e escura, malditos terremotos.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north>8</north>
+				<west>6</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="8">
+			<status>
+				<shortDescription id="1">
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south>7</south>
+			</NextRoom>
+			<NextRoom id="2">
+				<north>9</north>
+				<west></west>
+				<east></east>
+				<south>7</south>
+			</NextRoom>
+		</room>
+		<room id="9">
+			<status>
+				<shortDescription id="1">
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description id="1">
+				wow,mais uma sala estranha.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east>10</east>
+				<south>8</south>
+			</NextRoom>
+		</room>
+		<room id="10">
+			<status>
+				<shortDescription id="1">
+				Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+				A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+				Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+				Agora duas das quatro portas da sala estão abertas, a porta pela qual e vim e a porta que se abriu com o fim do desafio do terminal, as paredes continuam brancas por mais incrivel que pareça.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west>9</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id="2">
+				<north>11</north>
+				<west>9</west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+		<room id="11">
+			<status>
+				<shortDescription id="1">
+				Um vento frio vem dessa sala.
+				</shortDescription>
+				<description id="1">
+				A sala tem suas paredes brancas, porém decoradas de cartazes coloridos e criativos com os trabalhos e desenhos dos alunos. Estes deixam sala de aula com uma aparência alegre, divertida, acolhedora; tornando um lugar mais aconchegante e divertido.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west>12</west>
+				<east></east>
+				<south>10</south>
+			</NextRoom>
+		</room>
+		<room id="12">
+			<status>
+				<shortDescription id="1">
+					Uma escotilha fechada, deve estar aguardando por comando do terminal.
+				</shortDescription>
+				<description id="1">
+					A sala tem suas paredes brancas e frias como todas as outras salas anteriores.
+				</description>
+				<shortDescription id="2">
+					Uma sala mal iluminada.
+				</shortDescription>
+				<description id="2">
+					A ultima sala agora está iluminada com a luz suave que entra pela porta de saida.
+				</description>
+			</status>
+			<NextRoom id = "1">
+				<north></north>
+				<west></west>
+				<east>11</east>
+				<south></south>
+			</NextRoom>
+			<NextRoom id = "2">
+				<north>13</north>
+				<west></west>
+				<east>11</east>
+				<south>1</south>
+			</NextRoom>
+		</room>
+		<room id="13">
+			<status>
+				<shortDescription id="1">
+				Uma brisa alegre vem de fora.
+				</shortDescription>
+				<description id="1">
+				Me estico ao sol, feliz.
+				</description>
+			</status>
+			<NextRoom id="1">
+				<north></north>
+				<west></west>
+				<east></east>
+				<south></south>
+			</NextRoom>
+		</room>
+
+	</rooms>
+</xml>

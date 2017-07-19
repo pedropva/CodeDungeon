@@ -1,0 +1,14 @@
+<xml>
+<game id='Tutorial'>
+	<path>tutorial.xml</path>
+	<unlock></unlock>
+</game>
+<game id='Um jogo de exemplo'>
+	<path>tutorial.xml</path>
+	<unlock>Tutorial</unlock>
+</game>
+<game id='Outro exemplo de jogo maneiro'>
+	<path>tutorial.xml</path>
+	<unlock>Um jogo de exemplo</unlock>
+</game>
+</xml>

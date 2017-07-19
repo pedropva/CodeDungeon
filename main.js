@@ -1,7 +1,8 @@
 /**
  * Created by Pedro Vinicius Almeida de Freitas-LAWS-UFMA on 08/07/2016.
  */
- 
+var curGame='';//guarda qual jogo está rodando no momento
+var gamesDone = [];// lista de strings com os titulos dos jogos terminados (a ser substituida pelo bd)
 var ppmk ='0';//player primey key
 var playerID = '';
 var dbplayerStatus='';// status do bd
@@ -14,7 +15,8 @@ var monsters = [];
 var roomsStates = [];//guarda os states das salas recebe como argumento salaAtual, assim roomsStates[salaAtual] = "2";
 var blocks = [];//guarda o index da posicao de um bloco no inventario,gerado automaticamente a partir dos dados do inventario
 var salaAtual = 0;//va guadar o index da sala em que o player ta 
-var xhttp = new XMLHttpRequest();
+var http = new XMLHttpRequest();//xhttp do menu
+var xhttp = new XMLHttpRequest();//xhttp do jogo escolhido
 var workspace=null;//variaveis importantes do blockly
 var myInterpreter = null;//variaveis importantes do blockly
 var highlightPause = false;//variaveis importantes do blockly
@@ -29,13 +31,13 @@ var catMath = ['matematica','number','arithmetic','single','trig','constant','ch
 var catText = ['alerta','imprimir','ler'];
 var blocksHad =[];//guarda os blocos já obtidos, para que o tutorial não se repita
 var blocksTutorial =[];//vetor auxiliar pra saber quais blocos estão na pilha para serem apresentados no tutorial quando a janela der fade-in
-rest='../codedungeon/restserver/api/';
-login='login/';
-user='users/';
-user_itens='user_itens/';
-user_rooms='user_rooms/';
-user_monsters='user_monsters/';
-user_logs='logs/';
+var rest='../codedungeon/restserver/api/';
+var login='login/';
+var user='users/';
+var user_itens='user_itens/';
+var user_rooms='user_rooms/';
+var user_monsters='user_monsters/';
+var user_logs='logs/';
 //tutorial
 tutorialAux();
 function showTutorial(){
@@ -43,11 +45,70 @@ function showTutorial(){
 	tutorial();
 	fadeJanela("fadebackground");
 }
-//carrega TUDOMESMO
-carregaTudo();
+loadGames();
+function loadGames(){
+	//carrega games.xml
+    http.onreadystatechange = function() {
+		if (http.readyState == 4 && http.status == 200) {
+			loadMenu(http);
+		}else{
+			//feedBackHistory("Carregando...");  
+		}
+	};
+	http.open("GET", "xmls/games.xml", true);//aqui determina o carregamento assincrono
+	http.send();
+}
 
+//menu de seleção de jogos:
+function loadMenu(http){
+	curGame='';
+	var xmlDoc = http.responseXML;
+    //if(document.getElementById("overlay") == null){
+    	//criando a div 
+    	var divPopup = document.createElement("DIV");
+	    divPopup.id = "overlay";
+	    divPopup.className = "overlay";
+	    var divCaixaResposta = document.createElement("DIV");
+	    divCaixaResposta.id = "caixaResposta";
+	    divPopup.style.width = "85%";
+		divPopup.style.height = "85%";
+	    divPopup.appendChild(divCaixaResposta);
+	    document.getElementById("divPrincipal").appendChild(divPopup);
 
-
+    	var numberOfColumns = 5;
+	    var games = xmlDoc.getElementsByTagName("game");
+	    var divIns = document.createElement("DIV");
+	    var divMenu = document.createElement("DIV");
+	    var table = document.createElement("TABLE");
+	    var actualRow;
+	    var status = "disabled";
+	    var iRow = 0;
+	    table.className = "tableMenu";
+	    divIns.className = "title";
+	    divMenu.className = "menu";
+	    divMenu.appendChild(divIns);
+	    for(i = 0; i<games.length; i++){
+	        var status = "disabled";
+	        if(i%numberOfColumns == 0) actualRow = table.insertRow(iRow++);
+	        if(games[i].getElementsByTagName("unlock")[0].childNodes.length > 0){// ve se tem algum requisito
+		        for (var j = gamesDone.length - 1; j >= 0; j--) {     	
+		        	if(games[i].getElementsByTagName("unlock")[0].childNodes[0].nodeValue == gamesDone[j]) status = "";		//ve se o jogador tem esse requisito	
+		        }
+	        }else{
+	        	status = "";
+	        }
+	        actualRow.insertCell(i%numberOfColumns).innerHTML = "<button onclick = \"carregaTudo(\'"+games[i].getElementsByTagName("path")[0].childNodes[0].nodeValue+"\');\" class = \"menuQuestion\" "+status+">"+games[i].getAttribute('id')+"</button>";
+	    }
+	    divMenu.appendChild(table);
+	    divIns.innerHTML = "Selecione um jogo:";    
+	    document.getElementById("caixaResposta").innerHTML = "";
+	    document.getElementById("caixaResposta").appendChild(divMenu);
+	    $(document).ready(function(){
+	    	$('#overlay, #overlay-back').fadeIn(500);                
+		});
+	//}else{
+	//}
+}
 //outras funcoes do jogo(BD):
 function saveUser(){
 	//user data:
@@ -426,7 +487,11 @@ function monster(id,where,active,state,key){//isso eh meio que uma classe...
 	}
 }
 
-function carregaTudo(){
+function carregaTudo(game){
+	curGame=game;
+	$('#overlay').fadeOut(500,function(){		
+		$(".overlay").remove();
+    });
 	//carrega do save do jogo!
 	loadUser();
 	xhttp.onreadystatechange = function() {
@@ -439,7 +504,7 @@ function carregaTudo(){
 			//feedBackHistory("Carregando...");  
 		}
 	};
-	xhttp.open("GET", "xmls/rooms.xml", true);//aqui determina o carregamento assincrono
+	xhttp.open("GET", "xmls/"+curGame, true);//aqui determina o carregamento assincrono
 	xhttp.send();
 }
 
@@ -751,6 +816,10 @@ function processInput(e){
 		break;
 	case "i":    	
 		seeInventory();
+		break;
+	case "menu":    	
+		loadMenu(http);
+		feedBackHistory("Menu!");
 		break;
 	case "ni":    	
 		seeNotInventory();
@@ -1877,6 +1946,7 @@ function fimDeJogo(){
 	if((salaAtual+1) == finalRoom){
 		criaJanela("alerta","Fim do jogo!Obrigado por jogar!");
 		fadeJanela("fadebackground");
+		gamesDone[gamesDone.length]=curGame;
 	}
 }
  
