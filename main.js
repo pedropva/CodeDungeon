@@ -45,7 +45,8 @@ function showTutorial(){
 	tutorial();
 	fadeJanela("fadebackground");
 }
-loadGames();
+//loadGames();DESCOMENTE PARA CARREGAMENTO DO MENU DE XMLS
+carregaTudo('tutorial.xml');//DESCOMENTECOMENTE PARA CARREGAMENTO DIRETO DO TUTORIAL
 function loadGames(){
 	//carrega games.xml
     http.onreadystatechange = function() {
