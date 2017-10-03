@@ -592,7 +592,7 @@ function criaJanela(tipo,texto){
 }
 function fadeJanela(q){
     if(q=="hook"){
-    	document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"blockTutorial();\">";
+    	document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"blockTutorial();window.dispatchEvent(new Event('resize'));\">";
     }else if(q=="fadebackground"){
   		document.getElementById("overlay1").innerHTML += "<br><input type=\"submit\" id=\"btnOk\" value=\"Ok\" onclick=\"endJanelaOverlay();\">";
     }else if(q=="disconnect"){
@@ -1207,6 +1207,19 @@ function connect(xml,who){
 			blocklyDiv.style.height = "95%";
 		    document.getElementById("caixaResposta").appendChild(blocklyDiv);
 
+		    workspace = Blockly.inject('blocklyDiv',
+		    {toolbox: document.getElementById('toolbox'),
+		     zoom:
+		         {controls: true,
+		          wheel: true,
+		          startScale: 1.0,
+		          maxScale: 3,
+		          minScale: 0.3,
+		          scaleSpeed: 1.2},
+		     trashcan: true});
+		   	
+		  	workspace.addChangeListener(updateCode);
+
 		    //inserindo a div do script
 		    var codeDiv = document.createElement("DIV");
 		    codeDiv.id = "codeDiv";
@@ -1219,27 +1232,14 @@ function connect(xml,who){
 		  	
 		  	document.getElementById('result').innerHTML='Resultado:';
 		  	
-		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Run Code\" onclick=\"runCode();\">"
-		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRunAway\" value=\"Run Away\" onclick=\"disconnect();\">"
-
-		   	workspace = Blockly.inject('blocklyDiv',
-		    {toolbox: document.getElementById('toolbox'),
-		     zoom:
-		         {controls: true,
-		          wheel: true,
-		          startScale: 1.0,
-		          maxScale: 3,
-		          minScale: 0.3,
-		          scaleSpeed: 1.2},
-		     trashcan: true});
-		   	
-		  	workspace.addChangeListener(updateCode);
-			
+		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRun\" value=\"Rodar codigo\" onclick=\"runCode();\">"
+		   	document.getElementById("codeDiv").innerHTML += "<input type=\"submit\" id=\"btnRunAway\" value=\"Fugir\" onclick=\"disconnect();\">"
 			
 			document.getElementById("result").innerHTML += "<pre id=resultPre></pre>";
 			document.getElementById("chalenge").innerHTML += "Desafio:";
 			document.getElementById("chalenge").innerHTML += "<ul id=chalengeUl><li id=chalengeText></li></div>";
 			document.getElementById("chalengeText").innerHTML += chalenge;
+
 			updateCode();
 			blockTutorial();
 		}else{
