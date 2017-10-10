@@ -151,7 +151,7 @@ function loadUser(){
 		}
     });
 }
-function saveIten(what,action){
+function saveIten(what){
 	var position=-1;
 	var active=0;//guarda a traducao false=N true=Y
 	var where;
@@ -169,11 +169,7 @@ function saveIten(what,action){
 		}else{
 			active='Y';
 		}
-		if(action=='pick'){
-			where = -1;
-		}else{
-			where = inventory[position].where;
-		}
+		where = -1; // se tá no inventário então permanece no inventário
 		$.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
@@ -198,11 +194,7 @@ function saveIten(what,action){
 		}else{
 			active='Y';
 		}
-		if(action=='pick'){
-			where = -1;
-		}else{
-			where = items[position].where;
-		}
+		where = items[position].where; // se tá no chão então permanece no chão
 	    $.ajax({
 		  url: rest+user_itens,
 		  type: 'PUT',
@@ -760,6 +752,7 @@ document.getElementById('CommandInput').onkeypress = function(e) {
 function processInput(e){	
 	// Enter pressed
 	var texto;
+	var salaAnterior;
 	texto = document.getElementById("CommandInput").value;
 	texto=texto.toLowerCase();
 	document.getElementById("CommandInput").value = "";
@@ -781,9 +774,10 @@ function processInput(e){
 			case "e":
 				res[1]="east";
 				break;
-		}	
-		saveRoom(parseInt(salaAtual)+1);
+		}
+		salaAnterior=parseInt(salaAtual)+1;
 		go(res[1],xhttp);
+		saveRoom(salaAnterior);
 		saveUser();
 		break;
 	case "look":
@@ -852,7 +846,7 @@ function pick(what){
 					inventory[inventory.length-1].setActive("false");
 					descriptionRoom(xhttp);
 					doLogGame('itens');
-					saveIten(what,'pick');
+					saveIten(what);
 					return;
 				}else{
 					feedBackHistory("Nao consigo pegar isso, não está nessa sala!");//tem no jogo mas n tem no inventario
@@ -954,6 +948,7 @@ function extract(what){
 			items[items.length-1].setWhere(salaAtual+1);
 			feedBackHistory("Perdeu "+ what + "!");
 			doLogGame('itens');
+			saveIten(what);
 			return;
 		}
 	}
@@ -967,6 +962,7 @@ function give(what){
 			doLogGame('itens');
 			inventory[inventory.length-1].setActive("false");
 			descriptionRoom(xhttp);
+			saveIten(what);
 			return;
 		}
 	}
@@ -1641,7 +1637,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								//mudando as caracteristicas de um item no inventario
 								computed = false;
 								for (var l = inventory.length - 1; l >= 0; l--){
-									if((inventory[l].getActive().trim() == "false") && (inventory[l].getId().trim() == doSomething.victim)){
+									if((inventory[l].getId().trim() == doSomething.victim)){
 										switch(doSomething.property){
 											case "where": 
 												inventory[l].setWhere(doSomething.value);
@@ -1656,6 +1652,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 												break;
 										}
 										//feedBackHistory("Item modificado: "+inventory[l].getId()+" where: "+ inventory[l].getWhere() +" Active: "+ inventory[l].getActive() + " State: "+ inventory[l].getState());
+										saveIten(doSomething.victim);
 										computed = true;
 										break;
 									}
@@ -1663,7 +1660,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 								//mudando as caracteristicas de um item no chao
 								if(computed != true ){
 									for (l = items.length - 1; l >= 0; l--) {
-										if(((items[l].getActive().trim() == "true") || (items[l].getActive() == ("alwaysTrue"))) && (items[l].getId() == (doSomething.victim))){
+										if(items[l].getId() == (doSomething.victim)){
 											switch(doSomething.property){
 												case "where": 
 													items[l].setWhere(doSomething.value);
@@ -1678,6 +1675,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 													break;
 											}
 											//feedBackHistory("Item modificado: "+items[l].getId()+" where: "+ items[l].getWhere() +" Active: "+ items[l].getActive() + " State: "+ items[l].getState());
+											saveIten(doSomething.victim);
 											computed = true;
 											break;
 										}
@@ -1700,11 +1698,12 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 														break;
 												}
 												//feedBackHistory("Item modificado: "+monsters[l].getId()+" where: "+ monsters[l].getWhere() +" Active: "+ monsters[l].getActive() + " State: "+ monsters[l].getState());
+												saveMonster(doSomething.victim);
 												computed = true;
 												break;
 											}
 										}
-										if(computed = true){
+										if(computed != true){
 											//mudando as caracteristicas de um quarto
 											for (l = roomsStates.length - 1; l >= 0; l--) {
 												//alert("teste do room");
@@ -1712,6 +1711,7 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 													if(doSomething.property == "state"){
 														roomsStates[parseInt(doSomething.victim)-1] = doSomething.value;
 														//feedBackHistory("Sala modificada: "+parseInt(doSomething.victim));
+														saveRoom(parseInt(doSomething.victim));
 														break;
 													}
 												}
@@ -1723,7 +1723,6 @@ function use(what,onWhat,xml){//serve tanto pra iten quanto pra terminal e inven
 							//alert("fim do DO"); feito com sucesso
 							carregaSala(xhttp);
 							saveIten(what);
-							saveIten(onWhat);
 							return;
 						}
 					}

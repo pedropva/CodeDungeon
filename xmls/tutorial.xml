@@ -288,7 +288,7 @@
 					Tem um cartão de metal roxo no chão com várias palavras escritas nele, mas a palavra MATEMATICA se destaca no meio.
 				</descriptionDroped>
 			</status>
-			<tutorial>O bloco Matemática é na verdade um conjunto de blocos como o bloco de operação aritmética e o bloco de divisão.</tutorial>
+			<tutorial>O bloco Matemática é na verdade um conjunto de blocos como os blocos de operação aritmética e outras funções matemáticas.</tutorial>
 			<use>
 					[block type="math_number"][/block]
 			      [block type="math_arithmetic"]
