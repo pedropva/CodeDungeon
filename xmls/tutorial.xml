@@ -72,7 +72,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Dê me o que você lê.</problem>
+			<problem>Dê me o que você LÊ.</problem>
 			<test>456654</test>
 			<read>456654.</read>
 		</monster>
@@ -91,7 +91,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Me diga se o numero é igual a 23, responda 'true' para sim ou 'false' para não.</problem>
+			<problem>Me diga se o numero LIDO é igual a 23, responda 'true' para sim ou 'false' para não.</problem>
 			<test>true</test>
 			<read>23,23.</read>
 		</monster>
@@ -110,7 +110,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Use matemática para dobrar a entrada.</problem>
+			<problem>Use matemática para dobrar ao valor LIDO.</problem>
 			<test>912</test>
 			<read>456.</read>
 		</monster>
@@ -129,7 +129,7 @@
 					No topo do console há a palavra "esqueleto" escrita no topo, ele pisca seu unico led pequeno em verde sinalizando que a porta que ele guardava agora está destrancada.
 				</description>
 			</status>
-			<problem>Dê me o Fatorial da entrada!</problem>
+			<problem>Dê me o Fatorial do valor LIDO!</problem>
 			<test>3628800</test>
 			<read>10.</read>
 		</monster>
@@ -252,7 +252,7 @@
 					Tem um cartão reluzente verde escuro no chão com a palavra IMPRIMIR escrita nele.
 				</descriptionDroped>
 			</status>
-			<tutorial>O bloco imprimir recebe os dados do bloco conectado a ele e imprime-os no local de resposta, se o dado impresso no local de resposta satisfazer as condições do terminal então esta janela de combate será fechada e você retornará para o jogo de texto, caso a resposta não satisfaça as condições o jogador também será notificado.</tutorial>
+			<tutorial>O bloco imprimir recebe os dados do bloco conectado a ele e imprime-os no local de resposta (é vital pra responder todos os dsafios a seguir), se o dado impresso no local de resposta satisfazer as condições do terminal então esta janela de combate será fechada e você retornará para o jogo de texto, caso a resposta não satisfaça as condições o jogador também será notificado.</tutorial>
 			<use>[block type="text"][/block][block type="text_submeter"][value name="TEXT"][shadow type="text"][field name="TEXT"]abc[/field][/shadow][/value][/block]</use>
 		</item>
 		<item id="alerta">

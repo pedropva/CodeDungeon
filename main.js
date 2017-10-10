@@ -1949,4 +1949,3 @@ function fimDeJogo(){
 		gamesDone[gamesDone.length]=curGame;
 	}
 }
- 
